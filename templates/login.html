@@ -1,7 +1,13 @@
 {% extends 'base.html' %}
 
 {% block title %}Login / Sign Up - FoodMe{% endblock %}
-
+{% block navbar %}
+<nav class="navbar navbar-expand-lg navbar-light bg-transparent py-3">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="{% url 'index' %}" style="color: var(--fm-primary); font-size: 1.8rem;">FoodMe</a>
+    </div>
+</nav>
+{% endblock %}
 {% block content %}
 <div class="row justify-content-center mt-5 mb-5 g-5">
 
@@ -30,7 +36,7 @@
                     <a href="#" class="text-decoration-none small text-muted">Forgot password?</a>
                 </div>
 
-                <button type="submit" class="btn btn-primary w-100 py-2">LOGIN</button>
+                <a href="{% url 'dashboard' %}" class="btn btn-success w-100 d-block text-center fw-bold" style="background-color: var(--fm-primary); border: none;">LOGIN</a>
 
                 <div class="text-center mt-4 d-block d-md-none">
                     <span class="text-muted small">Don't have an account?</span>
@@ -74,7 +80,7 @@
                     <label class="form-check-label small" for="termsAgree">I agree to the Terms of Service and Privacy Policy</label>
                 </div>
 
-                <button type="submit" class="btn btn-dark w-100 py-2">CREATE ACCOUNT</button>
+                <a href="{% url 'dashboard' %}" class="btn btn-dark w-100 d-block text-center fw-bold">CREATE ACCOUNT</a>
             </form>
         </div>
     </div>

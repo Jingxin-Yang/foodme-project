@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}Welcome to FoodMe - Eat Better, Stress Less{% endblock %}
+{% block navbar %}
+<nav class="navbar navbar-expand-lg navbar-light bg-transparent py-3">
+    <div class="container d-flex justify-content-between align-items-center">
+        <a class="navbar-brand fw-bold" href="{% url 'index' %}" style="color: var(--fm-primary); font-size: 1.8rem;">FoodMe</a>
+        <div>
+            <a href="{% url 'login' %}" class="btn btn-outline-dark fw-bold px-4 rounded-pill">LOG IN</a>
+        </div>
+    </div>
+</nav>
+{% endblock %}
+{% block content %}
+<div class="row align-items-center py-5 mb-5" style="min-height: 70vh;">
+    <div class="col-lg-6 mb-5 mb-lg-0">
+        <h1 class="display-3 fw-bold mb-4" style="letter-spacing: -1px;">
+            Eat Better,<br>
+            <span style="color: var(--fm-primary);">Stress Less.</span>
+        </h1>
+        <p class="lead text-muted mb-5 pe-lg-5">
+            FoodMe is your ultimate smart kitchen assistant. Plan your weekly meals, discover healthy recipes, and automatically generate your shopping list in seconds.
+        </p>
+        <div class="d-grid gap-3 d-md-flex justify-content-md-start">
+            <a href="{% url 'login' %}#signupSection" class="btn btn-primary btn-lg px-5 py-3 fw-bold rounded-pill shadow-sm">GET STARTED FOR FREE</a>
+            <a href="{% url 'login' %}" class="btn btn-outline-dark btn-lg px-5 py-3 fw-bold rounded-pill">LOG IN</a>
+        </div>
+    </div>
+    
+    <div class="col-lg-6">
+        <div class="p-3 bg-light rounded-5 shadow-lg" style="transform: rotate(2deg); transition: transform 0.3s ease;">
+            <div class="bg-white rounded-4 border d-flex align-items-center justify-content-center flex-column" style="height: 450px; border-style: dashed !important; border-width: 2px !important;">
+                <span class="fs-1 mb-3">🥗</span>
+                <h4 class="fw-bold text-muted">[APP DASHBOARD PREVIEW]</h4>
+                <p class="text-muted small">Show a beautiful screenshot of your app here</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-5 py-5 border-top">
+    <div class="col-md-4 text-center px-4">
+        <div class="d-inline-flex align-items-center justify-content-center bg-light rounded-circle mb-4" style="width: 80px; height: 80px;">
+            <span class="fs-2">📅</span>
+        </div>
+        <h4 class="fw-bold mb-3">Smart Meal Planning</h4>
+        <p class="text-muted mb-0">Drag and drop your favorite recipes into your weekly calendar. We handle the calories and portions.</p>
+    </div>
+    
+    <div class="col-md-4 text-center px-4">
+        <div class="d-inline-flex align-items-center justify-content-center bg-light rounded-circle mb-4" style="width: 80px; height: 80px;">
+            <span class="fs-2">🛒</span>
+        </div>
+        <h4 class="fw-bold mb-3">Auto Shopping List</h4>
+        <p class="text-muted mb-0">Never forget an ingredient again. We generate your sorted grocery list instantly based on your meal plan.</p>
+    </div>
+    
+    <div class="col-md-4 text-center px-4">
+        <div class="d-inline-flex align-items-center justify-content-center bg-light rounded-circle mb-4" style="width: 80px; height: 80px;">
+            <span class="fs-2">📊</span>
+        </div>
+        <h4 class="fw-bold mb-3">Track Your Nutrition</h4>
+        <p class="text-muted mb-0">Keep an eye on your dietary goals with beautiful analytics. Track macros, cooking streaks, and more.</p>
+    </div>
+</div>
+{% endblock %}
