@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - FoodMe{% endblock %}
+
+{% block content %}
+<div class="row mb-3">
+    <div class="col-12">
+        <h2 class="fw-bold">Dashboard</h2>
+        <p class="text-muted">Welcome back to FoodMe</p>
+    </div>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-3 col-sm-6">
+        <div class="card p-3 shadow-sm border-0 h-100">
+            <h6 class="text-muted text-uppercase small fw-bold">Total Recipes</h6>
+            <h2 class="display-6 mb-2">127</h2>
+            <div class="bg-secondary bg-opacity-25 w-75 rounded" style="height: 12px;"></div>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+        <div class="card p-3 shadow-sm border-0 h-100">
+            <h6 class="text-muted text-uppercase small fw-bold">Meals This Week</h6>
+            <h2 class="display-6 mb-2">18</h2>
+            <div class="bg-secondary bg-opacity-25 w-100 rounded" style="height: 12px;"></div>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+        <div class="card p-3 shadow-sm border-0 h-100">
+            <h6 class="text-muted text-uppercase small fw-bold">Cooking Streak</h6>
+            <h2 class="display-6 mb-2">12</h2>
+            <div class="bg-secondary bg-opacity-25 w-50 rounded" style="height: 12px;"></div>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+        <div class="card p-3 shadow-sm border-0 h-100">
+            <h6 class="text-muted text-uppercase small fw-bold">Favorites</h6>
+            <h2 class="display-6 mb-2">34</h2>
+            <div class="bg-secondary bg-opacity-25 w-75 rounded" style="height: 12px;"></div>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-lg-6">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-header bg-white border-bottom-0 d-flex justify-content-between align-items-center pt-3 pb-0">
+                <h6 class="text-uppercase fw-bold mb-0">Recent Recipes</h6>
+                <a href="#" class="text-decoration-none small">View All</a>
+            </div>
+            <div class="card-body">
+                <div class="d-flex align-items-center mb-3 border-bottom pb-3">
+                    <div class="bg-secondary bg-opacity-25 rounded me-3" style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;"><small class="text-muted">[IMG]</small></div>
+                    <div class="flex-grow-1">
+                        <div class="bg-dark rounded mb-2" style="height: 15px; width: 80%;"></div>
+                        <div class="bg-secondary bg-opacity-25 rounded" style="height: 10px; width: 40%;"></div>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center">
+                    <div class="bg-secondary bg-opacity-25 rounded me-3" style="width: 60px; height: 60px; display: flex; align-items: center; justify-content: center;"><small class="text-muted">[IMG]</small></div>
+                    <div class="flex-grow-1">
+                        <div class="bg-dark rounded mb-2" style="height: 15px; width: 70%;"></div>
+                        <div class="bg-secondary bg-opacity-25 rounded" style="height: 10px; width: 50%;"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-header bg-white border-bottom-0 d-flex justify-content-between align-items-center pt-3 pb-0">
+                <h6 class="text-uppercase fw-bold mb-0">This Week's Plan</h6>
+                <a href="#" class="text-decoration-none small">Edit Plan</a>
+            </div>
+            <div class="card-body">
+                <div class="border rounded p-2 mb-2">
+                    <small class="text-muted text-uppercase d-block mb-1">Monday</small>
+                    <div class="bg-dark rounded mb-1" style="height: 12px; width: 70%;"></div>
+                    <div class="bg-secondary bg-opacity-25 rounded" style="height: 8px; width: 40%;"></div>
+                </div>
+                <div class="border rounded p-2">
+                    <small class="text-muted text-uppercase d-block mb-1">Tuesday</small>
+                    <div class="bg-dark rounded mb-1" style="height: 12px; width: 60%;"></div>
+                    <div class="bg-secondary bg-opacity-25 rounded" style="height: 8px; width: 30%;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow-sm border-0 mb-5">
+    <div class="card-body">
+        <h6 class="text-uppercase fw-bold mb-3">Quick Actions</h6>
+        <div class="row g-3 text-center">
+            <div class="col-md-3 col-6">
+                <a href="{% url 'add_recipe' %}" class="btn btn-outline-secondary w-100 py-3 d-flex flex-column align-items-center text-decoration-none text-dark">
+                    <span class="fs-4 mb-2">+</span>
+                    <small>ADD RECIPE</small>
+                </a>
+            </div>
+            <div class="col-md-3 col-6">
+                <button class="btn btn-outline-secondary w-100 py-3 d-flex flex-column align-items-center">
+                    <span class="fs-4 mb-2">📅</span>
+                    <small>PLAN MEALS</small>
+                </button>
+            </div>
+            <div class="col-md-3 col-6">
+                <button class="btn btn-outline-secondary w-100 py-3 d-flex flex-column align-items-center">
+                    <span class="fs-4 mb-2">🛒</span>
+                    <small>SHOPPING LIST</small>
+                </button>
+            </div>
+            <div class="col-md-3 col-6">
+                <button class="btn btn-outline-secondary w-100 py-3 d-flex flex-column align-items-center">
+                    <span class="fs-4 mb-2">📊</span>
+                    <small>VIEW STATS</small>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

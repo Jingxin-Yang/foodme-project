@@ -1,0 +1,108 @@
+{% extends 'base.html' %}
+
+{% block title %}Recipes - FoodMe{% endblock %}
+
+{% block content %}
+<div class="row mb-4 align-items-center">
+    <div class="col-md-8">
+        <h2 class="fw-bold">Recipe Library</h2>
+        <p class="text-muted mb-0">Browse and manage your recipes</p>
+    </div>
+    <div class="col-md-4 text-md-end mt-3 mt-md-0">
+        <a href="{% url 'add_recipe' %}" class="btn btn-dark fw-bold">+ ADD RECIPE</a>
+    </div>
+</div>
+
+<div class="card shadow-sm border-0 mb-4">
+    <div class="card-body p-3">
+        <div class="row g-2">
+            <div class="col-md-8">
+                <input type="text" class="form-control bg-light border-0" placeholder="Search recipes...">
+            </div>
+            <div class="col-md-2">
+                <select class="form-select border-0 bg-light">
+                    <option>Filter ▼</option>
+                </select>
+            </div>
+            <div class="col-md-2">
+                <select class="form-select border-0 bg-light">
+                    <option>Sort ▼</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="d-flex flex-wrap gap-2 mt-3">
+            <button class="btn btn-sm btn-dark px-3 rounded-pill">ALL</button>
+            <button class="btn btn-sm btn-outline-secondary px-3 rounded-pill">VEGETARIAN</button>
+            <button class="btn btn-sm btn-outline-secondary px-3 rounded-pill">KETO</button>
+            <button class="btn btn-sm btn-outline-secondary px-3 rounded-pill">CARNIVORE</button>
+            <button class="btn btn-sm btn-outline-secondary px-3 rounded-pill">HIGH-PROTEIN</button>
+            <button class="btn btn-sm btn-outline-secondary px-3 rounded-pill">QUICK</button>
+        </div>
+    </div>
+</div>
+
+<div class="row g-4 mb-5">
+
+    <div class="col-md-4 col-sm-6">
+        <div class="card h-100 shadow-sm border-0 overflow-hidden">
+            <a href="{% url 'recipe_detail' %}" class="text-decoration-none">
+                <div class="bg-secondary bg-opacity-25 d-flex align-items-center justify-content-center" style="height: 200px;">
+                    <span class="text-muted fw-bold">[RECIPE IMAGE]</span>
+                </div>
+            </a>
+            <div class="card-body">
+                <div class="bg-dark rounded mb-3" style="height: 16px; width: 80%;"></div>
+                <div class="d-flex gap-2 mb-3">
+                    <span class="badge border text-dark bg-light">VEG</span>
+                    <span class="badge border text-dark bg-light">QUICK</span>
+                </div>
+            </div>
+            <div class="card-footer bg-white border-top-0 d-flex justify-content-between text-muted small pb-3">
+                <span>⏱️ 30 min</span>
+                <span>👤 4 servings</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 col-sm-6">
+        <div class="card h-100 shadow-sm border-0 overflow-hidden">
+            <a href="{% url 'recipe_detail' %}" class="text-decoration-none">
+                <div class="bg-secondary bg-opacity-25 d-flex align-items-center justify-content-center" style="height: 200px;">
+                    <span class="text-muted fw-bold">[RECIPE IMAGE]</span>
+                </div>
+            </a>
+            <div class="card-body">
+                <div class="bg-dark rounded mb-3" style="height: 16px; width: 70%;"></div>
+                <div class="d-flex gap-2 mb-3">
+                    <span class="badge border text-dark bg-light">KETO</span>
+                </div>
+            </div>
+            <div class="card-footer bg-white border-top-0 d-flex justify-content-between text-muted small pb-3">
+                <span>⏱️ 45 min</span>
+                <span>👤 2 servings</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 col-sm-6">
+        <div class="card h-100 shadow-sm border-0 overflow-hidden">
+            <a href="{% url 'recipe_detail' %}" class="text-decoration-none">
+                <div class="bg-secondary bg-opacity-25 d-flex align-items-center justify-content-center" style="height: 200px;">
+                    <span class="text-muted fw-bold">[RECIPE IMAGE]</span>
+                </div>
+            </a>
+            <div class="card-body">
+                <div class="bg-dark rounded mb-3" style="height: 16px; width: 90%;"></div>
+                <div class="d-flex gap-2 mb-3">
+                    <span class="badge border text-dark bg-light">HIGH-PROTEIN</span>
+                </div>
+            </div>
+            <div class="card-footer bg-white border-top-0 d-flex justify-content-between text-muted small pb-3">
+                <span>⏱️ 20 min</span>
+                <span>👤 1 servings</span>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
