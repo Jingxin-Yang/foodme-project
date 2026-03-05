@@ -1,22 +1,17 @@
 /* ==========================================
-   FoodMe 全局主题变量 (清新健康风)
+   1. FoodMe 全局主题变量
 ========================================== */
 :root {
-    /* 核心主色调：罗勒绿 (对比度高，满足 WCAG 4.5:1 标准) */
     --fm-primary: #2d6a4f;
-    /* 辅色调：浅牛油果绿 (用于背景高亮或悬停) */
     --fm-secondary: #d8f3dc;
-    /* 强调色：活力的番茄红 (可以用于卡路里警告或删除按钮) */
     --fm-accent: #e63946;
-
-    /* 基础灰度 */
     --fm-bg-light: #f8f9fa;
     --fm-text-dark: #1b4332;
     --fm-text-muted: #6c757d;
 }
 
 /* ==========================================
-   全局重置与排版
+   2. 全局重置与排版
 ========================================== */
 body {
     font-family: 'Nunito', sans-serif;
@@ -30,7 +25,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* ==========================================
-   卡片 (Cards) 美化
+   3. 核心组件 (卡片、导航、按钮)
 ========================================== */
 .card {
     border-radius: 16px;
@@ -42,9 +37,6 @@ h1, h2, h3, h4, h5, h6 {
     box-shadow: 0 10px 20px rgba(45, 106, 79, 0.08) !important;
 }
 
-/* ==========================================
-   导航栏 (Navbar) 美化
-========================================== */
 .navbar {
     background-color: #ffffff !important;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
@@ -68,9 +60,6 @@ h1, h2, h3, h4, h5, h6 {
     color: var(--fm-primary) !important;
 }
 
-/* ==========================================
-   按钮 (Buttons) 覆写
-========================================== */
 .btn-primary {
     background-color: var(--fm-primary);
     border-color: var(--fm-primary);
@@ -96,31 +85,48 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* ==========================================
-   新增：交互过渡与打印样式 (Shopping List 等)
+   4. 交互状态 (已移出打印区，确保屏幕可见)
 ========================================== */
 .transition-all {
     transition: all 0.2s ease-in-out;
 }
 
-/* 购物清单：勾选后的明显置灰和半透明效果！ */
+/* 购物清单：勾选后的置灰 */
 .item-completed {
     background-color: #e9ecef !important;
     opacity: 0.6;
 }
 
-/* 仅在用户使用打印机时生效的 CSS */
+/* 菜谱详情页：食材高亮 */
+.item-selected {
+    background-color: rgba(45, 106, 79, 0.06) !important; 
+    border-left: 4px solid var(--fm-primary) !important;
+}
+
+/* Meal Planner 里的卡片悬停 */
+.meal-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(45, 106, 79, 0.15) !important;
+}
+
+.remove-meal:hover {
+    text-decoration: underline;
+    font-weight: bold;
+    color: var(--fm-accent);
+}
+
+/* ==========================================
+   5. 打印专属样式 (只放打印时需要的调整)
+========================================== */
 @media print {
-    /* 隐藏导航栏、右侧面板和按钮 */
     nav, .no-print, .btn, footer {
         display: none !important;
     }
 
-    /* 去掉背景色，省墨水 */
     body {
         background-color: white !important;
     }
 
-    /* 强制让购物清单占据全屏 */
     #printableArea {
         width: 100% !important;
         margin: 0 !important;
@@ -130,22 +136,6 @@ h1, h2, h3, h4, h5, h6 {
     .card {
         border: none !important;
         box-shadow: none !important;
-    }
-
-    /* Meal Planner 里的菜谱卡片悬停效果 */
-    .meal-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 5px 15px rgba(45, 106, 79, 0.15) !important;
-    }
-
-    .remove-meal:hover {
-        text-decoration: underline;
-        font-weight: bold;
-    }
-
-    /* 菜谱详情页：选中准备加入清单的食材的高亮效果 */
-    .item-selected {
-        background-color: rgba(45, 106, 79, 0.06) !important; /* 极浅的罗勒绿背景 */
-        border-left: 4px solid var(--fm-primary) !important; /* 左侧绿色加粗提示条 */
+        transform: none !important;
     }
 }
