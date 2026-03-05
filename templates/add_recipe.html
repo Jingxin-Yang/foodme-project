@@ -3,139 +3,83 @@
 {% block title %}Add New Recipe - FoodMe{% endblock %}
 
 {% block content %}
-<div class="row mb-4">
-    <div class="col-md-8">
-        <h2 class="fw-bold">Create New Recipe</h2>
-        <p class="text-muted">Share your culinary masterpiece with the world (or just save it for yourself).</p>
-    </div>
-    <div class="col-md-4 text-md-end mt-3 mt-md-0 d-flex justify-content-md-end align-items-center">
-        <a href="{% url 'recipes' %}" class="btn btn-outline-secondary fw-bold me-2">CANCEL</a>
-        <button type="submit" form="recipeForm" class="btn btn-primary fw-bold">SAVE RECIPE</button>
+<div class="row justify-content-center mb-5">
+    <div class="col-lg-8 col-md-10">
+        
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <div>
+                <h2 class="fw-bold mb-0">Create New Recipe</h2>
+                <p class="text-muted">Share your delicious creation with the world.</p>
+            </div>
+            <a href="{% url 'recipes' %}" class="btn btn-outline-secondary fw-bold">Cancel</a>
+        </div>
+
+        <div class="card shadow-sm border-0 p-4 p-md-5">
+            <form id="addRecipeForm">
+                
+                <h5 class="fw-bold border-bottom pb-2 mb-4" style="color: var(--fm-primary);">Basic Info</h5>
+                
+                <div class="mb-4">
+                    <label class="form-label fw-bold text-muted small text-uppercase">Recipe Title <span class="text-danger">*</span></label>
+                    <input type="text" class="form-control form-control-lg bg-light border-0" placeholder="e.g. Spicy Thai Basil Chicken" required>
+                </div>
+
+                <div class="mb-4">
+                    <label class="form-label fw-bold text-muted small text-uppercase">Description</label>
+                    <textarea class="form-control bg-light border-0" rows="3" placeholder="A short description of this dish..."></textarea>
+                </div>
+
+                <div class="row g-3 mb-5">
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold text-muted small text-uppercase">Prep Time (min)</label>
+                        <input type="number" class="form-control bg-light border-0" placeholder="15">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold text-muted small text-uppercase">Cook Time (min)</label>
+                        <input type="number" class="form-control bg-light border-0" placeholder="20">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label fw-bold text-muted small text-uppercase">Servings</label>
+                        <input type="number" class="form-control bg-light border-0" placeholder="4">
+                    </div>
+                </div>
+
+                <h5 class="fw-bold border-bottom pb-2 mb-4" style="color: var(--fm-primary);">Ingredients</h5>
+                
+                <div id="ingredientsContainer" class="mb-3">
+                    <div class="d-flex gap-2 mb-2 ingredient-row transition-all">
+                        <input type="text" class="form-control bg-light border-0 w-25" placeholder="Amount (e.g. 2)">
+                        <input type="text" class="form-control bg-light border-0 w-25" placeholder="Unit (e.g. lbs)">
+                        <input type="text" class="form-control bg-light border-0 w-50" placeholder="Ingredient (e.g. Chicken Breast)">
+                        <button type="button" class="btn btn-outline-danger border-0 remove-row-btn" title="Remove" disabled>✕</button>
+                    </div>
+                </div>
+                
+                <button type="button" id="addIngredientBtn" class="btn btn-outline-secondary btn-sm fw-bold rounded-pill px-3 mb-5">
+                    + Add Ingredient
+                </button>
+
+                <h5 class="fw-bold border-bottom pb-2 mb-4" style="color: var(--fm-primary);">Instructions</h5>
+                
+                <div id="stepsContainer" class="mb-3">
+                    <div class="d-flex gap-3 mb-3 step-row transition-all align-items-start">
+                        <div class="step-number bg-dark text-white rounded-circle d-flex align-items-center justify-content-center flex-shrink-0 mt-1" style="width: 32px; height: 32px; font-weight: bold;">1</div>
+                        <textarea class="form-control bg-light border-0 flex-grow-1" rows="2" placeholder="Describe this step..."></textarea>
+                        <button type="button" class="btn btn-outline-danger border-0 remove-row-btn mt-1" title="Remove" disabled>✕</button>
+                    </div>
+                </div>
+
+                <button type="button" id="addStepBtn" class="btn btn-outline-secondary btn-sm fw-bold rounded-pill px-3 mb-5">
+                    + Add Step
+                </button>
+
+                <hr class="mb-4">
+                <button type="submit" class="btn btn-success btn-lg w-100 fw-bold shadow-sm" style="background-color: var(--fm-primary); border: none;">
+                    SAVE RECIPE
+                </button>
+
+            </form>
+        </div>
     </div>
 </div>
-
-<form id="recipeForm" action="#" method="POST" enctype="multipart/form-data">
-    <div class="row g-4 mb-5">
-        
-        <div class="col-lg-8">
-            
-            <div class="card shadow-sm border-0 mb-4 p-4">
-                <h5 class="fw-bold mb-4 border-bottom pb-2">Basic Information</h5>
-                
-                <div class="mb-4">
-                    <label for="recipeTitle" class="form-label small text-muted text-uppercase fw-bold">Recipe Title</label>
-                    <input type="text" class="form-control form-control-lg" id="recipeTitle" placeholder="e.g., Spicy Thai Basil Chicken" required>
-                </div>
-
-                <div class="mb-4">
-                    <label for="recipeDescription" class="form-label small text-muted text-uppercase fw-bold">Description</label>
-                    <textarea class="form-control" id="recipeDescription" rows="3" placeholder="A short description of what makes this recipe great..."></textarea>
-                </div>
-
-                <div class="row g-3 mb-4">
-                    <div class="col-md-4">
-                        <label for="prepTime" class="form-label small text-muted text-uppercase fw-bold">Prep Time (min)</label>
-                        <input type="number" class="form-control" id="prepTime" min="0" placeholder="15">
-                    </div>
-                    <div class="col-md-4">
-                        <label for="cookTime" class="form-label small text-muted text-uppercase fw-bold">Cook Time (min)</label>
-                        <input type="number" class="form-control" id="cookTime" min="0" placeholder="20">
-                    </div>
-                    <div class="col-md-4">
-                        <label for="servings" class="form-label small text-muted text-uppercase fw-bold">Servings</label>
-                        <input type="number" class="form-control" id="servings" min="1" placeholder="4">
-                    </div>
-                </div>
-            </div>
-
-            <div class="card shadow-sm border-0 mb-4 p-4">
-                <h5 class="fw-bold mb-4 border-bottom pb-2">Instructions</h5>
-                
-                <div class="d-flex mb-3">
-                    <div class="me-3 mt-1">
-                        <span class="badge bg-dark rounded-circle p-2 px-3">1</span>
-                    </div>
-                    <div class="flex-grow-1">
-                        <textarea class="form-control" rows="2" placeholder="Describe this step..."></textarea>
-                    </div>
-                    <div class="ms-2 mt-1">
-                        <button type="button" class="btn btn-sm btn-outline-danger border-0">✕</button>
-                    </div>
-                </div>
-                
-                <div class="d-flex mb-3">
-                    <div class="me-3 mt-1">
-                        <span class="badge bg-dark rounded-circle p-2 px-3">2</span>
-                    </div>
-                    <div class="flex-grow-1">
-                        <textarea class="form-control" rows="2" placeholder="Describe this step..."></textarea>
-                    </div>
-                    <div class="ms-2 mt-1">
-                        <button type="button" class="btn btn-sm btn-outline-danger border-0">✕</button>
-                    </div>
-                </div>
-
-                <button type="button" class="btn btn-outline-secondary btn-sm fw-bold mt-2 w-100">+ ADD ANOTHER STEP</button>
-            </div>
-            
-        </div>
-
-        <div class="col-lg-4">
-            
-            <div class="card shadow-sm border-0 mb-4 p-4 text-center">
-                <h5 class="fw-bold mb-4 border-bottom pb-2 text-start">Photo</h5>
-                
-                <div class="bg-light border rounded-3 d-flex flex-column align-items-center justify-content-center p-4 mb-3" style="border-style: dashed !important; height: 180px;">
-                    <span class="fs-1 mb-2">📷</span>
-                    <small class="text-muted fw-bold">Upload a photo</small>
-                    <small class="text-muted" style="font-size: 0.7rem;">JPEG, PNG up to 5MB</small>
-                </div>
-                <input class="form-control form-control-sm" type="file" id="recipeImage">
-            </div>
-
-            <div class="card shadow-sm border-0 mb-4 p-4">
-                <h5 class="fw-bold mb-4 border-bottom pb-2">Ingredients</h5>
-                
-                <div class="row g-2 mb-2">
-                    <div class="col-4">
-                        <input type="text" class="form-control form-control-sm" placeholder="Amt (e.g. 1 cup)">
-                    </div>
-                    <div class="col-7">
-                        <input type="text" class="form-control form-control-sm" placeholder="Ingredient name">
-                    </div>
-                    <div class="col-1 text-end">
-                        <button type="button" class="btn btn-sm text-danger p-0 mt-1">✕</button>
-                    </div>
-                </div>
-
-                <div class="row g-2 mb-2">
-                    <div class="col-4">
-                        <input type="text" class="form-control form-control-sm" placeholder="Amt (e.g. 2 tbsp)">
-                    </div>
-                    <div class="col-7">
-                        <input type="text" class="form-control form-control-sm" placeholder="Ingredient name">
-                    </div>
-                    <div class="col-1 text-end">
-                        <button type="button" class="btn btn-sm text-danger p-0 mt-1">✕</button>
-                    </div>
-                </div>
-
-                <button type="button" class="btn btn-outline-secondary btn-sm fw-bold mt-3 w-100">+ ADD INGREDIENT</button>
-            </div>
-
-            <div class="card shadow-sm border-0 p-4">
-                <h5 class="fw-bold mb-3 border-bottom pb-2">Tags</h5>
-                <select class="form-select mb-3" multiple aria-label="Multiple select example" style="height: 120px;">
-                    <option value="vegetarian">Vegetarian</option>
-                    <option value="vegan">Vegan</option>
-                    <option value="keto">Keto</option>
-                    <option value="high-protein">High-Protein</option>
-                    <option value="quick">Quick & Easy</option>
-                </select>
-                <small class="text-muted">Hold Ctrl (Windows) or Cmd (Mac) to select multiple tags.</small>
-            </div>
-
-        </div>
-    </div>
-</form>
 {% endblock %}

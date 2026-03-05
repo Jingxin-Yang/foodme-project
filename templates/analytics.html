@@ -3,206 +3,138 @@
 {% block title %}Analytics - FoodMe{% endblock %}
 
 {% block content %}
-<div class="row mb-4">
-    <div class="col-12">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<div class="row mb-4 align-items-center">
+    <div class="col-md-8">
         <h2 class="fw-bold">Analytics & Insights</h2>
-        <p class="text-muted">Track your cooking habits and trends</p>
+        <p class="text-muted mb-0">Track your cooking habits and nutritional trends</p>
     </div>
-</div>
-
-<div class="card shadow-sm border-0 mb-4">
-    <div class="card-body d-flex flex-column flex-md-row justify-content-between align-items-center py-3">
-        <div class="btn-group mb-3 mb-md-0" role="group">
-            <button type="button" class="btn btn-outline-secondary btn-sm px-3">WEEK</button>
-            <button type="button" class="btn btn-dark btn-sm px-3">MONTH</button>
-            <button type="button" class="btn btn-outline-secondary btn-sm px-3">3 MONTHS</button>
-            <button type="button" class="btn btn-outline-secondary btn-sm px-3">YEAR</button>
-            <button type="button" class="btn btn-outline-secondary btn-sm px-3">ALL TIME</button>
+    <div class="col-md-4 text-md-end mt-3 mt-md-0">
+        <div class="btn-group shadow-sm" role="group">
+            <button type="button" class="btn btn-outline-secondary fw-bold">WEEK</button>
+            <button type="button" class="btn btn-dark fw-bold active">MONTH</button>
+            <button type="button" class="btn btn-outline-secondary fw-bold">YEAR</button>
         </div>
-        <span class="text-muted small">Showing: February 2026</span>
     </div>
 </div>
 
-<div class="row g-3 mb-4">
-    <div class="col-md-3 col-6">
-        <div class="card p-3 shadow-sm border-0 h-100">
-            <h6 class="text-muted text-uppercase small fw-bold mb-2">Meals Cooked</h6>
+<div class="row g-4 mb-5">
+    <div class="col-md-3 col-sm-6">
+        <div class="card h-100 border-0 shadow-sm p-3 border-start border-4 border-primary transition-all meal-card">
+            <h6 class="text-uppercase text-muted small fw-bold mb-2">Meals Cooked</h6>
             <h2 class="mb-1">42</h2>
             <small class="text-success fw-bold">↑ 12% <span class="text-muted fw-normal">from last month</span></small>
         </div>
     </div>
-    <div class="col-md-3 col-6">
-        <div class="card p-3 shadow-sm border-0 h-100">
-            <h6 class="text-muted text-uppercase small fw-bold mb-2">Unique Recipes</h6>
+    <div class="col-md-3 col-sm-6">
+        <div class="card h-100 border-0 shadow-sm p-3 border-start border-4 border-success transition-all meal-card">
+            <h6 class="text-uppercase text-muted small fw-bold mb-2">Unique Recipes</h6>
             <h2 class="mb-1">18</h2>
             <small class="text-success fw-bold">↑ 6% <span class="text-muted fw-normal">from last month</span></small>
         </div>
     </div>
-    <div class="col-md-3 col-6">
-        <div class="card p-3 shadow-sm border-0 h-100">
-            <h6 class="text-muted text-uppercase small fw-bold mb-2">Cooking Streak</h6>
-            <h2 class="mb-1">12 days</h2>
+    <div class="col-md-3 col-sm-6">
+        <div class="card h-100 border-0 shadow-sm p-3 border-start border-4 border-warning transition-all meal-card">
+            <h6 class="text-uppercase text-muted small fw-bold mb-2">Cooking Streak</h6>
+            <h2 class="mb-1">12 <span class="fs-6 text-muted fw-normal">days</span></h2>
             <small class="text-muted">Current streak</small>
         </div>
     </div>
-    <div class="col-md-3 col-6">
-        <div class="card p-3 shadow-sm border-0 h-100">
-            <h6 class="text-muted text-uppercase small fw-bold mb-2">Avg. Prep Time</h6>
-            <h2 class="mb-1">28 min</h2>
+    <div class="col-md-3 col-sm-6">
+        <div class="card h-100 border-0 shadow-sm p-3 border-start border-4 border-danger transition-all meal-card">
+            <h6 class="text-uppercase text-muted small fw-bold mb-2">Avg. Prep Time</h6>
+            <h2 class="mb-1">28 <span class="fs-6 text-muted fw-normal">min</span></h2>
             <small class="text-danger fw-bold">↓ 8% <span class="text-muted fw-normal">from last month</span></small>
         </div>
     </div>
 </div>
 
-<div class="row g-4 mb-4">
-    <div class="col-lg-6">
-        <div class="card shadow-sm border-0 h-100">
-            <div class="card-header bg-white border-bottom-0 pt-4 pb-0">
-                <h6 class="text-uppercase fw-bold mb-0 border-bottom pb-2">Cooking Frequency</h6>
-            </div>
-            <div class="card-body d-flex flex-column justify-content-end align-items-center" style="min-height: 250px;">
-                <div class="w-100 d-flex justify-content-between align-items-end px-3" style="height: 150px; border-bottom: 2px solid #dee2e6;">
-                    <div class="bg-secondary bg-opacity-25 rounded-top" style="width: 12%; height: 30%;"></div>
-                    <div class="bg-secondary bg-opacity-25 rounded-top" style="width: 12%; height: 50%;"></div>
-                    <div class="bg-primary bg-opacity-75 rounded-top" style="width: 12%; height: 80%;"></div>
-                    <div class="bg-secondary bg-opacity-25 rounded-top" style="width: 12%; height: 40%;"></div>
-                    <div class="bg-secondary bg-opacity-25 rounded-top" style="width: 12%; height: 60%;"></div>
-                    <div class="bg-secondary bg-opacity-25 rounded-top" style="width: 12%; height: 70%;"></div>
-                </div>
-                <div class="w-100 d-flex justify-content-between px-3 mt-2 text-muted small fw-bold">
-                    <span>JAN</span><span>FEB</span><span>MAR</span><span>APR</span><span>MAY</span><span>JUN</span>
-                </div>
-                <small class="text-muted mt-3">Meals per month</small>
+<div class="row g-4 mb-5">
+    <div class="col-lg-8">
+        <div class="card shadow-sm border-0 h-100 p-4">
+            <h6 class="text-uppercase fw-bold mb-4" style="color: var(--fm-primary);">Cooking Frequency</h6>
+            <div style="height: 300px; width: 100%;">
+                <canvas id="frequencyChart"></canvas>
             </div>
         </div>
     </div>
-
-    <div class="col-lg-6">
-        <div class="card shadow-sm border-0 h-100">
-            <div class="card-header bg-white border-bottom-0 pt-4 pb-0">
-                <h6 class="text-uppercase fw-bold mb-0 border-bottom pb-2">Most Cooked Recipes</h6>
+    
+    <div class="col-lg-4">
+        <div class="card shadow-sm border-0 h-100 p-4">
+            <h6 class="text-uppercase fw-bold mb-4" style="color: var(--fm-primary);">Most Cooked</h6>
+            
+            <div class="mb-3">
+                <div class="d-flex justify-content-between mb-1">
+                    <span class="fw-bold small text-dark">1. Grilled Salmon</span>
+                    <span class="small text-muted">8x</span>
+                </div>
+                <div class="progress" style="height: 8px;">
+                    <div class="progress-bar" style="width: 100%; background-color: var(--fm-primary);"></div>
+                </div>
             </div>
-            <div class="card-body">
-                
-                <div class="mb-3">
-                    <div class="d-flex justify-content-between mb-1 small">
-                        <span class="fw-bold">1. Grilled Salmon</span>
-                        <span class="text-muted">8x this month</span>
-                    </div>
-                    <div class="progress" style="height: 12px;">
-                        <div class="progress-bar bg-dark" role="progressbar" style="width: 100%"></div>
-                    </div>
+            <div class="mb-3">
+                <div class="d-flex justify-content-between mb-1">
+                    <span class="fw-bold small text-dark">2. Chicken Alfredo</span>
+                    <span class="small text-muted">6x</span>
                 </div>
-                
-                <div class="mb-3">
-                    <div class="d-flex justify-content-between mb-1 small">
-                        <span class="fw-bold">2. Chicken Alfredo</span>
-                        <span class="text-muted">6x this month</span>
-                    </div>
-                    <div class="progress" style="height: 12px;">
-                        <div class="progress-bar bg-dark" role="progressbar" style="width: 75%"></div>
-                    </div>
+                <div class="progress" style="height: 8px;">
+                    <div class="progress-bar bg-success" style="width: 75%"></div>
                 </div>
-
-                <div class="mb-3">
-                    <div class="d-flex justify-content-between mb-1 small">
-                        <span class="fw-bold">3. Veggie Stir Fry</span>
-                        <span class="text-muted">5x this month</span>
-                    </div>
-                    <div class="progress" style="height: 12px;">
-                        <div class="progress-bar bg-dark" role="progressbar" style="width: 60%"></div>
-                    </div>
+            </div>
+            <div class="mb-3">
+                <div class="d-flex justify-content-between mb-1">
+                    <span class="fw-bold small text-dark">3. Veggie Stir Fry</span>
+                    <span class="small text-muted">5x</span>
                 </div>
-
-                <div class="mb-3">
-                    <div class="d-flex justify-content-between mb-1 small">
-                        <span class="fw-bold">4. Beef Tacos</span>
-                        <span class="text-muted">4x this month</span>
-                    </div>
-                    <div class="progress" style="height: 12px;">
-                        <div class="progress-bar bg-dark" role="progressbar" style="width: 50%"></div>
-                    </div>
+                <div class="progress" style="height: 8px;">
+                    <div class="progress-bar bg-warning" style="width: 60%"></div>
                 </div>
-
-                <div class="mb-0">
-                    <div class="d-flex justify-content-between mb-1 small">
-                        <span class="fw-bold">5. Oatmeal Bowl</span>
-                        <span class="text-muted">4x this month</span>
-                    </div>
-                    <div class="progress" style="height: 12px;">
-                        <div class="progress-bar bg-dark" role="progressbar" style="width: 50%"></div>
-                    </div>
+            </div>
+            <div class="mb-3">
+                <div class="d-flex justify-content-between mb-1">
+                    <span class="fw-bold small text-dark">4. Beef Tacos</span>
+                    <span class="small text-muted">4x</span>
                 </div>
-
+                <div class="progress" style="height: 8px;">
+                    <div class="progress-bar bg-danger" style="width: 50%"></div>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
-<div class="card shadow-sm border-0 mb-5">
-    <div class="card-header bg-white border-bottom-0 pt-4 pb-0">
-        <h6 class="text-uppercase fw-bold mb-0 border-bottom pb-2">Meal Type Distribution</h6>
-    </div>
-    <div class="card-body">
-        <div class="row g-3">
-            <div class="col-md-2 col-4">
-                <div class="border rounded p-2 h-100 d-flex flex-column justify-content-between">
-                    <small class="text-muted text-uppercase fw-bold d-block mb-1" style="font-size: 0.7rem;">High-Protein</small>
-                    <h4 class="mb-2">15</h4>
-                    <div class="progress rounded-0 mb-1" style="height: 20px;">
-                        <div class="progress-bar bg-dark" style="width: 100%;"></div>
+<div class="row g-4 mb-5">
+    <div class="col-lg-12">
+        <div class="card shadow-sm border-0 p-4">
+            <h6 class="text-uppercase fw-bold mb-4" style="color: var(--fm-primary);">Dietary Distribution</h6>
+            <div class="row align-items-center">
+                <div class="col-md-5 text-center">
+                    <div style="height: 250px; width: 100%; display: flex; justify-content: center;">
+                        <canvas id="dietChart"></canvas>
                     </div>
-                    <small class="text-muted" style="font-size: 0.7rem;">36% of meals</small>
                 </div>
-            </div>
-            <div class="col-md-2 col-4">
-                <div class="border rounded p-2 h-100 d-flex flex-column justify-content-between">
-                    <small class="text-muted text-uppercase fw-bold d-block mb-1" style="font-size: 0.7rem;">Vegetarian</small>
-                    <h4 class="mb-2">12</h4>
-                    <div class="progress rounded-0 mb-1" style="height: 20px;">
-                        <div class="progress-bar bg-dark" style="width: 80%;"></div>
+                <div class="col-md-7 mt-4 mt-md-0">
+                    <div class="row g-3">
+                        <div class="col-sm-4">
+                            <div class="p-3 bg-light rounded text-center border-bottom border-4" style="border-color: var(--fm-primary) !important;">
+                                <h3 class="mb-0 text-dark">36%</h3>
+                                <small class="text-muted fw-bold text-uppercase">High-Protein</small>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="p-3 bg-light rounded text-center border-bottom border-4 border-success">
+                                <h3 class="mb-0 text-dark">29%</h3>
+                                <small class="text-muted fw-bold text-uppercase">Vegetarian</small>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <div class="p-3 bg-light rounded text-center border-bottom border-4 border-warning">
+                                <h3 class="mb-0 text-dark">19%</h3>
+                                <small class="text-muted fw-bold text-uppercase">Quick Meals</small>
+                            </div>
+                        </div>
                     </div>
-                    <small class="text-muted" style="font-size: 0.7rem;">29% of meals</small>
-                </div>
-            </div>
-            <div class="col-md-2 col-4">
-                <div class="border rounded p-2 h-100 d-flex flex-column justify-content-between">
-                    <small class="text-muted text-uppercase fw-bold d-block mb-1" style="font-size: 0.7rem;">Quick</small>
-                    <h4 class="mb-2">8</h4>
-                    <div class="progress rounded-0 mb-1" style="height: 20px;">
-                        <div class="progress-bar bg-dark" style="width: 53%;"></div>
-                    </div>
-                    <small class="text-muted" style="font-size: 0.7rem;">19% of meals</small>
-                </div>
-            </div>
-            <div class="col-md-2 col-4">
-                <div class="border rounded p-2 h-100 d-flex flex-column justify-content-between">
-                    <small class="text-muted text-uppercase fw-bold d-block mb-1" style="font-size: 0.7rem;">Keto</small>
-                    <h4 class="mb-2">4</h4>
-                    <div class="progress rounded-0 mb-1" style="height: 20px;">
-                        <div class="progress-bar bg-dark" style="width: 26%;"></div>
-                    </div>
-                    <small class="text-muted" style="font-size: 0.7rem;">10% of meals</small>
-                </div>
-            </div>
-            <div class="col-md-2 col-4">
-                <div class="border rounded p-2 h-100 d-flex flex-column justify-content-between">
-                    <small class="text-muted text-uppercase fw-bold d-block mb-1" style="font-size: 0.7rem;">Carnivore</small>
-                    <h4 class="mb-2">2</h4>
-                    <div class="progress rounded-0 mb-1" style="height: 20px;">
-                        <div class="progress-bar bg-dark" style="width: 13%;"></div>
-                    </div>
-                    <small class="text-muted" style="font-size: 0.7rem;">5% of meals</small>
-                </div>
-            </div>
-            <div class="col-md-2 col-4">
-                <div class="border rounded p-2 h-100 d-flex flex-column justify-content-between">
-                    <small class="text-muted text-uppercase fw-bold d-block mb-1" style="font-size: 0.7rem;">Vegan</small>
-                    <h4 class="mb-2">1</h4>
-                    <div class="progress rounded-0 mb-1" style="height: 20px;">
-                        <div class="progress-bar bg-dark" style="width: 6%;"></div>
-                    </div>
-                    <small class="text-muted" style="font-size: 0.7rem;">2% of meals</small>
                 </div>
             </div>
         </div>

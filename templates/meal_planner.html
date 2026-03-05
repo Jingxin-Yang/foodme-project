@@ -4,118 +4,177 @@
 
 {% block content %}
 <div class="row mb-4 align-items-center">
-    <div class="col-md-6">
+    <div class="col-md-8">
         <h2 class="fw-bold">Meal Planner</h2>
         <p class="text-muted mb-0">Plan your meals for the week</p>
     </div>
-    <div class="col-md-6 text-md-end mt-3 mt-md-0">
-        <button class="btn btn-primary fw-bold shadow-sm">GENERATE SHOPPING LIST →</button>
+    <div class="col-md-4 text-md-end mt-3 mt-md-0">
+        <a href="{% url 'shopping_list' %}" class="btn btn-success fw-bold shadow-sm" style="background-color: var(--fm-primary); border: none;">
+            🛒 GENERATE SHOPPING LIST →
+        </a>
     </div>
 </div>
 
-<div class="card shadow-sm border-0 mb-4">
-    <div class="card-body d-flex justify-content-between align-items-center py-2">
-        <button class="btn btn-outline-secondary btn-sm px-3">&lt;</button>
+<div class="card shadow-sm border-0 mb-4 py-3">
+    <div class="d-flex justify-content-between align-items-center px-4">
+        <button class="btn btn-outline-secondary rounded-circle px-3 fw-bold">&lt;</button>
         <div class="text-center">
-            <h6 class="mb-0 fw-bold">WEEK OF FEBRUARY 3-9, 2026</h6>
-            <small class="text-muted">Current Week</small>
+            <h5 class="fw-bold mb-0 text-dark">WEEK OF FEBRUARY 3-9, 2026</h5>
+            <span class="badge bg-light text-success border mt-1">Current Week</span>
         </div>
-        <button class="btn btn-outline-secondary btn-sm px-3">&gt;</button>
+        <button class="btn btn-outline-secondary rounded-circle px-3 fw-bold">&gt;</button>
     </div>
 </div>
 
 <div class="card shadow-sm border-0 mb-5 overflow-hidden">
     <div class="table-responsive">
-        <table class="table table-bordered text-center align-middle mb-0" style="min-width: 900px;">
+        <table class="table table-bordered mb-0 text-center align-middle" style="min-width: 900px;">
             <thead class="bg-light">
                 <tr>
-                    <th class="text-muted small text-uppercase py-3" style="width: 12%;">Meal Type</th>
-                    <th>MON<br><small class="fw-normal">3</small></th>
-                    <th>TUE<br><small class="fw-normal">4</small></th>
-                    <th>WED<br><small class="fw-normal">5</small></th>
-                    <th>THU<br><small class="fw-normal">6</small></th>
-                    <th>FRI<br><small class="fw-normal">7</small></th>
-                    <th>SAT<br><small class="fw-normal">8</small></th>
-                    <th>SUN<br><small class="fw-normal">9</small></th>
+                    <th class="py-3 text-muted small fw-bold" style="width: 12%;">MEAL TYPE</th>
+                    <th class="py-3" style="width: 12.5%;">MON <br><span class="fw-normal text-muted fs-6">3</span></th>
+                    <th class="py-3 bg-success bg-opacity-10" style="width: 12.5%;">TUE <br><span class="fw-normal text-success fs-6">4 (Today)</span></th>
+                    <th class="py-3" style="width: 12.5%;">WED <br><span class="fw-normal text-muted fs-6">5</span></th>
+                    <th class="py-3" style="width: 12.5%;">THU <br><span class="fw-normal text-muted fs-6">6</span></th>
+                    <th class="py-3" style="width: 12.5%;">FRI <br><span class="fw-normal text-muted fs-6">7</span></th>
+                    <th class="py-3" style="width: 12.5%;">SAT <br><span class="fw-normal text-muted fs-6">8</span></th>
+                    <th class="py-3" style="width: 12.5%;">SUN <br><span class="fw-normal text-muted fs-6">9</span></th>
                 </tr>
             </thead>
             <tbody>
                 <tr>
-                    <td class="text-muted small fw-bold">BREAKFAST</td>
-                    <td class="p-2 align-top">
-                        <div class="border rounded p-2 text-start position-relative bg-white shadow-sm">
-                            <div class="bg-dark rounded mb-1" style="height: 10px; width: 80%;"></div>
-                            <div class="bg-secondary bg-opacity-25 rounded mb-2" style="height: 8px; width: 50%;"></div>
-                            <button class="btn btn-link text-danger text-decoration-none p-0 small" style="font-size: 0.8rem;">Remove</button>
+                    <td class="bg-light text-muted small fw-bold text-uppercase">Breakfast</td>
+                    <td class="p-2">
+                        <div class="p-2 bg-white border rounded shadow-sm text-start position-relative meal-card transition-all">
+                            <div class="d-flex align-items-center mb-1">
+                                <img src="https://images.unsplash.com/photo-1476224203421-9ac39bcb3327?auto=format&fit=crop&w=100&q=80" class="rounded-circle me-2" width="24" height="24" style="object-fit: cover;">
+                                <span class="small fw-bold text-dark lh-1">Avocado Toast</span>
+                            </div>
+                            <small class="text-danger remove-meal" style="cursor: pointer;">Remove</small>
                         </div>
                     </td>
-                    <td class="p-2 align-top">
-                        <div class="border rounded p-2 text-start position-relative bg-white shadow-sm">
-                            <div class="bg-dark rounded mb-1" style="height: 10px; width: 90%;"></div>
-                            <div class="bg-secondary bg-opacity-25 rounded mb-2" style="height: 8px; width: 60%;"></div>
-                            <button class="btn btn-link text-danger text-decoration-none p-0 small" style="font-size: 0.8rem;">Remove</button>
+                    <td class="p-2 bg-success bg-opacity-10">
+                        <div class="p-2 bg-white border rounded shadow-sm text-start position-relative meal-card transition-all border-success">
+                            <div class="d-flex align-items-center mb-1">
+                                <img src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?auto=format&fit=crop&w=100&q=80" class="rounded-circle me-2" width="24" height="24" style="object-fit: cover;">
+                                <span class="small fw-bold text-dark lh-1">Berry Smoothie</span>
+                            </div>
+                            <small class="text-danger remove-meal" style="cursor: pointer;">Remove</small>
                         </div>
                     </td>
-                    <td class="p-2 align-top">
-                        <div class="border rounded p-2 text-start position-relative bg-white shadow-sm">
-                            <div class="bg-dark rounded mb-1" style="height: 10px; width: 70%;"></div>
-                            <div class="bg-secondary bg-opacity-25 rounded mb-2" style="height: 8px; width: 40%;"></div>
-                            <button class="btn btn-link text-danger text-decoration-none p-0 small" style="font-size: 0.8rem;">Remove</button>
-                        </div>
-                    </td>
-                    <td></td><td></td><td></td><td></td>
+                    <td class="p-2"></td>
+                    <td class="p-2"></td>
+                    <td class="p-2"></td>
+                    <td class="p-2"></td>
+                    <td class="p-2"></td>
                 </tr>
+                
                 <tr>
-                    <td class="text-muted small fw-bold">LUNCH</td>
-                    <td class="p-2 align-top">
-                        <div class="border rounded p-2 text-start position-relative bg-white shadow-sm">
-                            <div class="bg-dark rounded mb-1" style="height: 10px; width: 85%;"></div>
-                            <div class="bg-secondary bg-opacity-25 rounded mb-2" style="height: 8px; width: 45%;"></div>
-                            <button class="btn btn-link text-danger text-decoration-none p-0 small" style="font-size: 0.8rem;">Remove</button>
+                    <td class="bg-light text-muted small fw-bold text-uppercase">Lunch</td>
+                    <td class="p-2">
+                        <div class="p-2 bg-white border rounded shadow-sm text-start position-relative meal-card transition-all">
+                            <div class="d-flex align-items-center mb-1">
+                                <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=100&q=80" class="rounded-circle me-2" width="24" height="24" style="object-fit: cover;">
+                                <span class="small fw-bold text-dark lh-1">Healthy Salad</span>
+                            </div>
+                            <small class="text-danger remove-meal" style="cursor: pointer;">Remove</small>
                         </div>
                     </td>
-                    <td></td><td></td><td></td><td></td><td></td><td></td>
+                    <td class="p-2 bg-success bg-opacity-10"></td>
+                    <td class="p-2">
+                        <div class="p-2 bg-white border rounded shadow-sm text-start position-relative meal-card transition-all">
+                            <div class="d-flex align-items-center mb-1">
+                                <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=100&q=80" class="rounded-circle me-2" width="24" height="24" style="object-fit: cover;">
+                                <span class="small fw-bold text-dark lh-1">Grilled Chicken</span>
+                            </div>
+                            <small class="text-danger remove-meal" style="cursor: pointer;">Remove</small>
+                        </div>
+                    </td>
+                    <td class="p-2"></td>
+                    <td class="p-2"></td>
+                    <td class="p-2"></td>
+                    <td class="p-2"></td>
                 </tr>
+
                 <tr>
-                    <td class="text-muted small fw-bold">DINNER</td>
-                    <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
-                </tr>
-                <tr>
-                    <td class="text-muted small fw-bold">SNACKS</td>
-                    <td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+                    <td class="bg-light text-muted small fw-bold text-uppercase">Dinner</td>
+                    <td class="p-2"></td>
+                    <td class="p-2 bg-success bg-opacity-10">
+                        <div class="p-2 bg-white border rounded shadow-sm text-start position-relative meal-card transition-all border-success">
+                            <div class="d-flex align-items-center mb-1">
+                                <img src="https://images.unsplash.com/photo-1460306855393-0410f61241c7?auto=format&fit=crop&w=100&q=80" class="rounded-circle me-2" width="24" height="24" style="object-fit: cover;">
+                                <span class="small fw-bold text-dark lh-1">Beef Burger</span>
+                            </div>
+                            <small class="text-danger remove-meal" style="cursor: pointer;">Remove</small>
+                        </div>
+                    </td>
+                    <td class="p-2"></td>
+                    <td class="p-2"></td>
+                    <td class="p-2"></td>
+                    <td class="p-2">
+                        <div class="p-2 bg-white border rounded shadow-sm text-start position-relative meal-card transition-all">
+                            <div class="d-flex align-items-center mb-1">
+                                <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=100&q=80" class="rounded-circle me-2" width="24" height="24" style="object-fit: cover;">
+                                <span class="small fw-bold text-dark lh-1">Margherita Pizza</span>
+                            </div>
+                            <small class="text-danger remove-meal" style="cursor: pointer;">Remove</small>
+                        </div>
+                    </td>
+                    <td class="p-2"></td>
                 </tr>
             </tbody>
         </table>
     </div>
 </div>
 
-<h5 class="fw-bold mb-3 border-bottom pb-2">ADD RECIPE TO PLAN</h5>
-<div class="row g-3 mb-5">
-    <div class="col-md-6">
-        <input type="text" class="form-control" placeholder="Type to search recipes...">
+<h5 class="fw-bold mb-3 text-uppercase" style="color: var(--fm-primary);">Add Recipe To Plan</h5>
+<div class="row g-3 mb-5 align-items-center">
+    <div class="col-md-8">
+        <input type="text" class="form-control form-control-lg bg-white shadow-sm border-0" placeholder="🔍 Search your favorite recipes to add...">
     </div>
-    <div class="col-md-6">
-        <select class="form-select">
-            <option>All Recipes</option>
+    <div class="col-md-4">
+        <select class="form-select form-select-lg bg-white shadow-sm border-0">
+            <option>All Categories</option>
             <option>Vegetarian</option>
-            <option>Keto</option>
+            <option>High-Protein</option>
         </select>
     </div>
-    <div class="col-md-3 mt-4">
-        <div class="card h-100 shadow-sm border-0">
-            <div class="bg-secondary bg-opacity-25" style="height: 120px;"></div>
-            <div class="card-body p-2 text-center">
-                <div class="bg-dark rounded mx-auto mb-2" style="height: 10px; width: 80%;"></div>
-                <button class="btn btn-sm btn-outline-primary w-100">+ Add to Plan</button>
+</div>
+
+<div class="row g-4 mb-5">
+    <div class="col-md-3 col-sm-6">
+        <div class="card h-100 shadow-sm border-0 meal-card transition-all">
+            <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=400&q=80" class="card-img-top object-fit-cover" height="120">
+            <div class="card-body p-3 text-center">
+                <h6 class="fw-bold mb-2">Healthy Salad</h6>
+                <button class="btn btn-sm btn-outline-primary w-100 fw-bold rounded-pill add-to-plan-btn">+ Add to Plan</button>
             </div>
         </div>
     </div>
-    <div class="col-md-3 mt-4">
-        <div class="card h-100 shadow-sm border-0">
-            <div class="bg-secondary bg-opacity-25" style="height: 120px;"></div>
-            <div class="card-body p-2 text-center">
-                <div class="bg-dark rounded mx-auto mb-2" style="height: 10px; width: 70%;"></div>
-                <button class="btn btn-sm btn-outline-primary w-100">+ Add to Plan</button>
+    <div class="col-md-3 col-sm-6">
+        <div class="card h-100 shadow-sm border-0 meal-card transition-all">
+            <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=400&q=80" class="card-img-top object-fit-cover" height="120">
+            <div class="card-body p-3 text-center">
+                <h6 class="fw-bold mb-2">Spicy Chicken</h6>
+                <button class="btn btn-sm btn-outline-primary w-100 fw-bold rounded-pill add-to-plan-btn">+ Add to Plan</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+        <div class="card h-100 shadow-sm border-0 meal-card transition-all">
+            <img src="https://images.unsplash.com/photo-1476224203421-9ac39bcb3327?auto=format&fit=crop&w=400&q=80" class="card-img-top object-fit-cover" height="120">
+            <div class="card-body p-3 text-center">
+                <h6 class="fw-bold mb-2">Avocado Toast</h6>
+                <button class="btn btn-sm btn-outline-primary w-100 fw-bold rounded-pill add-to-plan-btn">+ Add to Plan</button>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 col-sm-6">
+        <div class="card h-100 shadow-sm border-0 meal-card transition-all">
+            <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=400&q=80" class="card-img-top object-fit-cover" height="120">
+            <div class="card-body p-3 text-center">
+                <h6 class="fw-bold mb-2">Vegan Bowl</h6>
+                <button class="btn btn-sm btn-outline-primary w-100 fw-bold rounded-pill add-to-plan-btn">+ Add to Plan</button>
             </div>
         </div>
     </div>
