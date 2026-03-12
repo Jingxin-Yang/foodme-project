@@ -1,128 +1,164 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Spicy Thai Basil Chicken - FoodMe{% endblock %}
 
 {% block content %}
-<div class="mb-4">
-    <a href="{% url 'recipes' %}" class="text-decoration-none text-muted fw-bold small">← BACK TO RECIPES</a>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb mb-0">
+            <li class="breadcrumb-item"><a href="{% url 'recipes' %}" class="text-decoration-none text-muted">Recipes</a></li>
+            <li class="breadcrumb-item active fw-bold" aria-current="page">Spicy Thai Basil Chicken</li>
+        </ol>
+    </nav>
+    <div class="d-flex gap-2">
+        <button class="btn btn-outline-secondary btn-sm fw-bold">❤️ FAVORITE</button>
+        <button class="btn btn-primary btn-sm fw-bold">+ ADD TO PLANNER</button>
+    </div>
+</div>
+
+<div class="row mb-5">
+    <div class="col-lg-5 d-flex flex-column justify-content-center mb-4 mb-lg-0">
+        <h1 class="fw-bold mb-3 display-5">Spicy Thai Basil Chicken</h1>
+        <p class="text-muted mb-4">A quick, flavorful, and authentic Thai street food classic that you can make at home in under 30 minutes. Perfect for busy weeknights!</p>
+        
+        <div class="d-flex flex-wrap gap-2 mb-4">
+            <span class="badge border text-dark bg-light px-3 py-2 rounded-pill">HIGH-PROTEIN</span>
+            <span class="badge border text-dark bg-light px-3 py-2 rounded-pill">QUICK</span>
+            <span class="badge border text-dark bg-light px-3 py-2 rounded-pill">SPICY</span>
+        </div>
+        
+        <div class="card shadow-sm border-0 bg-light">
+            <div class="card-body py-3">
+                <div class="row text-center g-0">
+                    <div class="col-3 border-end">
+                        <small class="text-muted text-uppercase fw-bold d-block" style="font-size: 0.7rem;">Prep</small>
+                        <span class="fw-bold">10 min</span>
+                    </div>
+                    <div class="col-3 border-end">
+                        <small class="text-muted text-uppercase fw-bold d-block" style="font-size: 0.7rem;">Cook</small>
+                        <span class="fw-bold">15 min</span>
+                    </div>
+                    <div class="col-3 border-end">
+                        <small class="text-muted text-uppercase fw-bold d-block" style="font-size: 0.7rem;">Yields</small>
+                        <span class="fw-bold">4 Servings</span>
+                    </div>
+                    <div class="col-3">
+                        <small class="text-muted text-uppercase fw-bold d-block" style="font-size: 0.7rem;">Calories</small>
+                        <span class="fw-bold">350 kcal</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="col-lg-7">
+        <!-- Unsplash food image; onerror falls back to local placeholder -->
+        <img src="https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=800&h=500&fit=crop"
+             alt="Spicy Thai Basil Chicken"
+             class="rounded-4 shadow-sm w-100"
+             style="height: 400px; object-fit: cover;"
+             onerror="this.onerror=null; this.src='{% static 'img/recipe_placeholder.svg' %}';">
+    </div>
 </div>
 
 <div class="row g-5 mb-5">
-    <div class="col-lg-5">
-        <h1 class="fw-bold display-5 mb-3" style="color: var(--fm-primary);">Spicy Thai Basil Chicken</h1>
-        <p class="text-muted fs-5 mb-4">A quick, flavorful, and authentic Thai street food classic that you can make at home in under 30 minutes. Perfect for busy weeknights!</p>
-        
-        <div class="d-flex flex-wrap gap-2 mb-4">
-            <span class="badge bg-light border text-dark px-3 py-2 rounded-pill shadow-sm">HIGH-PROTEIN</span>
-            <span class="badge bg-light border text-dark px-3 py-2 rounded-pill shadow-sm">QUICK</span>
-            <span class="badge bg-light border text-dark px-3 py-2 rounded-pill shadow-sm">SPICY</span>
-        </div>
-
-        <div class="card shadow-sm border-0 mb-5 text-center">
-            <div class="card-body d-flex justify-content-around py-4">
-                <div>
-                    <span class="d-block small text-muted fw-bold text-uppercase mb-1">PREP</span>
-                    <span class="fs-5 fw-bold">10 min</span>
-                </div>
-                <div class="border-end"></div>
-                <div>
-                    <span class="d-block small text-muted fw-bold text-uppercase mb-1">COOK</span>
-                    <span class="fs-5 fw-bold">15 min</span>
-                </div>
-                <div class="border-end"></div>
-                <div>
-                    <span class="d-block small text-muted fw-bold text-uppercase mb-1">YIELDS</span>
-                    <span class="fs-5 fw-bold">4 Servings</span>
-                </div>
-                <div class="border-end"></div>
-                <div>
-                    <span class="d-block small text-muted fw-bold text-uppercase mb-1">CALORIES</span>
-                    <span class="fs-5 fw-bold">350 kcal</span>
-                </div>
+    <div class="col-lg-4">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-header bg-white border-bottom-0 pt-4 pb-2 d-flex justify-content-between align-items-center">
+                <h5 class="fw-bold mb-0">Ingredients</h5>
+                <button class="btn btn-sm btn-outline-secondary">🛒 ADD TO LIST</button>
             </div>
-        </div>
-
-        <div class="card shadow-sm border-0">
-            <div class="card-header bg-white border-bottom pb-3 pt-4 px-4 d-flex justify-content-between align-items-center">
-                <h4 class="fw-bold mb-0" style="color: var(--fm-primary);">Ingredients</h4>
-                <button id="addToListBtn" class="btn btn-outline-secondary btn-sm fw-bold rounded-pill px-3 transition-all">
-                    🛒 ADD TO LIST
-                </button>
+            <div class="card-body">
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item px-0 py-3 d-flex align-items-center border-bottom-dashed">
+                        <input class="form-check-input me-3" type="checkbox" style="width: 1.2rem; height: 1.2rem;">
+                        <div>
+                            <span class="fw-bold text-dark">1.5 lbs</span>
+                            <span class="text-muted ms-1">Ground chicken or thinly sliced chicken breast</span>
+                        </div>
+                    </li>
+                    <li class="list-group-item px-0 py-3 d-flex align-items-center border-bottom-dashed">
+                        <input class="form-check-input me-3" type="checkbox" style="width: 1.2rem; height: 1.2rem;">
+                        <div>
+                            <span class="fw-bold text-dark">1 cup</span>
+                            <span class="text-muted ms-1">Fresh Thai holy basil leaves</span>
+                        </div>
+                    </li>
+                    <li class="list-group-item px-0 py-3 d-flex align-items-center border-bottom-dashed">
+                        <input class="form-check-input me-3" type="checkbox" style="width: 1.2rem; height: 1.2rem;">
+                        <div>
+                            <span class="fw-bold text-dark">4 cloves</span>
+                            <span class="text-muted ms-1">Garlic, minced</span>
+                        </div>
+                    </li>
+                    <li class="list-group-item px-0 py-3 d-flex align-items-center border-bottom-dashed">
+                        <input class="form-check-input me-3" type="checkbox" style="width: 1.2rem; height: 1.2rem;">
+                        <div>
+                            <span class="fw-bold text-dark">2 tbsp</span>
+                            <span class="text-muted ms-1">Oyster sauce</span>
+                        </div>
+                    </li>
+                    <li class="list-group-item px-0 py-3 d-flex align-items-center border-bottom-dashed">
+                        <input class="form-check-input me-3" type="checkbox" style="width: 1.2rem; height: 1.2rem;">
+                        <div>
+                            <span class="fw-bold text-dark">1 tbsp</span>
+                            <span class="text-muted ms-1">Soy sauce</span>
+                        </div>
+                    </li>
+                </ul>
             </div>
-            <ul class="list-group list-group-flush" id="recipeIngredients">
-                <li class="list-group-item px-4 py-3 d-flex align-items-start transition-all">
-                    <input class="form-check-input me-3 mt-1 detail-checkbox" type="checkbox">
-                    <span><strong class="text-dark">1.5 lbs</strong> Ground chicken</span>
-                </li>
-                <li class="list-group-item px-4 py-3 d-flex align-items-start transition-all">
-                    <input class="form-check-input me-3 mt-1 detail-checkbox" type="checkbox">
-                    <span><strong class="text-dark">1 cup</strong> Fresh Thai holy basil leaves</span>
-                </li>
-                <li class="list-group-item px-4 py-3 d-flex align-items-start transition-all">
-                    <input class="form-check-input me-3 mt-1 detail-checkbox" type="checkbox">
-                    <span><strong class="text-dark">4 cloves</strong> Garlic, minced</span>
-                </li>
-                <li class="list-group-item px-4 py-3 d-flex align-items-start transition-all">
-                    <input class="form-check-input me-3 mt-1 detail-checkbox" type="checkbox">
-                    <span><strong class="text-dark">2 tbsp</strong> Oyster sauce</span>
-                </li>
-                <li class="list-group-item px-4 py-3 d-flex align-items-start transition-all">
-                    <input class="form-check-input me-3 mt-1 detail-checkbox" type="checkbox">
-                    <span><strong class="text-dark">1 tbsp</strong> Soy sauce</span>
-                </li>
-            </ul>
         </div>
     </div>
 
-    <div class="col-lg-7">
-        <img src="https://images.unsplash.com/photo-1564834724105-918b73d1b9e0?auto=format&fit=crop&w=1200&q=80" alt="Thai Basil Chicken" class="img-fluid rounded-4 shadow-sm mb-5 w-100 object-fit-cover" style="height: 400px;">
-        
-        <h4 class="fw-bold mb-4" style="color: var(--fm-primary);">Instructions</h4>
+    <div class="col-lg-8">
+        <h5 class="fw-bold mb-4">Instructions</h5>
         
         <div class="d-flex mb-4">
-            <div class="me-4 mt-1">
-                <span class="badge bg-dark rounded-circle p-2 d-flex align-items-center justify-content-center fs-6" style="width: 35px; height: 35px;">1</span>
+            <div class="me-3">
+                <div class="rounded-circle bg-dark text-white d-flex justify-content-center align-items-center fw-bold" style="width: 32px; height: 32px;">1</div>
             </div>
             <div>
-                <h6 class="fw-bold fs-5 text-dark">Prepare the Sauce</h6>
-                <p class="text-muted text-break">In a small bowl, whisk together the oyster sauce, soy sauce, fish sauce, and a pinch of sugar. Set aside.</p>
+                <h6 class="fw-bold mb-2">Prepare the Sauce</h6>
+                <p class="text-muted mb-0">In a small bowl, whisk together the oyster sauce, soy sauce, fish sauce, and a pinch of sugar. Set aside.</p>
+            </div>
+        </div>
+        
+        <div class="d-flex mb-4">
+            <div class="me-3">
+                <div class="rounded-circle bg-dark text-white d-flex justify-content-center align-items-center fw-bold" style="width: 32px; height: 32px;">2</div>
+            </div>
+            <div>
+                <h6 class="fw-bold mb-2">Sauté Aromatics</h6>
+                <p class="text-muted mb-0">Heat a wok or large skillet over medium-high heat. Add 1 tablespoon of cooking oil. Add the minced garlic and Thai chilies, stirring constantly for about 30 seconds until fragrant (be careful not to burn the garlic).</p>
             </div>
         </div>
 
         <div class="d-flex mb-4">
-            <div class="me-4 mt-1">
-                <span class="badge bg-dark rounded-circle p-2 d-flex align-items-center justify-content-center fs-6" style="width: 35px; height: 35px;">2</span>
+            <div class="me-3">
+                <div class="rounded-circle bg-dark text-white d-flex justify-content-center align-items-center fw-bold" style="width: 32px; height: 32px;">3</div>
             </div>
             <div>
-                <h6 class="fw-bold fs-5 text-dark">Sauté Aromatics</h6>
-                <p class="text-muted">Heat a wok or large skillet over medium-high heat. Add 1 tablespoon of cooking oil. Add the minced garlic and Thai chilies, stirring constantly for about 30 seconds until fragrant (be careful not to burn the garlic).</p>
+                <h6 class="fw-bold mb-2">Cook the Chicken</h6>
+                <p class="text-muted mb-0">Add the ground chicken to the pan. Break it apart with a spatula and cook until it is mostly browned and cooked through, about 5-7 minutes.</p>
             </div>
         </div>
 
         <div class="d-flex mb-4">
-            <div class="me-4 mt-1">
-                <span class="badge bg-dark rounded-circle p-2 d-flex align-items-center justify-content-center fs-6" style="width: 35px; height: 35px;">3</span>
+            <div class="me-3">
+                <div class="rounded-circle bg-dark text-white d-flex justify-content-center align-items-center fw-bold" style="width: 32px; height: 32px;">4</div>
             </div>
             <div>
-                <h6 class="fw-bold fs-5 text-dark">Cook the Chicken</h6>
-                <p class="text-muted">Add the ground chicken to the pan. Break it apart with a spatula and cook until it is mostly browned and cooked through, about 5-7 minutes.</p>
+                <h6 class="fw-bold mb-2">Add Sauce and Basil</h6>
+                <p class="text-muted mb-0">Pour the sauce mixture over the chicken and toss to coat evenly. Cook for another 1-2 minutes until the sauce slightly thickens. Turn off the heat and immediately stir in the fresh basil leaves until they are just wilted.</p>
             </div>
         </div>
-
-        <div class="d-flex mb-4">
-            <div class="me-4 mt-1">
-                <span class="badge bg-dark rounded-circle p-2 d-flex align-items-center justify-content-center fs-6" style="width: 35px; height: 35px;">4</span>
-            </div>
+        
+        <div class="alert alert-secondary border-0 mt-4 d-flex align-items-start" role="alert">
+            <span class="fs-4 me-3">💡</span>
             <div>
-                <h6 class="fw-bold fs-5 text-dark">Add Sauce and Basil</h6>
-                <p class="text-muted">Pour the sauce mixture over the chicken and toss to coat evenly. Cook for another 1-2 minutes until the sauce slightly thickens. Turn off the heat and immediately stir in the fresh basil leaves until they are just wilted.</p>
-            </div>
-        </div>
-
-        <div class="card bg-warning bg-opacity-10 border-warning border-opacity-50 border-start border-4 mt-5">
-            <div class="card-body p-4">
-                <h6 class="fw-bold text-dark mb-2">💡 Chef's Tip</h6>
-                <p class="text-muted mb-0 small">Serve this immediately over a bed of warm jasmine rice. For the ultimate authentic experience, fry an egg sunny-side up and place it right on top of the chicken before serving!</p>
+                <strong class="d-block mb-1">Chef's Tip</strong>
+                <span class="small text-muted">Serve immediately over a bed of warm jasmine rice with a crispy fried egg on top for the ultimate authentic experience!</span>
             </div>
         </div>
     </div>
