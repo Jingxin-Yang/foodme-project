@@ -3,139 +3,122 @@
 {% block title %}Analytics - FoodMe{% endblock %}
 
 {% block content %}
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<div class="row mb-4 align-items-center">
-    <div class="col-md-8">
+<div class="row mb-4">
+    <div class="col-12">
         <h2 class="fw-bold">Analytics & Insights</h2>
-        <p class="text-muted mb-0">Track your cooking habits and nutritional trends</p>
-    </div>
-    <div class="col-md-4 text-md-end mt-3 mt-md-0">
-        <div class="btn-group shadow-sm" role="group">
-            <button type="button" class="btn btn-outline-secondary fw-bold">WEEK</button>
-            <button type="button" class="btn btn-dark fw-bold active">MONTH</button>
-            <button type="button" class="btn btn-outline-secondary fw-bold">YEAR</button>
-        </div>
+        <p class="text-muted">Track your cooking habits and trends</p>
     </div>
 </div>
 
-<div class="row g-4 mb-5">
-    <div class="col-md-3 col-sm-6">
-        <div class="card h-100 border-0 shadow-sm p-3 border-start border-4 border-primary transition-all meal-card">
-            <h6 class="text-uppercase text-muted small fw-bold mb-2">Meals Cooked</h6>
-            <h2 class="mb-1">42</h2>
-            <small class="text-success fw-bold">↑ 12% <span class="text-muted fw-normal">from last month</span></small>
+<!-- ====== Time Range Selector ====== -->
+<div class="card shadow-sm border-0 mb-4">
+    <div class="card-body d-flex flex-column flex-md-row justify-content-between align-items-center py-3">
+        <!--
+            时间范围按钮组
+            每个按钮有 data-range 属性，JS 用它来决定显示哪段时间的数据
+            点击按钮后，JS 会：
+            1. 切换按钮的样式(高亮当前选中的)
+            2. 更新统计数字
+            3. 重新绘制图表
+        -->
+        <div class="btn-group mb-3 mb-md-0" role="group" id="timeRangeGroup">
+            <button type="button" class="btn btn-outline-secondary btn-sm px-3 time-range-btn" data-range="week">WEEK</button>
+            <button type="button" class="btn btn-dark btn-sm px-3 time-range-btn" data-range="month">MONTH</button>
+            <button type="button" class="btn btn-outline-secondary btn-sm px-3 time-range-btn" data-range="3months">3 MONTHS</button>
+            <button type="button" class="btn btn-outline-secondary btn-sm px-3 time-range-btn" data-range="year">YEAR</button>
+            <button type="button" class="btn btn-outline-secondary btn-sm px-3 time-range-btn" data-range="all">ALL TIME</button>
+        </div>
+        <span class="text-muted small" id="timeRangeLabel">Showing: February 2026</span>
+    </div>
+</div>
+
+<!-- ====== 统计卡片 ====== -->
+<div class="row g-3 mb-4">
+    <div class="col-md-3 col-6">
+        <div class="card p-3 shadow-sm border-0 h-100">
+            <h6 class="text-muted text-uppercase small fw-bold mb-2">Meals Cooked</h6>
+            <h2 class="mb-1" id="statMealsCooked">42</h2>
+            <small id="statMealsTrend" class="text-success fw-bold">↑ 12% <span class="text-muted fw-normal">from last month</span></small>
         </div>
     </div>
-    <div class="col-md-3 col-sm-6">
-        <div class="card h-100 border-0 shadow-sm p-3 border-start border-4 border-success transition-all meal-card">
-            <h6 class="text-uppercase text-muted small fw-bold mb-2">Unique Recipes</h6>
-            <h2 class="mb-1">18</h2>
-            <small class="text-success fw-bold">↑ 6% <span class="text-muted fw-normal">from last month</span></small>
+    <div class="col-md-3 col-6">
+        <div class="card p-3 shadow-sm border-0 h-100">
+            <h6 class="text-muted text-uppercase small fw-bold mb-2">Unique Recipes</h6>
+            <h2 class="mb-1" id="statUniqueRecipes">18</h2>
+            <small id="statRecipesTrend" class="text-success fw-bold">↑ 6% <span class="text-muted fw-normal">from last month</span></small>
         </div>
     </div>
-    <div class="col-md-3 col-sm-6">
-        <div class="card h-100 border-0 shadow-sm p-3 border-start border-4 border-warning transition-all meal-card">
-            <h6 class="text-uppercase text-muted small fw-bold mb-2">Cooking Streak</h6>
-            <h2 class="mb-1">12 <span class="fs-6 text-muted fw-normal">days</span></h2>
+    <div class="col-md-3 col-6">
+        <div class="card p-3 shadow-sm border-0 h-100">
+            <h6 class="text-muted text-uppercase small fw-bold mb-2">Cooking Streak</h6>
+            <h2 class="mb-1" id="statStreak">12 days</h2>
             <small class="text-muted">Current streak</small>
         </div>
     </div>
-    <div class="col-md-3 col-sm-6">
-        <div class="card h-100 border-0 shadow-sm p-3 border-start border-4 border-danger transition-all meal-card">
-            <h6 class="text-uppercase text-muted small fw-bold mb-2">Avg. Prep Time</h6>
-            <h2 class="mb-1">28 <span class="fs-6 text-muted fw-normal">min</span></h2>
-            <small class="text-danger fw-bold">↓ 8% <span class="text-muted fw-normal">from last month</span></small>
+    <div class="col-md-3 col-6">
+        <div class="card p-3 shadow-sm border-0 h-100">
+            <h6 class="text-muted text-uppercase small fw-bold mb-2">Avg. Prep Time</h6>
+            <h2 class="mb-1" id="statAvgPrep">28 min</h2>
+            <small id="statPrepTrend" class="text-danger fw-bold">↓ 8% <span class="text-muted fw-normal">from last month</span></small>
         </div>
     </div>
 </div>
 
-<div class="row g-4 mb-5">
-    <div class="col-lg-8">
-        <div class="card shadow-sm border-0 h-100 p-4">
-            <h6 class="text-uppercase fw-bold mb-4" style="color: var(--fm-primary);">Cooking Frequency</h6>
-            <div style="height: 300px; width: 100%;">
-                <canvas id="frequencyChart"></canvas>
+<!-- ====== Chart Area ====== -->
+<div class="row g-4 mb-4">
+    <!-- Left: Cooking Frequency bar chart -->
+    <div class="col-lg-6">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-header bg-white border-bottom-0 pt-4 pb-0">
+                <h6 class="text-uppercase fw-bold mb-0 border-bottom pb-2">Cooking Frequency</h6>
+            </div>
+            <div class="card-body">
+                <!--
+                    这是一个 canvas 元素，Chart.js 会在这里画图
+                    原来用 div+height 模拟的假图表已经删掉了
+                    JS 里会初始化一个真正的柱状图
+                -->
+                <canvas id="cookingFrequencyChart" height="200"></canvas>
             </div>
         </div>
     </div>
-    
-    <div class="col-lg-4">
-        <div class="card shadow-sm border-0 h-100 p-4">
-            <h6 class="text-uppercase fw-bold mb-4" style="color: var(--fm-primary);">Most Cooked</h6>
-            
-            <div class="mb-3">
-                <div class="d-flex justify-content-between mb-1">
-                    <span class="fw-bold small text-dark">1. Grilled Salmon</span>
-                    <span class="small text-muted">8x</span>
-                </div>
-                <div class="progress" style="height: 8px;">
-                    <div class="progress-bar" style="width: 100%; background-color: var(--fm-primary);"></div>
-                </div>
+
+    <!-- Right: Most Cooked Recipes horizontal bar chart -->
+    <div class="col-lg-6">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-header bg-white border-bottom-0 pt-4 pb-0">
+                <h6 class="text-uppercase fw-bold mb-0 border-bottom pb-2">Most Cooked Recipes</h6>
             </div>
-            <div class="mb-3">
-                <div class="d-flex justify-content-between mb-1">
-                    <span class="fw-bold small text-dark">2. Chicken Alfredo</span>
-                    <span class="small text-muted">6x</span>
-                </div>
-                <div class="progress" style="height: 8px;">
-                    <div class="progress-bar bg-success" style="width: 75%"></div>
-                </div>
-            </div>
-            <div class="mb-3">
-                <div class="d-flex justify-content-between mb-1">
-                    <span class="fw-bold small text-dark">3. Veggie Stir Fry</span>
-                    <span class="small text-muted">5x</span>
-                </div>
-                <div class="progress" style="height: 8px;">
-                    <div class="progress-bar bg-warning" style="width: 60%"></div>
-                </div>
-            </div>
-            <div class="mb-3">
-                <div class="d-flex justify-content-between mb-1">
-                    <span class="fw-bold small text-dark">4. Beef Tacos</span>
-                    <span class="small text-muted">4x</span>
-                </div>
-                <div class="progress" style="height: 8px;">
-                    <div class="progress-bar bg-danger" style="width: 50%"></div>
-                </div>
+            <div class="card-body">
+                <!--
+                    这也是一个 canvas，Chart.js 会画横向柱状图
+                    原来用 progress bar 模拟的假图也删掉了
+                -->
+                <canvas id="mostCookedChart" height="200"></canvas>
             </div>
         </div>
     </div>
 </div>
 
+<!-- ====== Meal Type Distribution + Weekly Trend ====== -->
 <div class="row g-4 mb-5">
-    <div class="col-lg-12">
-        <div class="card shadow-sm border-0 p-4">
-            <h6 class="text-uppercase fw-bold mb-4" style="color: var(--fm-primary);">Dietary Distribution</h6>
-            <div class="row align-items-center">
-                <div class="col-md-5 text-center">
-                    <div style="height: 250px; width: 100%; display: flex; justify-content: center;">
-                        <canvas id="dietChart"></canvas>
-                    </div>
-                </div>
-                <div class="col-md-7 mt-4 mt-md-0">
-                    <div class="row g-3">
-                        <div class="col-sm-4">
-                            <div class="p-3 bg-light rounded text-center border-bottom border-4" style="border-color: var(--fm-primary) !important;">
-                                <h3 class="mb-0 text-dark">36%</h3>
-                                <small class="text-muted fw-bold text-uppercase">High-Protein</small>
-                            </div>
-                        </div>
-                        <div class="col-sm-4">
-                            <div class="p-3 bg-light rounded text-center border-bottom border-4 border-success">
-                                <h3 class="mb-0 text-dark">29%</h3>
-                                <small class="text-muted fw-bold text-uppercase">Vegetarian</small>
-                            </div>
-                        </div>
-                        <div class="col-sm-4">
-                            <div class="p-3 bg-light rounded text-center border-bottom border-4 border-warning">
-                                <h3 class="mb-0 text-dark">19%</h3>
-                                <small class="text-muted fw-bold text-uppercase">Quick Meals</small>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+    <div class="col-lg-6">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-header bg-white border-bottom-0 pt-4 pb-0">
+                <h6 class="text-uppercase fw-bold mb-0 border-bottom pb-2">Meal Type Distribution</h6>
+            </div>
+            <div class="card-body d-flex justify-content-center">
+                <canvas id="mealTypeChart" height="250" style="max-width:400px;"></canvas>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-6">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-header bg-white border-bottom-0 pt-4 pb-0">
+                <h6 class="text-uppercase fw-bold mb-0 border-bottom pb-2">Weekly Cooking Trend</h6>
+            </div>
+            <div class="card-body">
+                <canvas id="weeklyTrendChart" height="250"></canvas>
             </div>
         </div>
     </div>
