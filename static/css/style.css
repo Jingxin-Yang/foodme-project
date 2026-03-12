@@ -1,42 +1,51 @@
 /* ==========================================
-   1. FoodMe 全局主题变量
+   FoodMe Global Theme Variables
 ========================================== */
 :root {
+    /* Primary colour: Basil green (meets WCAG 4.5:1 contrast ratio) */
     --fm-primary: #2d6a4f;
+    /* Secondary: Light avocado green (background highlight / hover) */
     --fm-secondary: #d8f3dc;
+    /* Accent: Tomato red (calorie warnings, delete buttons) */
     --fm-accent: #e63946;
+
+    /* Base greys */
     --fm-bg-light: #f8f9fa;
     --fm-text-dark: #1b4332;
     --fm-text-muted: #6c757d;
 }
 
 /* ==========================================
-   2. 全局重置与排版
+   Global Reset & Typography
 ========================================== */
 body {
     font-family: 'Nunito', sans-serif;
-    background-color: var(--fm-bg-light);
+    background-color: var(--fm-bg-light); /* Light grey page background so white cards stand out */
     color: var(--fm-text-dark);
 }
 
 h1, h2, h3, h4, h5, h6 {
     font-weight: 700;
-    color: var(--fm-primary);
+    color: var(--fm-primary); /* All headings use the primary colour */
 }
 
 /* ==========================================
-   3. 核心组件 (卡片、导航、按钮)
+   Card Styling
 ========================================== */
 .card {
-    border-radius: 16px;
+    border-radius: 16px; /* Rounded corners */
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
+/* Subtle lift on hover for interactivity */
 .card:hover {
     transform: translateY(-3px);
     box-shadow: 0 10px 20px rgba(45, 106, 79, 0.08) !important;
 }
 
+/* ==========================================
+   Navbar Styling
+========================================== */
 .navbar {
     background-color: #ffffff !important;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
@@ -60,6 +69,9 @@ h1, h2, h3, h4, h5, h6 {
     color: var(--fm-primary) !important;
 }
 
+/* ==========================================
+   Button Overrides
+========================================== */
 .btn-primary {
     background-color: var(--fm-primary);
     border-color: var(--fm-primary);
@@ -72,6 +84,7 @@ h1, h2, h3, h4, h5, h6 {
     border-color: #1b4332;
 }
 
+/* Outline button for quick-action cards */
 .btn-outline-secondary {
     border-color: #e9ecef;
     color: var(--fm-text-dark);
@@ -83,59 +96,44 @@ h1, h2, h3, h4, h5, h6 {
     color: var(--fm-primary);
     border-color: var(--fm-secondary);
 }
-
 /* ==========================================
-   4. 交互状态 (已移出打印区，确保屏幕可见)
+   Navbar Active Link Highlight
 ========================================== */
-.transition-all {
-    transition: all 0.2s ease-in-out;
-}
-
-/* 购物清单：勾选后的置灰 */
-.item-completed {
-    background-color: #e9ecef !important;
-    opacity: 0.6;
-}
-
-/* 菜谱详情页：食材高亮 */
-.item-selected {
-    background-color: rgba(45, 106, 79, 0.06) !important; 
-    border-left: 4px solid var(--fm-primary) !important;
-}
-
-/* Meal Planner 里的卡片悬停 */
-.meal-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(45, 106, 79, 0.15) !important;
-}
-
-.remove-meal:hover {
-    text-decoration: underline;
-    font-weight: bold;
-    color: var(--fm-accent);
+.nav-link.active {
+    color: var(--fm-primary) !important;
+    font-weight: 700;
+    border-bottom: 3px solid var(--fm-primary);
+    padding-bottom: calc(0.5rem - 3px);
 }
 
 /* ==========================================
-   5. 打印专属样式 (只放打印时需要的调整)
+   Print Styles (Shopping List print feature)
 ========================================== */
 @media print {
-    nav, .no-print, .btn, footer {
+    /* Hide nav and buttons when printing */
+    .navbar, .btn, .card-header, #statusAnnouncer {
         display: none !important;
     }
-
-    body {
-        background-color: white !important;
+    /* Only show shopping list content */
+    .shopping-item {
+        break-inside: avoid;
     }
+}
 
-    #printableArea {
-        width: 100% !important;
-        margin: 0 !important;
-        padding: 0 !important;
-    }
+/* ==========================================
+   Shopping List Checkbox Transition
+========================================== */
+.shopping-item {
+    transition: background-color 0.2s ease, opacity 0.2s ease;
+}
 
-    .card {
-        border: none !important;
-        box-shadow: none !important;
-        transform: none !important;
-    }
+/* ==========================================
+   Empty Cell Hover Hint (Meal Planner)
+========================================== */
+.meal-cell:empty {
+    cursor: pointer;
+    min-height: 60px;
+}
+.meal-cell:empty:hover {
+    background-color: var(--fm-secondary) !important;
 }
