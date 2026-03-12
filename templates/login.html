@@ -1,31 +1,40 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Login / Sign Up - FoodMe{% endblock %}
-{% block navbar %}
-<nav class="navbar navbar-expand-lg navbar-light bg-transparent py-3">
-    <div class="container">
-        <a class="navbar-brand fw-bold" href="{% url 'index' %}" style="color: var(--fm-primary); font-size: 1.8rem;">FoodMe</a>
-    </div>
-</nav>
-{% endblock %}
-{% block content %}
-<div class="row justify-content-center mt-5 mb-5 g-5">
 
+{% block content %}
+<!-- Logo at top of login page -->
+<div class="text-center mt-4 mb-2">
+    <img src="{% static 'img/logo.png' %}" alt="FoodMe" height="45">
+</div>
+
+<div class="row justify-content-center mt-3 mb-5 g-5">
+
+    <!-- ====== Login Form ====== -->
     <div class="col-md-5">
         <div class="card shadow-sm border-0 h-100 p-4">
             <h3 class="fw-bold mb-4">Login</h3>
-            <form>
+            <!--
+                id="loginForm" 让 JS 可以找到这个表单
+                原来没有 id，JS 无法绑定验证逻辑
+            -->
+            <form id="loginForm">
                 <div class="mb-3">
                     <label for="loginEmail" class="form-label small text-muted text-uppercase fw-bold">Email</label>
-                    <input type="email" class="form-control" id="loginEmail" placeholder="Enter your email">
+                    <input type="email" class="form-control" id="loginEmail" placeholder="Enter your email" required>
+                    <!-- Error text (hidden by default; JS shows it on validation failure) -->
+                    <div class="invalid-feedback">Please enter a valid email address.</div>
                 </div>
 
                 <div class="mb-4">
                     <label for="loginPassword" class="form-label small text-muted text-uppercase fw-bold">Password</label>
                     <div class="input-group">
-                        <input type="password" class="form-control" id="loginPassword" placeholder="Enter your password">
+                        <input type="password" class="form-control" id="loginPassword" placeholder="Enter your password" required>
+                        <!-- Eye icon: toggles password visibility -->
                         <button class="btn btn-outline-secondary toggle-password" type="button" tabindex="-1" style="border-color: #dee2e6;">🙈</button>
                     </div>
+                    <div class="invalid-feedback">Please enter your password.</div>
                 </div>
 
                 <div class="d-flex justify-content-between align-items-center mb-4">
@@ -36,7 +45,12 @@
                     <a href="#" class="text-decoration-none small text-muted">Forgot password?</a>
                 </div>
 
-                <a href="{% url 'dashboard' %}" class="btn btn-success w-100 d-block text-center fw-bold" style="background-color: var(--fm-primary); border: none;">LOGIN</a>
+                <button type="submit" class="btn btn-primary w-100 py-2">LOGIN</button>
+
+                <!-- Login error alert (hidden by default) -->
+                <div id="loginError" class="alert alert-danger mt-3 small d-none" role="alert">
+                    Invalid email or password. Please try again.
+                </div>
 
                 <div class="text-center mt-4 d-block d-md-none">
                     <span class="text-muted small">Don't have an account?</span>
@@ -46,41 +60,51 @@
         </div>
     </div>
 
+    <!-- ====== Signup Form ====== -->
     <div class="col-md-5" id="signupSection">
         <div class="card shadow-sm border-0 h-100 p-4 bg-white">
             <h3 class="fw-bold mb-4">Sign Up</h3>
-            <form>
+            <form id="signupForm">
                 <div class="mb-3">
                     <label for="signupName" class="form-label small text-muted text-uppercase fw-bold">Full Name</label>
-                    <input type="text" class="form-control" id="signupName" placeholder="e.g. Jane Doe">
+                    <input type="text" class="form-control" id="signupName" placeholder="e.g. Jane Doe" required>
+                    <div class="invalid-feedback">Please enter your full name.</div>
                 </div>
                 <div class="mb-3">
                     <label for="signupEmail" class="form-label small text-muted text-uppercase fw-bold">Email</label>
-                    <input type="email" class="form-control" id="signupEmail" placeholder="Enter your email">
+                    <input type="email" class="form-control" id="signupEmail" placeholder="Enter your email" required>
+                    <div class="invalid-feedback">Please enter a valid email address.</div>
                 </div>
 
                 <div class="mb-3">
                     <label for="signupPassword" class="form-label small text-muted text-uppercase fw-bold">Password</label>
                     <div class="input-group">
-                        <input type="password" class="form-control" id="signupPassword" placeholder="Create a password">
+                        <input type="password" class="form-control" id="signupPassword" placeholder="Create a password" required>
                         <button class="btn btn-outline-secondary toggle-password" type="button" tabindex="-1" style="border-color: #dee2e6;">🙈</button>
                     </div>
+                    <div class="form-text small text-muted">Must be at least 8 characters and contain a number.</div>
                 </div>
 
                 <div class="mb-4">
                     <label for="confirmPassword" class="form-label small text-muted text-uppercase fw-bold">Confirm Password</label>
                     <div class="input-group">
-                        <input type="password" class="form-control" id="confirmPassword" placeholder="Repeat your password">
+                        <input type="password" class="form-control" id="confirmPassword" placeholder="Repeat your password" required>
                         <button class="btn btn-outline-secondary toggle-password" type="button" tabindex="-1" style="border-color: #dee2e6;">🙈</button>
                     </div>
                 </div>
 
                 <div class="form-check mb-4">
-                    <input type="checkbox" class="form-check-input" id="termsAgree">
+                    <input type="checkbox" class="form-check-input" id="termsAgree" required>
                     <label class="form-check-label small" for="termsAgree">I agree to the Terms of Service and Privacy Policy</label>
+                    <div class="invalid-feedback">You must agree to the terms.</div>
                 </div>
 
-                <a href="{% url 'dashboard' %}" class="btn btn-dark w-100 d-block text-center fw-bold">CREATE ACCOUNT</a>
+                <button type="submit" class="btn btn-dark w-100 py-2">CREATE ACCOUNT</button>
+
+                <!-- Signup success alert (hidden by default) -->
+                <div id="signupSuccess" class="alert alert-success mt-3 small d-none" role="alert">
+                    Account created successfully! Redirecting to dashboard...
+                </div>
             </form>
         </div>
     </div>
