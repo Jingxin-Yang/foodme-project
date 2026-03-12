@@ -4,175 +4,291 @@
 
 {% block content %}
 <div class="row mb-4 align-items-center">
-    <div class="col-md-8">
+    <div class="col-md-6">
         <h2 class="fw-bold">Shopping List</h2>
         <p class="text-muted mb-0">Generated from your meal plan (Feb 3-9, 2026)</p>
     </div>
-    <div class="col-md-4 text-md-end mt-3 mt-md-0 d-flex justify-content-md-end gap-2">
-        <button class="btn btn-outline-secondary fw-bold">✉️ EMAIL LIST</button>
-        <button class="btn btn-outline-secondary fw-bold" onclick="window.print()">🖨️ PRINT</button>
-        <a href="{% url 'meal_planner' %}" class="btn btn-dark fw-bold">← BACK TO PLANNER</a>
+    <div class="col-md-6 text-md-end mt-3 mt-md-0 d-flex justify-content-md-end gap-2">
+        <button class="btn btn-outline-secondary btn-sm px-3 fw-bold" id="emailListBtn">📧 EMAIL LIST</button>
+        <!-- PRINT button triggers browser print dialog -->
+        <button class="btn btn-outline-secondary btn-sm px-3 fw-bold" id="printListBtn">🖨️ PRINT</button>
+        <a href="{% url 'meal_planner' %}" class="btn btn-dark btn-sm px-3 fw-bold">← BACK TO PLANNER</a>
     </div>
 </div>
 
+<!-- ====== 统计卡片(数字会被 JS 自动更新) ====== -->
 <div class="row g-3 mb-4">
     <div class="col-md-3 col-6">
-        <div class="card p-3 shadow-sm border-0 border-start border-primary border-4 h-100">
+        <div class="card p-3 shadow-sm border-0 h-100 border-start border-4 border-primary">
             <h6 class="text-muted text-uppercase small fw-bold mb-1">Total Items</h6>
-            <h3 class="mb-0" id="statTotal">6</h3>
+            <h3 class="mb-0" id="statTotal">0</h3>
         </div>
     </div>
     <div class="col-md-3 col-6">
-        <div class="card p-3 shadow-sm border-0 border-start border-success border-4 h-100">
+        <div class="card p-3 shadow-sm border-0 h-100 border-start border-4 border-success">
             <h6 class="text-muted text-uppercase small fw-bold mb-1">Checked Off</h6>
             <h3 class="mb-0 text-success" id="statChecked">0</h3>
         </div>
     </div>
     <div class="col-md-3 col-6">
-        <div class="card p-3 shadow-sm border-0 border-start border-warning border-4 h-100">
+        <div class="card p-3 shadow-sm border-0 h-100 border-start border-4 border-warning">
             <h6 class="text-muted text-uppercase small fw-bold mb-1">Remaining</h6>
-            <h3 class="mb-0 text-warning" id="statRemaining">6</h3>
+            <h3 class="mb-0 text-warning" id="statRemaining">0</h3>
         </div>
     </div>
     <div class="col-md-3 col-6">
-        <div class="card p-3 shadow-sm border-0 border-start border-info border-4 h-100">
+        <div class="card p-3 shadow-sm border-0 h-100 border-start border-4 border-info">
             <h6 class="text-muted text-uppercase small fw-bold mb-1">From Recipes</h6>
-            <h3 class="mb-0">12</h3>
+            <h3 class="mb-0" id="statRecipes">0</h3>
         </div>
     </div>
 </div>
 
 <div class="row g-4 mb-5">
-    <div class="col-lg-8" id="printableArea">
-        <h6 class="text-uppercase fw-bold mb-3">Shopping Items</h6>
-        
-        <div class="card shadow-sm border-0 mb-4" id="shoppingListGroup">
-            
-            <div class="bg-light border-bottom px-4 py-3 d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#collapseMeat" role="button" aria-expanded="true" style="cursor: pointer;">
-                <span class="small fw-bold text-muted text-uppercase">🥩 Meat & Seafood</span>
-                <span class="text-muted small">▼</span>
+    <!-- ====== Left Panel: Shopping Items ====== -->
+    <div class="col-lg-8">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-header bg-light border-bottom-0 pt-3 pb-2">
+                <h6 class="text-uppercase fw-bold mb-0 text-muted">Shopping Items</h6>
             </div>
-            <div class="collapse show" id="collapseMeat">
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item px-4 py-3 d-flex justify-content-between align-items-center transition-all">
-                        <div class="d-flex align-items-start">
-                            <input class="form-check-input me-3 mt-1 item-checkbox" type="checkbox" style="width: 1.2rem; height: 1.2rem;">
-                            <div>
-                                <label class="fw-bold text-dark d-block mb-0 item-label">Chicken breast</label>
-                                <small class="text-muted">2 lbs</small>
-                            </div>
-                        </div>
-                        <button class="btn btn-sm btn-link text-muted text-decoration-none edit-btn">Edit</button>
-                    </li>
-                    <li class="list-group-item px-4 py-3 d-flex justify-content-between align-items-center transition-all">
-                        <div class="d-flex align-items-start">
-                            <input class="form-check-input me-3 mt-1 item-checkbox" type="checkbox" style="width: 1.2rem; height: 1.2rem;">
-                            <div>
-                                <label class="fw-bold text-dark d-block mb-0 item-label">Ground beef</label>
-                                <small class="text-muted">1.5 lbs</small>
-                            </div>
-                        </div>
-                        <button class="btn btn-sm btn-link text-muted text-decoration-none edit-btn">Edit</button>
-                    </li>
-                </ul>
-            </div>
+            <!--
+                id="shoppingListGroup": JS 通过这个 id 找到列表容器
+                每个 li 都有 data-from="recipe" 或 data-from="custom" 属性
+                data-from="recipe" 表示来自食谱(自动生成的)
+                data-from="custom" 表示用户手动添加的
+            -->
+            <ul class="list-group list-group-flush" id="shoppingListGroup">
+                <!-- Each shopping item is an <li> element -->
+                <li class="list-group-item d-flex justify-content-between align-items-center py-3 shopping-item" data-from="recipe">
+                    <div class="form-check d-flex align-items-center mb-0">
+                        <!-- checkbox: 勾选后 JS 会给文字加删除线、更新统计数字 -->
+                        <input class="form-check-input me-3 item-checkbox" type="checkbox" style="width: 1.2rem; height: 1.2rem;">
+                        <label class="form-check-label">
+                            <span class="fw-bold d-block text-dark item-name">Chicken breast</span>
+                            <small class="text-muted item-amount">2 lbs</small>
+                        </label>
+                    </div>
+                    <button class="btn btn-link text-danger text-decoration-none small p-0 delete-item-btn">✕</button>
+                </li>
 
-            <div class="bg-light border-bottom border-top px-4 py-3 d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#collapseProduce" role="button" aria-expanded="true" style="cursor: pointer;">
-                <span class="small fw-bold text-muted text-uppercase">🥦 Produce</span>
-                <span class="text-muted small">▼</span>
-            </div>
-            <div class="collapse show" id="collapseProduce">
-                <ul class="list-group list-group-flush">
-                    <li class="list-group-item px-4 py-3 d-flex justify-content-between align-items-center transition-all">
-                        <div class="d-flex align-items-start">
-                            <input class="form-check-input me-3 mt-1 item-checkbox" type="checkbox" style="width: 1.2rem; height: 1.2rem;" checked>
-                            <div>
-                                <label class="fw-bold text-dark d-block mb-0 item-label">Thai basil</label>
-                                <small class="text-muted">2 bunches</small>
-                            </div>
-                        </div>
-                        <button class="btn btn-sm btn-link text-muted text-decoration-none edit-btn">Edit</button>
-                    </li>
-                    <li class="list-group-item px-4 py-3 d-flex justify-content-between align-items-center transition-all">
-                        <div class="d-flex align-items-start">
-                            <input class="form-check-input me-3 mt-1 item-checkbox" type="checkbox" style="width: 1.2rem; height: 1.2rem;" checked>
-                            <div>
-                                <label class="fw-bold text-dark d-block mb-0 item-label">Onions</label>
-                                <small class="text-muted">3 medium</small>
-                            </div>
-                        </div>
-                        <button class="btn btn-sm btn-link text-muted text-decoration-none edit-btn">Edit</button>
-                    </li>
-                </ul>
-            </div>
+                <li class="list-group-item d-flex justify-content-between align-items-center py-3 shopping-item" data-from="recipe">
+                    <div class="form-check d-flex align-items-center mb-0">
+                        <input class="form-check-input me-3 item-checkbox" type="checkbox" style="width: 1.2rem; height: 1.2rem;">
+                        <label class="form-check-label">
+                            <span class="fw-bold d-block text-dark item-name">Ground beef</span>
+                            <small class="text-muted item-amount">1.5 lbs</small>
+                        </label>
+                    </div>
+                    <button class="btn btn-link text-danger text-decoration-none small p-0 delete-item-btn">✕</button>
+                </li>
 
-            <div class="bg-light border-bottom border-top px-4 py-3 d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#collapsePantry" role="button" aria-expanded="true" style="cursor: pointer;">
-                <span class="small fw-bold text-muted text-uppercase">🥫 Pantry</span>
-                <span class="text-muted small">▼</span>
-            </div>
-            <div class="collapse show" id="collapsePantry">
-                <ul class="list-group list-group-flush border-bottom-0">
-                    <li class="list-group-item px-4 py-3 d-flex justify-content-between align-items-center transition-all border-bottom-0">
-                        <div class="d-flex align-items-start">
-                            <input class="form-check-input me-3 mt-1 item-checkbox" type="checkbox" style="width: 1.2rem; height: 1.2rem;">
-                            <div>
-                                <label class="fw-bold text-dark d-block mb-0 item-label">Oyster sauce</label>
-                                <small class="text-muted">1 bottle</small>
-                            </div>
-                        </div>
-                        <button class="btn btn-sm btn-link text-muted text-decoration-none edit-btn">Edit</button>
-                    </li>
-                    <li class="list-group-item px-4 py-3 d-flex justify-content-between align-items-center transition-all border-bottom-0">
-                        <div class="d-flex align-items-start">
-                            <input class="form-check-input me-3 mt-1 item-checkbox" type="checkbox" style="width: 1.2rem; height: 1.2rem;">
-                            <div>
-                                <label class="fw-bold text-dark d-block mb-0 item-label">Jasmine rice</label>
-                                <small class="text-muted">5 lbs bag</small>
-                            </div>
-                        </div>
-                        <button class="btn btn-sm btn-link text-muted text-decoration-none edit-btn">Edit</button>
-                    </li>
-                </ul>
-            </div>
+                <li class="list-group-item d-flex justify-content-between align-items-center py-3 shopping-item" data-from="recipe">
+                    <div class="form-check d-flex align-items-center mb-0">
+                        <input class="form-check-input me-3 item-checkbox" type="checkbox" style="width: 1.2rem; height: 1.2rem;">
+                        <label class="form-check-label">
+                            <span class="fw-bold d-block text-dark item-name">Salmon fillet</span>
+                            <small class="text-muted item-amount">4 pieces</small>
+                        </label>
+                    </div>
+                    <button class="btn btn-link text-danger text-decoration-none small p-0 delete-item-btn">✕</button>
+                </li>
+
+                <li class="list-group-item d-flex justify-content-between align-items-center py-3 shopping-item bg-light" data-from="recipe">
+                    <div class="form-check d-flex align-items-center mb-0">
+                        <input class="form-check-input me-3 item-checkbox" type="checkbox" checked style="width: 1.2rem; height: 1.2rem;">
+                        <label class="form-check-label text-decoration-line-through text-muted">
+                            <span class="fw-bold d-block item-name">Thai basil</span>
+                            <small class="item-amount">2 bunches</small>
+                        </label>
+                    </div>
+                    <button class="btn btn-link text-danger text-decoration-none small p-0 delete-item-btn">✕</button>
+                </li>
+
+                <li class="list-group-item d-flex justify-content-between align-items-center py-3 shopping-item" data-from="recipe">
+                    <div class="form-check d-flex align-items-center mb-0">
+                        <input class="form-check-input me-3 item-checkbox" type="checkbox" style="width: 1.2rem; height: 1.2rem;">
+                        <label class="form-check-label">
+                            <span class="fw-bold d-block text-dark item-name">Bell peppers</span>
+                            <small class="text-muted item-amount">6 pieces</small>
+                        </label>
+                    </div>
+                    <button class="btn btn-link text-danger text-decoration-none small p-0 delete-item-btn">✕</button>
+                </li>
+
+                <li class="list-group-item d-flex justify-content-between align-items-center py-3 shopping-item bg-light" data-from="recipe">
+                    <div class="form-check d-flex align-items-center mb-0">
+                        <input class="form-check-input me-3 item-checkbox" type="checkbox" checked style="width: 1.2rem; height: 1.2rem;">
+                        <label class="form-check-label text-decoration-line-through text-muted">
+                            <span class="fw-bold d-block item-name">Onions</span>
+                            <small class="item-amount">3 medium</small>
+                        </label>
+                    </div>
+                    <button class="btn btn-link text-danger text-decoration-none small p-0 delete-item-btn">✕</button>
+                </li>
+
+                <li class="list-group-item d-flex justify-content-between align-items-center py-3 shopping-item" data-from="recipe">
+                    <div class="form-check d-flex align-items-center mb-0">
+                        <input class="form-check-input me-3 item-checkbox" type="checkbox" style="width: 1.2rem; height: 1.2rem;">
+                        <label class="form-check-label">
+                            <span class="fw-bold d-block text-dark item-name">Garlic cloves</span>
+                            <small class="text-muted item-amount">2 heads</small>
+                        </label>
+                    </div>
+                    <button class="btn btn-link text-danger text-decoration-none small p-0 delete-item-btn">✕</button>
+                </li>
+
+                <li class="list-group-item d-flex justify-content-between align-items-center py-3 shopping-item bg-light" data-from="recipe">
+                    <div class="form-check d-flex align-items-center mb-0">
+                        <input class="form-check-input me-3 item-checkbox" type="checkbox" checked style="width: 1.2rem; height: 1.2rem;">
+                        <label class="form-check-label text-decoration-line-through text-muted">
+                            <span class="fw-bold d-block item-name">Soy sauce</span>
+                            <small class="item-amount">1 bottle</small>
+                        </label>
+                    </div>
+                    <button class="btn btn-link text-danger text-decoration-none small p-0 delete-item-btn">✕</button>
+                </li>
+
+                <li class="list-group-item d-flex justify-content-between align-items-center py-3 shopping-item" data-from="recipe">
+                    <div class="form-check d-flex align-items-center mb-0">
+                        <input class="form-check-input me-3 item-checkbox" type="checkbox" style="width: 1.2rem; height: 1.2rem;">
+                        <label class="form-check-label">
+                            <span class="fw-bold d-block text-dark item-name">Fish sauce</span>
+                            <small class="text-muted item-amount">1 bottle</small>
+                        </label>
+                    </div>
+                    <button class="btn btn-link text-danger text-decoration-none small p-0 delete-item-btn">✕</button>
+                </li>
+
+                <li class="list-group-item d-flex justify-content-between align-items-center py-3 shopping-item" data-from="recipe">
+                    <div class="form-check d-flex align-items-center mb-0">
+                        <input class="form-check-input me-3 item-checkbox" type="checkbox" style="width: 1.2rem; height: 1.2rem;">
+                        <label class="form-check-label">
+                            <span class="fw-bold d-block text-dark item-name">Olive oil</span>
+                            <small class="text-muted item-amount">500ml</small>
+                        </label>
+                    </div>
+                    <button class="btn btn-link text-danger text-decoration-none small p-0 delete-item-btn">✕</button>
+                </li>
+
+                <li class="list-group-item d-flex justify-content-between align-items-center py-3 shopping-item bg-light" data-from="recipe">
+                    <div class="form-check d-flex align-items-center mb-0">
+                        <input class="form-check-input me-3 item-checkbox" type="checkbox" checked style="width: 1.2rem; height: 1.2rem;">
+                        <label class="form-check-label text-decoration-line-through text-muted">
+                            <span class="fw-bold d-block item-name">Butter</span>
+                            <small class="item-amount">1 stick</small>
+                        </label>
+                    </div>
+                    <button class="btn btn-link text-danger text-decoration-none small p-0 delete-item-btn">✕</button>
+                </li>
+
+                <li class="list-group-item d-flex justify-content-between align-items-center py-3 shopping-item" data-from="recipe">
+                    <div class="form-check d-flex align-items-center mb-0">
+                        <input class="form-check-input me-3 item-checkbox" type="checkbox" style="width: 1.2rem; height: 1.2rem;">
+                        <label class="form-check-label">
+                            <span class="fw-bold d-block text-dark item-name">Pasta</span>
+                            <small class="text-muted item-amount">500g</small>
+                        </label>
+                    </div>
+                    <button class="btn btn-link text-danger text-decoration-none small p-0 delete-item-btn">✕</button>
+                </li>
+
+                <li class="list-group-item d-flex justify-content-between align-items-center py-3 shopping-item" data-from="recipe">
+                    <div class="form-check d-flex align-items-center mb-0">
+                        <input class="form-check-input me-3 item-checkbox" type="checkbox" style="width: 1.2rem; height: 1.2rem;">
+                        <label class="form-check-label">
+                            <span class="fw-bold d-block text-dark item-name">Heavy cream</span>
+                            <small class="text-muted item-amount">200ml</small>
+                        </label>
+                    </div>
+                    <button class="btn btn-link text-danger text-decoration-none small p-0 delete-item-btn">✕</button>
+                </li>
+            </ul>
         </div>
     </div>
 
-    <div class="col-lg-4 no-print">
-        <h6 class="text-uppercase fw-bold mb-3">Add From Recipes</h6>
-        <div class="card shadow-sm border-0 mb-4 p-3">
-            <div class="d-flex justify-content-between align-items-center border-bottom pb-3 mb-3">
-                <div>
-                    <span class="fw-bold d-block small">Spicy Thai Basil Chicken</span>
-                    <small class="text-muted">8 ingredients</small>
-                </div>
-                <button class="btn btn-outline-secondary btn-sm rounded-circle fw-bold">+</button>
+    <!-- ====== Right Panel ====== -->
+    <div class="col-lg-4">
+
+        <!-- Add from recipes -->
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-header bg-white border-bottom-0 pt-3 pb-0">
+                <h6 class="text-uppercase fw-bold mb-0">Add From Recipes</h6>
             </div>
-            <div class="d-flex justify-content-between align-items-center">
-                <div>
-                    <span class="fw-bold d-block small">Beef Tacos</span>
-                    <small class="text-muted">6 ingredients</small>
+            <div class="card-body">
+                <div class="d-flex justify-content-between border rounded p-2 mb-2 align-items-center shadow-sm bg-white">
+                    <div>
+                        <span class="d-block small fw-bold">Spicy Thai Basil Chicken</span>
+                        <small class="text-muted" style="font-size: 0.7rem;">8 ingredients</small>
+                    </div>
+                    <!-- Click adds all ingredients from this recipe to the shopping list -->
+                    <button class="btn btn-sm btn-outline-secondary add-recipe-ingredients-btn" data-ingredients='[{"name":"Chicken breast","amount":"1.5 lbs"},{"name":"Thai basil","amount":"1 cup"},{"name":"Garlic","amount":"4 cloves"},{"name":"Oyster sauce","amount":"2 tbsp"},{"name":"Soy sauce","amount":"1 tbsp"},{"name":"Fish sauce","amount":"1 tbsp"},{"name":"Thai chilies","amount":"3 pcs"},{"name":"Cooking oil","amount":"1 tbsp"}]'>+</button>
                 </div>
-                <button class="btn btn-outline-secondary btn-sm rounded-circle fw-bold">+</button>
+                <div class="d-flex justify-content-between border rounded p-2 mb-2 align-items-center shadow-sm bg-white">
+                    <div>
+                        <span class="d-block small fw-bold">Beef Tacos</span>
+                        <small class="text-muted" style="font-size: 0.7rem;">6 ingredients</small>
+                    </div>
+                    <button class="btn btn-sm btn-outline-secondary add-recipe-ingredients-btn" data-ingredients='[{"name":"Ground beef","amount":"1 lb"},{"name":"Taco shells","amount":"8 pcs"},{"name":"Lettuce","amount":"1 head"},{"name":"Tomato","amount":"2 pcs"},{"name":"Cheese","amount":"1 cup"},{"name":"Sour cream","amount":"4 tbsp"}]'>+</button>
+                </div>
+                <div class="d-flex justify-content-between border rounded p-2 align-items-center shadow-sm bg-white">
+                    <div>
+                        <span class="d-block small fw-bold">Grilled Salmon</span>
+                        <small class="text-muted" style="font-size: 0.7rem;">5 ingredients</small>
+                    </div>
+                    <button class="btn btn-sm btn-outline-secondary add-recipe-ingredients-btn" data-ingredients='[{"name":"Salmon fillet","amount":"2 pcs"},{"name":"Lemon","amount":"1 pc"},{"name":"Olive oil","amount":"2 tbsp"},{"name":"Garlic","amount":"2 cloves"},{"name":"Dill","amount":"1 bunch"}]'>+</button>
+                </div>
             </div>
         </div>
 
-        <h6 class="text-uppercase fw-bold mb-3">Add Custom Item</h6>
-        <div class="card shadow-sm border-0 mb-4 p-4">
-            <div class="mb-3">
-                <label class="form-label small text-muted text-uppercase fw-bold">Item Name</label>
-                <input type="text" class="form-control form-control-sm">
+        <!-- Add custom item manually -->
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-header bg-white border-bottom-0 pt-3 pb-0">
+                <h6 class="text-uppercase fw-bold mb-0">Add Custom Item</h6>
             </div>
-            <div class="mb-3">
-                <label class="form-label small text-muted text-uppercase fw-bold">Amount (Quantity)</label>
-                <input type="text" class="form-control form-control-sm">
+            <div class="card-body">
+                <!--
+                    id="customItemForm": JS 会拦截这个表单的提交
+                    novalidate: 关闭浏览器默认验证，我们自己用 JS 验证
+                    满足规格书 M4(表单验证防止负数) 和 S3(添加自定义项目)
+                -->
+                <form id="customItemForm" novalidate>
+                    <div class="mb-3">
+                        <label for="itemName" class="form-label small text-muted text-uppercase fw-bold">Item Name</label>
+                        <input type="text" class="form-control" id="itemName" required>
+                        <div class="invalid-feedback small">Please enter an item name.</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="itemAmount" class="form-label small text-muted text-uppercase fw-bold">Amount (Quantity)</label>
+                        <input type="number" class="form-control" id="itemAmount" min="0" step="any" required>
+                        <!--
+                            SC 3.3.1 Error Identification:
+                            当用户输入负数时，这里会显示红色错误信息
+                        -->
+                        <div class="invalid-feedback small" id="amountErrorText">Quantity must be a positive number.</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="itemUnit" class="form-label small text-muted text-uppercase fw-bold">Unit (optional)</label>
+                        <select class="form-select" id="itemUnit">
+                            <option value="pcs">pieces</option>
+                            <option value="lbs">lbs</option>
+                            <option value="kg">kg</option>
+                            <option value="g">g</option>
+                            <option value="ml">ml</option>
+                            <option value="cups">cups</option>
+                            <option value="tbsp">tbsp</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-outline-primary w-100 fw-bold">+ ADD ITEM</button>
+                </form>
             </div>
-            <button class="btn btn-outline-primary btn-sm fw-bold w-100">+ ADD ITEM</button>
         </div>
 
+        <!-- Action buttons -->
         <div class="d-grid gap-2">
-            <button class="btn btn-outline-secondary fw-bold">CLEAR CHECKED ITEMS</button>
-            <button class="btn btn-outline-danger fw-bold">RESET LIST</button>
+            <button class="btn btn-outline-secondary fw-bold bg-white shadow-sm" id="clearCheckedBtn">CLEAR CHECKED ITEMS</button>
+            <button class="btn btn-outline-danger fw-bold bg-white shadow-sm" id="resetListBtn">RESET LIST</button>
         </div>
+
     </div>
 </div>
 {% endblock %}
