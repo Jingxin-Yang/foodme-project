@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Recipes - FoodMe{% endblock %}
 
@@ -13,65 +14,157 @@
     </div>
 </div>
 
+<!-- ====== Search Bar + Filters ====== -->
 <div class="card shadow-sm border-0 mb-4">
     <div class="card-body p-3">
         <div class="row g-2">
             <div class="col-md-8">
-                <input type="text" class="form-control bg-light border-0" placeholder="Search recipes...">
+                <input type="text" class="form-control bg-light border-0" id="recipeSearchInput" placeholder="Search recipes...">
             </div>
             <div class="col-md-2">
-                <select class="form-select border-0 bg-light">
-                    <option>Filter ▼</option>
+                <select class="form-select border-0 bg-light" id="recipeSortSelect">
+                    <option value="default">Filter ▼</option>
+                    <option value="vegetarian">Vegetarian</option>
+                    <option value="keto">Keto</option>
+                    <option value="high-protein">High-Protein</option>
                 </select>
             </div>
             <div class="col-md-2">
-                <select class="form-select border-0 bg-light">
-                    <option>Sort ▼</option>
+                <select class="form-select border-0 bg-light" id="recipeSortOrder">
+                    <option value="default">Sort ▼</option>
+                    <option value="time-asc">Time: Low to High</option>
+                    <option value="time-desc">Time: High to Low</option>
+                    <option value="servings-asc">Servings: Low to High</option>
                 </select>
             </div>
         </div>
 
-        <div class="d-flex flex-wrap gap-2 mt-3">
-            <button class="btn btn-sm btn-dark px-3 rounded-pill">ALL</button>
-            <button class="btn btn-sm btn-outline-secondary px-3 rounded-pill">VEGETARIAN</button>
-            <button class="btn btn-sm btn-outline-secondary px-3 rounded-pill">KETO</button>
-            <button class="btn btn-sm btn-outline-secondary px-3 rounded-pill">CARNIVORE</button>
-            <button class="btn btn-sm btn-outline-secondary px-3 rounded-pill">HIGH-PROTEIN</button>
-            <button class="btn btn-sm btn-outline-secondary px-3 rounded-pill">QUICK</button>
+        <!-- Tag filter buttons -->
+        <div class="d-flex flex-wrap gap-2 mt-3" id="tagFilterGroup">
+            <button class="btn btn-sm btn-dark px-3 rounded-pill tag-filter-btn" data-tag="all">ALL</button>
+            <button class="btn btn-sm btn-outline-secondary px-3 rounded-pill tag-filter-btn" data-tag="vegetarian">VEGETARIAN</button>
+            <button class="btn btn-sm btn-outline-secondary px-3 rounded-pill tag-filter-btn" data-tag="keto">KETO</button>
+            <button class="btn btn-sm btn-outline-secondary px-3 rounded-pill tag-filter-btn" data-tag="carnivore">CARNIVORE</button>
+            <button class="btn btn-sm btn-outline-secondary px-3 rounded-pill tag-filter-btn" data-tag="high-protein">HIGH-PROTEIN</button>
+            <button class="btn btn-sm btn-outline-secondary px-3 rounded-pill tag-filter-btn" data-tag="quick">QUICK</button>
         </div>
     </div>
 </div>
 
-<div class="row g-4 mb-4">
-    
-    <div class="col-md-4 col-sm-6">
+<!-- ====== Recipe Card Grid ====== -->
+<div class="row g-4 mb-5" id="recipeGrid">
+
+    <!-- 食谱 1: Spicy Thai Basil Chicken -->
+    <div class="col-md-4 col-sm-6 recipe-card" data-tags="high-protein,quick" data-title="Spicy Thai Basil Chicken" data-time="25" data-servings="4">
         <div class="card h-100 shadow-sm border-0 overflow-hidden">
             <a href="{% url 'recipe_detail' %}" class="text-decoration-none">
-                <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80" class="card-img-top object-fit-cover" height="200" alt="Recipe Image">
+                <!--
+                    Unsplash 外链图片:
+                    w=600&h=400&fit=crop 让 Unsplash 服务器裁剪出 600x400 的图
+                    object-fit:cover 让图片铺满容器不变形
+                    onerror: 如果图片加载失败，自动换成本地占位图
+                -->
+                <img src="https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=600&h=400&fit=crop"
+                     alt="Spicy Thai Basil Chicken"
+                     class="w-100" style="height: 200px; object-fit: cover;"
+                     onerror="this.onerror=null; this.src='{% static 'img/recipe_placeholder.svg' %}';">
             </a>
             <div class="card-body">
-                <h5 class="fw-bold mb-3 text-dark">Healthy Salad Bowl</h5>
-                <div class="d-flex flex-wrap gap-2 mb-3">
-                    <span class="badge border text-dark bg-light">VEG</span>
+                <h6 class="fw-bold text-dark mb-2">Spicy Thai Basil Chicken</h6>
+                <div class="d-flex gap-2 mb-3">
+                    <span class="badge border text-dark bg-light">HIGH-PROTEIN</span>
                     <span class="badge border text-dark bg-light">QUICK</span>
                 </div>
             </div>
             <div class="card-footer bg-white border-top-0 d-flex justify-content-between text-muted small pb-3">
-                <span>⏱️ 15 min</span>
+                <span>⏱️ 25 min</span>
+                <span>👤 4 servings</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 食谱 2: Grilled Salmon Bowl -->
+    <div class="col-md-4 col-sm-6 recipe-card" data-tags="keto,high-protein" data-title="Grilled Salmon Bowl" data-time="35" data-servings="2">
+        <div class="card h-100 shadow-sm border-0 overflow-hidden">
+            <a href="{% url 'recipe_detail' %}" class="text-decoration-none">
+                <img src="https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=600&h=400&fit=crop"
+                     alt="Grilled Salmon Bowl"
+                     class="w-100" style="height: 200px; object-fit: cover;"
+                     onerror="this.onerror=null; this.src='{% static 'img/recipe_placeholder.svg' %}';">
+            </a>
+            <div class="card-body">
+                <h6 class="fw-bold text-dark mb-2">Grilled Salmon Bowl</h6>
+                <div class="d-flex gap-2 mb-3">
+                    <span class="badge border text-dark bg-light">KETO</span>
+                    <span class="badge border text-dark bg-light">HIGH-PROTEIN</span>
+                </div>
+            </div>
+            <div class="card-footer bg-white border-top-0 d-flex justify-content-between text-muted small pb-3">
+                <span>⏱️ 35 min</span>
                 <span>👤 2 servings</span>
             </div>
         </div>
     </div>
 
-    <div class="col-md-4 col-sm-6">
+    <!-- 食谱 3: Veggie Stir Fry -->
+    <div class="col-md-4 col-sm-6 recipe-card" data-tags="vegetarian,quick" data-title="Veggie Stir Fry" data-time="20" data-servings="3">
         <div class="card h-100 shadow-sm border-0 overflow-hidden">
             <a href="{% url 'recipe_detail' %}" class="text-decoration-none">
-                <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?auto=format&fit=crop&w=600&q=80" class="card-img-top object-fit-cover" height="200" alt="Recipe Image">
+                <img src="https://images.unsplash.com/photo-1512058564366-18510be2db19?w=600&h=400&fit=crop"
+                     alt="Veggie Stir Fry"
+                     class="w-100" style="height: 200px; object-fit: cover;"
+                     onerror="this.onerror=null; this.src='{% static 'img/recipe_placeholder.svg' %}';">
             </a>
             <div class="card-body">
-                <h5 class="fw-bold mb-3 text-dark">Margherita Pizza</h5>
-                <div class="d-flex flex-wrap gap-2 mb-3">
+                <h6 class="fw-bold text-dark mb-2">Veggie Stir Fry</h6>
+                <div class="d-flex gap-2 mb-3">
+                    <span class="badge border text-dark bg-light">VEG</span>
+                    <span class="badge border text-dark bg-light">QUICK</span>
+                </div>
+            </div>
+            <div class="card-footer bg-white border-top-0 d-flex justify-content-between text-muted small pb-3">
+                <span>⏱️ 20 min</span>
+                <span>👤 3 servings</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 食谱 4: Beef Tacos -->
+    <div class="col-md-4 col-sm-6 recipe-card" data-tags="carnivore,high-protein" data-title="Beef Tacos" data-time="30" data-servings="4">
+        <div class="card h-100 shadow-sm border-0 overflow-hidden">
+            <a href="{% url 'recipe_detail' %}" class="text-decoration-none">
+                <img src="https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=600&h=400&fit=crop"
+                     alt="Beef Tacos"
+                     class="w-100" style="height: 200px; object-fit: cover;"
+                     onerror="this.onerror=null; this.src='{% static 'img/recipe_placeholder.svg' %}';">
+            </a>
+            <div class="card-body">
+                <h6 class="fw-bold text-dark mb-2">Beef Tacos</h6>
+                <div class="d-flex gap-2 mb-3">
                     <span class="badge border text-dark bg-light">CARNIVORE</span>
+                    <span class="badge border text-dark bg-light">HIGH-PROTEIN</span>
+                </div>
+            </div>
+            <div class="card-footer bg-white border-top-0 d-flex justify-content-between text-muted small pb-3">
+                <span>⏱️ 30 min</span>
+                <span>👤 4 servings</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 食谱 5: Chicken Alfredo -->
+    <div class="col-md-4 col-sm-6 recipe-card" data-tags="high-protein" data-title="Chicken Alfredo" data-time="45" data-servings="4">
+        <div class="card h-100 shadow-sm border-0 overflow-hidden">
+            <a href="{% url 'recipe_detail' %}" class="text-decoration-none">
+                <img src="https://images.unsplash.com/photo-1645112411341-6c4fd023714a?w=600&h=400&fit=crop"
+                     alt="Chicken Alfredo"
+                     class="w-100" style="height: 200px; object-fit: cover;"
+                     onerror="this.onerror=null; this.src='{% static 'img/recipe_placeholder.svg' %}';">
+            </a>
+            <div class="card-body">
+                <h6 class="fw-bold text-dark mb-2">Chicken Alfredo</h6>
+                <div class="d-flex gap-2 mb-3">
+                    <span class="badge border text-dark bg-light">HIGH-PROTEIN</span>
                 </div>
             </div>
             <div class="card-footer bg-white border-top-0 d-flex justify-content-between text-muted small pb-3">
@@ -81,95 +174,36 @@
         </div>
     </div>
 
-    <div class="col-md-4 col-sm-6">
+    <!-- 食谱 6: Oatmeal Bowl -->
+    <div class="col-md-4 col-sm-6 recipe-card" data-tags="vegetarian,quick" data-title="Oatmeal Bowl" data-time="10" data-servings="1">
         <div class="card h-100 shadow-sm border-0 overflow-hidden">
             <a href="{% url 'recipe_detail' %}" class="text-decoration-none">
-                <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=600&q=80" class="card-img-top object-fit-cover" height="200" alt="Recipe Image">
+                <img src="https://images.unsplash.com/photo-1517673400267-0251440c45dc?w=600&h=400&fit=crop"
+                     alt="Oatmeal Bowl"
+                     class="w-100" style="height: 200px; object-fit: cover;"
+                     onerror="this.onerror=null; this.src='{% static 'img/recipe_placeholder.svg' %}';">
             </a>
             <div class="card-body">
-                <h5 class="fw-bold mb-3 text-dark">Spicy Grilled Chicken</h5>
-                <div class="d-flex flex-wrap gap-2 mb-3">
-                    <span class="badge border text-dark bg-light">HIGH-PROTEIN</span>
-                    <span class="badge border text-dark bg-light">KETO</span>
-                </div>
-            </div>
-            <div class="card-footer bg-white border-top-0 d-flex justify-content-between text-muted small pb-3">
-                <span>⏱️ 30 min</span>
-                <span>👤 2 servings</span>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-4 col-sm-6">
-        <div class="card h-100 shadow-sm border-0 overflow-hidden">
-            <a href="{% url 'recipe_detail' %}" class="text-decoration-none">
-                <img src="https://images.unsplash.com/photo-1476224203421-9ac39bcb3327?auto=format&fit=crop&w=600&q=80" class="card-img-top object-fit-cover" height="200" alt="Recipe Image">
-            </a>
-            <div class="card-body">
-                <h5 class="fw-bold mb-3 text-dark">Avocado Toast Supreme</h5>
-                <div class="d-flex flex-wrap gap-2 mb-3">
+                <h6 class="fw-bold text-dark mb-2">Oatmeal Bowl</h6>
+                <div class="d-flex gap-2 mb-3">
                     <span class="badge border text-dark bg-light">VEG</span>
                     <span class="badge border text-dark bg-light">QUICK</span>
                 </div>
             </div>
             <div class="card-footer bg-white border-top-0 d-flex justify-content-between text-muted small pb-3">
                 <span>⏱️ 10 min</span>
-                <span>👤 1 serving</span>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-4 col-sm-6">
-        <div class="card h-100 shadow-sm border-0 overflow-hidden">
-            <a href="{% url 'recipe_detail' %}" class="text-decoration-none">
-                <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&w=600&q=80" class="card-img-top object-fit-cover" height="200" alt="Recipe Image">
-            </a>
-            <div class="card-body">
-                <h5 class="fw-bold mb-3 text-dark">Vegan Buddha Bowl</h5>
-                <div class="d-flex flex-wrap gap-2 mb-3">
-                    <span class="badge border text-dark bg-light">VEGAN</span>
-                    <span class="badge border text-dark bg-light">HIGH-PROTEIN</span>
-                </div>
-            </div>
-            <div class="card-footer bg-white border-top-0 d-flex justify-content-between text-muted small pb-3">
-                <span>⏱️ 25 min</span>
-                <span>👤 2 servings</span>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-md-4 col-sm-6">
-        <div class="card h-100 shadow-sm border-0 overflow-hidden">
-            <a href="{% url 'recipe_detail' %}" class="text-decoration-none">
-                <img src="https://images.unsplash.com/photo-1460306855393-0410f61241c7?auto=format&fit=crop&w=600&q=80" class="card-img-top object-fit-cover" height="200" alt="Recipe Image">
-            </a>
-            <div class="card-body">
-                <h5 class="fw-bold mb-3 text-dark">Classic Beef Burger</h5>
-                <div class="d-flex flex-wrap gap-2 mb-3">
-                    <span class="badge border text-dark bg-light">HIGH-PROTEIN</span>
-                    <span class="badge border text-dark bg-light">CARNIVORE</span>
-                </div>
-            </div>
-            <div class="card-footer bg-white border-top-0 d-flex justify-content-between text-muted small pb-3">
-                <span>⏱️ 20 min</span>
-                <span>👤 1 serving</span>
+                <span>👤 1 servings</span>
             </div>
         </div>
     </div>
 
 </div>
 
-<nav aria-label="Recipe pagination" class="mb-5">
-    <ul class="pagination justify-content-center">
-        <li class="page-item disabled">
-            <a class="page-link text-muted" href="#" tabindex="-1" aria-disabled="true">Previous</a>
-        </li>
-        <li class="page-item active"><a class="page-link bg-dark border-dark" href="#">1</a></li>
-        <li class="page-item"><a class="page-link text-dark" href="#">2</a></li>
-        <li class="page-item"><a class="page-link text-dark" href="#">3</a></li>
-        <li class="page-item">
-            <a class="page-link text-dark" href="#">Next</a>
-        </li>
-    </ul>
-</nav>
+<!-- "No results" message (hidden by default) -->
+<div id="noRecipeResults" class="text-center text-muted py-5 d-none">
+    <span class="fs-1 d-block mb-2">🔍</span>
+    <p class="fw-bold">No recipes found matching your filters.</p>
+    <p class="small">Try adjusting your search or tag filters.</p>
+</div>
+
 {% endblock %}
