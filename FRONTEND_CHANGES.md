@@ -1,12 +1,12 @@
 # Front-End Changes Documentation
 
-**Author**: Jingxin Yang (3096032Y)
+**Author**: Runmeng Chen (3092353C) — front-end enhancements & interactivity
 **Date**: March 2026
-**Base version**: `foodme-project-master` (initial front-end by Runmeng Chen)
+**Base version**: `foodme-project-master` (initial front-end scaffolding by Jingxin Yang)
 
 This document describes every change made to the front end, organised by file. It is written for two audiences:
 
-- **Runmeng (front-end)** — so you can see exactly what was modified from your original templates
+- **Jingxin (front-end scaffolding)** — so you can see exactly what was modified from your original templates
 - **Ivan (back-end)** — so you know what hooks, IDs, and data attributes are available for wiring up Django views and models
 
 ---
