@@ -1,155 +1,145 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Dashboard - FoodMe{% endblock %}
 
 {% block content %}
-<div class="row mb-4">
+<div class="row mb-3">
     <div class="col-12">
         <h2 class="fw-bold">Dashboard</h2>
-        <p class="text-muted">Welcome back to FoodMe, ready to cook something delicious?</p>
+        <p class="text-muted">Welcome back to FoodMe</p>
     </div>
 </div>
 
-<div class="row g-3 mb-5">
-    <div class="col-md-3 col-6">
-        <div class="card p-3 shadow-sm border-0 h-100">
-            <h6 class="text-muted text-uppercase small fw-bold mb-2">Total Recipes</h6>
-            <h2 class="mb-1">127</h2>
-            <div class="progress mt-2" style="height: 6px;">
-                <div class="progress-bar bg-success" style="width: 70%"></div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-3 col-6">
-        <div class="card p-3 shadow-sm border-0 h-100">
-            <h6 class="text-muted text-uppercase small fw-bold mb-2">Meals This Week</h6>
-            <h2 class="mb-1">18</h2>
-            <div class="progress mt-2" style="height: 6px;">
-                <div class="progress-bar bg-primary" style="width: 85%"></div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-3 col-6">
-        <div class="card p-3 shadow-sm border-0 h-100">
-            <h6 class="text-muted text-uppercase small fw-bold mb-2">Cooking Streak</h6>
-            <h2 class="mb-1">12 <span class="fs-6 text-muted fw-normal">days</span></h2>
-            <div class="progress mt-2" style="height: 6px;">
-                <div class="progress-bar bg-warning" style="width: 50%"></div>
-            </div>
-        </div>
-    </div>
-    <div class="col-md-3 col-6">
-        <div class="card p-3 shadow-sm border-0 h-100">
-            <h6 class="text-muted text-uppercase small fw-bold mb-2">Favorites</h6>
-            <h2 class="mb-1">34</h2>
-            <div class="progress mt-2" style="height: 6px;">
-                <div class="progress-bar bg-danger" style="width: 40%"></div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="card shadow-sm border-0 mb-5 overflow-hidden">
-    <div class="row g-0">
-        <div class="col-md-5">
-            <img src="https://images.unsplash.com/photo-1490645935967-10de6ba17061?auto=format&fit=crop&w=800&q=80" class="img-fluid rounded-start h-100 object-fit-cover" alt="Recipe of the day" style="min-height: 250px;">
-        </div>
-        <div class="col-md-7 d-flex flex-column justify-content-center p-4 p-md-5">
-            <span class="badge bg-warning text-dark mb-3 align-self-start fw-bold px-3 py-2 rounded-pill">⭐ RECIPE OF THE DAY</span>
-            <h3 class="fw-bold mb-3">Avocado & Quinoa Superbowl</h3>
-            <p class="text-muted mb-4">A nutrient-packed bowl featuring roasted sweet potatoes, fresh avocado, fluffy quinoa, and a tangy lemon-tahini dressing. Perfect for a quick, healthy lunch.</p>
-            <div class="d-flex gap-3 text-muted small fw-bold mb-4">
-                <span>⏱️ 15 MIN</span>
-                <span>🔥 420 KCAL</span>
-                <span>🌱 VEGAN</span>
-            </div>
-            <div>
-                <a href="{% url 'recipe_detail' %}" class="btn btn-dark fw-bold px-4 me-2">VIEW RECIPE</a>
-                <button class="btn btn-outline-secondary fw-bold px-4">+ ADD TO PLAN</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="row g-4 mb-5">
-
-    <div class="col-lg-6">
-        <div class="card shadow-sm border-0 h-100">
-            <div class="card-header bg-white border-bottom-0 pt-4 pb-0 d-flex justify-content-between align-items-center">
-                <h6 class="text-uppercase fw-bold mb-0">Recent Recipes</h6>
-                <a href="{% url 'recipes' %}" class="text-decoration-none small fw-bold" style="color: var(--fm-primary);">View All</a>
-            </div>
-            <div class="card-body">
-                <a href="{% url 'recipe_detail' %}" class="d-flex align-items-center mb-3 text-decoration-none text-dark">
-                    <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=150&q=80" class="rounded" width="60" height="60" style="object-fit: cover;" alt="food">
-                    <div class="ms-3 flex-grow-1">
-                        <h6 class="fw-bold mb-1">Spicy Thai Basil Chicken</h6>
-                        <small class="text-muted">Added 2 days ago</small>
-                    </div>
-                </a>
-                <hr class="text-muted opacity-25">
-                <a href="{% url 'recipe_detail' %}" class="d-flex align-items-center text-decoration-none text-dark">
-                    <img src="https://images.unsplash.com/photo-1460306855393-0410f61241c7?auto=format&fit=crop&w=150&q=80" class="rounded" width="60" height="60" style="object-fit: cover;" alt="food">
-                    <div class="ms-3 flex-grow-1">
-                        <h6 class="fw-bold mb-1">Classic Beef Burger</h6>
-                        <small class="text-muted">Added 5 days ago</small>
-                    </div>
-                </a>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-lg-6">
-        <div class="card shadow-sm border-0 h-100">
-            <div class="card-header bg-white border-bottom-0 pt-4 pb-0 d-flex justify-content-between align-items-center">
-                <h6 class="text-uppercase fw-bold mb-0">This Week's Plan</h6>
-                <a href="{% url 'meal_planner' %}" class="text-decoration-none small fw-bold" style="color: var(--fm-primary);">Edit Plan</a>
-            </div>
-            <div class="card-body">
-                <div class="mb-3 p-3 bg-light rounded border">
-                    <span class="d-block small text-muted fw-bold mb-1">TODAY</span>
-                    <div class="d-flex align-items-center">
-                        <span class="fs-4 me-2">🥗</span>
-                        <span class="fw-bold">Avocado & Quinoa Superbowl</span>
-                    </div>
-                </div>
-                <div class="p-3 border rounded border-dashed">
-                    <span class="d-block small text-muted fw-bold mb-1">TOMORROW</span>
-                    <div class="d-flex align-items-center">
-                        <span class="fs-4 me-2">🥩</span>
-                        <span class="fw-bold">Grilled Steak with Asparagus</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<h6 class="text-uppercase fw-bold mb-3">Quick Actions</h6>
+<!-- ====== Summary Stat Cards ====== -->
 <div class="row g-3 mb-4">
-    <div class="col-md-3 col-6">
-        <a href="{% url 'add_recipe' %}" class="btn btn-outline-secondary w-100 py-4 d-flex flex-column align-items-center text-decoration-none border-dashed bg-white">
-            <span class="fs-3 mb-2 text-dark">+</span>
-            <small class="fw-bold text-dark">ADD RECIPE</small>
-        </a>
+    <div class="col-md-3 col-sm-6">
+        <div class="card p-3 shadow-sm border-0 h-100">
+            <h6 class="text-muted text-uppercase small fw-bold">Total Recipes</h6>
+            <h2 class="display-6 mb-2">127</h2>
+            <div class="bg-secondary bg-opacity-25 w-75 rounded" style="height: 12px;"></div>
+        </div>
     </div>
-    <div class="col-md-3 col-6">
-        <a href="{% url 'meal_planner' %}" class="btn border-0 shadow-sm w-100 py-4 d-flex flex-column align-items-center text-decoration-none bg-white">
-            <span class="fs-3 mb-2">📅</span>
-            <small class="fw-bold text-dark">PLAN MEALS</small>
-        </a>
+    <div class="col-md-3 col-sm-6">
+        <div class="card p-3 shadow-sm border-0 h-100">
+            <h6 class="text-muted text-uppercase small fw-bold">Meals This Week</h6>
+            <h2 class="display-6 mb-2">18</h2>
+            <div class="bg-secondary bg-opacity-25 w-100 rounded" style="height: 12px;"></div>
+        </div>
     </div>
-    <div class="col-md-3 col-6">
-        <a href="{% url 'shopping_list' %}" class="btn border-0 shadow-sm w-100 py-4 d-flex flex-column align-items-center text-decoration-none bg-white">
-            <span class="fs-3 mb-2">🛒</span>
-            <small class="fw-bold text-dark">SHOPPING LIST</small>
-        </a>
+    <div class="col-md-3 col-sm-6">
+        <div class="card p-3 shadow-sm border-0 h-100">
+            <h6 class="text-muted text-uppercase small fw-bold">Cooking Streak</h6>
+            <h2 class="display-6 mb-2">12</h2>
+            <div class="bg-secondary bg-opacity-25 w-50 rounded" style="height: 12px;"></div>
+        </div>
     </div>
-    <div class="col-md-3 col-6">
-        <a href="{% url 'analytics' %}" class="btn border-0 shadow-sm w-100 py-4 d-flex flex-column align-items-center text-decoration-none bg-white">
-            <span class="fs-3 mb-2">📊</span>
-            <small class="fw-bold text-dark">VIEW STATS</small>
-        </a>
+    <div class="col-md-3 col-sm-6">
+        <div class="card p-3 shadow-sm border-0 h-100">
+            <h6 class="text-muted text-uppercase small fw-bold">Favorites</h6>
+            <h2 class="display-6 mb-2">34</h2>
+            <div class="bg-secondary bg-opacity-25 w-75 rounded" style="height: 12px;"></div>
+        </div>
+    </div>
+</div>
+
+<!-- ====== Recent Recipes + This Week's Plan ====== -->
+<div class="row g-4 mb-4">
+    <div class="col-lg-6">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-header bg-white border-bottom-0 d-flex justify-content-between align-items-center pt-3 pb-0">
+                <h6 class="text-uppercase fw-bold mb-0">Recent Recipes</h6>
+                <!-- Fixed: was href="#", now links to Recipes page -->
+                <a href="{% url 'recipes' %}" class="text-decoration-none small">View All</a>
+            </div>
+            <div class="card-body">
+                <!-- Clickable: navigates to recipe detail page -->
+                <a href="{% url 'recipe_detail' %}" class="d-flex align-items-center mb-3 border-bottom pb-3 text-decoration-none">
+                    <img src="https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=120&h=120&fit=crop"
+                         alt="Spicy Thai Basil Chicken" class="rounded me-3"
+                         style="width: 60px; height: 60px; object-fit: cover;"
+                         onerror="this.onerror=null; this.src='{% static 'img/recipe_placeholder.svg' %}';">
+                    <div class="flex-grow-1">
+                        <span class="fw-bold d-block text-dark small">Spicy Thai Basil Chicken</span>
+                        <small class="text-muted">25 min · 4 servings</small>
+                    </div>
+                </a>
+                <a href="{% url 'recipe_detail' %}" class="d-flex align-items-center text-decoration-none">
+                    <img src="https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=120&h=120&fit=crop"
+                         alt="Grilled Salmon Bowl" class="rounded me-3"
+                         style="width: 60px; height: 60px; object-fit: cover;"
+                         onerror="this.onerror=null; this.src='{% static 'img/recipe_placeholder.svg' %}';">
+                    <div class="flex-grow-1">
+                        <span class="fw-bold d-block text-dark small">Grilled Salmon Bowl</span>
+                        <small class="text-muted">35 min · 2 servings</small>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-6">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-header bg-white border-bottom-0 d-flex justify-content-between align-items-center pt-3 pb-0">
+                <h6 class="text-uppercase fw-bold mb-0">This Week's Plan</h6>
+                <!-- Fixed: was href="#", now links to Meal Planner -->
+                <a href="{% url 'meal_planner' %}" class="text-decoration-none small">Edit Plan</a>
+            </div>
+            <div class="card-body">
+                <div class="border rounded p-2 mb-2">
+                    <small class="text-muted text-uppercase d-block mb-1">Monday</small>
+                    <span class="fw-bold small text-dark">Spicy Thai Basil Chicken</span>
+                    <small class="text-muted d-block">Dinner · 25 min</small>
+                </div>
+                <div class="border rounded p-2 mb-2">
+                    <small class="text-muted text-uppercase d-block mb-1">Tuesday</small>
+                    <span class="fw-bold small text-dark">Grilled Salmon Bowl</span>
+                    <small class="text-muted d-block">Lunch · 35 min</small>
+                </div>
+                <div class="border rounded p-2">
+                    <small class="text-muted text-uppercase d-block mb-1">Wednesday</small>
+                    <span class="fw-bold small text-dark">Veggie Stir Fry</span>
+                    <small class="text-muted d-block">Breakfast · 20 min</small>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ====== Quick Actions ====== -->
+<div class="card shadow-sm border-0 mb-5">
+    <div class="card-body">
+        <h6 class="text-uppercase fw-bold mb-3">Quick Actions</h6>
+        <div class="row g-3 text-center">
+            <div class="col-md-3 col-6">
+                
+                <a href="{% url 'add_recipe' %}" class="btn btn-outline-secondary w-100 py-3 d-flex flex-column align-items-center text-decoration-none text-dark">
+                    <span class="fs-4 mb-2">+</span>
+                    <small>ADD RECIPE</small>
+                </a>
+            </div>
+            <div class="col-md-3 col-6">
+                <!-- Fixed: was a non-linking <button>, now an <a> linking to Meal Planner -->
+                <a href="{% url 'meal_planner' %}" class="btn btn-outline-secondary w-100 py-3 d-flex flex-column align-items-center text-decoration-none text-dark">
+                    <span class="fs-4 mb-2">📅</span>
+                    <small>PLAN MEALS</small>
+                </a>
+            </div>
+            <div class="col-md-3 col-6">
+                <!-- Fixed: was a non-linking <button>, now an <a> linking to Shopping List -->
+                <a href="{% url 'shopping_list' %}" class="btn btn-outline-secondary w-100 py-3 d-flex flex-column align-items-center text-decoration-none text-dark">
+                    <span class="fs-4 mb-2">🛒</span>
+                    <small>SHOPPING LIST</small>
+                </a>
+            </div>
+            <div class="col-md-3 col-6">
+                <!-- Fixed: was a non-linking <button>, now an <a> linking to Analytics -->
+                <a href="{% url 'analytics' %}" class="btn btn-outline-secondary w-100 py-3 d-flex flex-column align-items-center text-decoration-none text-dark">
+                    <span class="fs-4 mb-2">📊</span>
+                    <small>VIEW STATS</small>
+                </a>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}
