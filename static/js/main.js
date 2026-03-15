@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
 
-        //add ingredient
+    //add step
     //clones last row and clears it
     document.addEventListener("click", function (e) {
         if (e.target && e.target.textContent.trim() === "+ ADD ANOTHER STEP") {
@@ -136,7 +136,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    //hopping list inline item edit toggl
+    //shopping list inline item edit toggle
     window.toggleItemEdit = function(itemId) {
         const display = document.querySelector(".item-display-" + itemId);
         const editForm = document.querySelector(".item-edit-" + itemId);
@@ -154,6 +154,26 @@ document.addEventListener('DOMContentLoaded', function() {
             if (row) row.remove();
         }
     });
+
+    //image preview — shows selected image in the upload box before saving
+    const imageInput = document.getElementById("recipeImage");
+    if (imageInput) {
+        imageInput.addEventListener("change", function () {
+            const file = this.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const previewBox = imageInput.previousElementSibling;
+                if (previewBox) {
+                    previewBox.style.backgroundImage = "url(" + e.target.result + ")";
+                    previewBox.style.backgroundSize = "cover";
+                    previewBox.style.backgroundPosition = "center";
+                    previewBox.innerHTML = "";
+                }
+            };
+            reader.readAsDataURL(file);
+        });
+    }
 
     const daySelector = document.getElementById("daySelector");
     const mealTypeSelector = document.getElementById("mealTypeSelector");
@@ -174,6 +194,24 @@ document.addEventListener('DOMContentLoaded', function() {
     if (mealTypeSelector) mealTypeSelector.addEventListener("change", updatePlanForms);
     //run once on page load to set initial values
     updatePlanForms();
+
+    //email shopping list — builds a mailto link with all items in the body
+    const emailListBtn = document.getElementById("emailListBtn");
+    if (emailListBtn) {
+        emailListBtn.addEventListener("click", function () {
+            const items = document.querySelectorAll("#shoppingListGroup .list-group-item");
+            let body = "My Shopping List:\n\n";
+            items.forEach(function (item) {
+                const name = item.querySelector(".fw-bold");
+                const qty = item.querySelector("small");
+                if (name && qty) {
+                    body += "- " + name.textContent.trim() + " (" + qty.textContent.trim() + ")\n";
+                }
+            });
+            const subject = "My FoodMe Shopping List";
+            window.location.href = "mailto:?subject=" + encodeURIComponent(subject) + "&body=" + encodeURIComponent(body);
+        });
+    }
 
     //new ingredient modal
     const saveNewIngredient = document.getElementById("saveNewIngredient");

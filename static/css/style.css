@@ -96,3 +96,14 @@ h1, h2, h3, h4, h5, h6 {
     color: var(--fm-primary);
     border-color: var(--fm-secondary);
 }
+@media print {
+    nav, .btn, form, #emailListBtn, .card-header, .col-lg-4 {
+        display: none !important;
+    }
+    .col-lg-8 {
+        width: 100% !important;
+    }
+    body {
+        font-size: 12pt;
+    }
+}

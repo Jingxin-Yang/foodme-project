@@ -17,4 +17,10 @@ urlpatterns = [
     #get current user profile
     path("profile/", views.user_profile, name="user_profile"),
 
+    #dashboard
+    path("dashboard/", views.dashboard, name="dashboard"),
+
+    #user stats
+    path("analytics/", views.analytics, name="analytics"),
+
 ]

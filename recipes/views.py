@@ -77,6 +77,10 @@ def add_recipe(request):
             title=request.POST.get("title"),
             description=request.POST.get("description", ""),
         )
+        #save image if one was uploaded
+        if request.FILES.get("image"):
+            recipe.image = request.FILES["image"]
+            recipe.save()
         #update tags
         tag_ids = request.POST.getlist("tag_ids")
         recipe.tags.set(Tag.objects.filter(id__in=tag_ids))

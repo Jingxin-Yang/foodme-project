@@ -13,8 +13,8 @@
         {% endif %}
     </div>
     <div class="col-md-6 text-md-end mt-3 mt-md-0 d-flex justify-content-md-end gap-2">
-        <button class="btn btn-outline-secondary btn-sm px-3 fw-bold">📧 EMAIL LIST</button>
-        <button class="btn btn-outline-secondary btn-sm px-3 fw-bold">🖨️ PRINT</button>
+        <button class="btn btn-outline-secondary btn-sm px-3 fw-bold" id="emailListBtn">📧 EMAIL LIST</button>
+        <button class="btn btn-outline-secondary btn-sm px-3 fw-bold" onclick="window.print()">🖨️ PRINT</button>
         {% if shopping_list %}
             <a href="{% url 'shoppinglist_list' %}" class="btn btn-outline-secondary btn-sm px-3 fw-bold">☰ ALL LISTS</a>
             {% if shopping_list.meal_plan %}
