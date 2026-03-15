@@ -20,6 +20,7 @@
 </div>
 
 <!-- stats derived from items context -->
+{% if shopping_list %}
 <div class="row g-3 mb-4">
     <div class="col-md-3 col-6">
         <div class="card p-3 shadow-sm border-0 h-100 border-start border-4 border-primary">
@@ -36,7 +37,7 @@
     <div class="col-md-3 col-6">
         <div class="card p-3 shadow-sm border-0 h-100 border-start border-4 border-warning">
             <h6 class="text-muted text-uppercase small fw-bold mb-1">Remaining</h6>
-            <h3 class="mb-0 text-warning" id="statRemaining">—</h3>
+            <h3 class="mb-0 text-warning">—</h3>
         </div>
     </div>
     <div class="col-md-3 col-6">
@@ -46,7 +47,10 @@
         </div>
     </div>
 </div>
+{% endif %}
 
+{% if shopping_list %}
+<!-- detail view — show items for a specific shopping list -->
 <div class="row g-4 mb-5">
     <div class="col-lg-8">
         <div class="card shadow-sm border-0 h-100">
@@ -61,7 +65,7 @@
                         <!-- toggle purchased status via post -->
                         <form method="POST" action="{% url 'mark_item_purchased' item.id %}">
                             {% csrf_token %}
-                            <input class="form-check-input me-3 item-checkbox" type="checkbox" 
+                            <input class="form-check-input me-3 item-checkbox" type="checkbox"
                                 style="width: 1.2rem; height: 1.2rem;"
                                 {% if item.purchased %}checked{% endif %}
                                 onchange="this.form.submit()">
@@ -81,7 +85,6 @@
     </div>
 
     <div class="col-lg-4">
-
         <div class="card shadow-sm border-0 mb-4">
             <div class="card-header bg-white border-bottom-0 pt-3 pb-0">
                 <h6 class="text-uppercase fw-bold mb-0">Add Custom Item</h6>
@@ -117,7 +120,53 @@
                 <button type="submit" class="btn btn-outline-danger fw-bold bg-white shadow-sm w-100">RESET LIST</button>
             </form>
         </div>
-
     </div>
 </div>
+
+{% else %}
+<!-- list view toshow all shopping lists when none is selected -->
+<div class="row g-4 mb-5">
+    <div class="col-lg-8">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-light border-bottom-0 pt-3 pb-2">
+                <h6 class="text-uppercase fw-bold mb-0 text-muted">Your Shopping Lists</h6>
+            </div>
+            <ul class="list-group list-group-flush">
+                {% for list in lists %}
+                <li class="list-group-item d-flex justify-content-between align-items-center py-3">
+                    <div>
+                        <span class="fw-bold d-block">Shopping List — {{ list.created_at|date:"M j, Y" }}</span>
+                        <small class="text-muted">{{ list.items.count }} items</small>
+                    </div>
+                    <a href="{% url 'shoppinglist_detail' list.id %}" class="btn btn-sm btn-outline-primary">VIEW</a>
+                </li>
+                {% empty %}
+                    <li class="list-group-item text-muted py-3">no shopping lists yet — generate one from a meal plan</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+    <div class="col-lg-4">
+        <!-- create a new empty shopping list -->
+        <div class="card shadow-sm border-0 mb-4">
+            <div class="card-header bg-white border-bottom-0 pt-3 pb-0">
+                <h6 class="text-uppercase fw-bold mb-0">New Shopping List</h6>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{% url 'shoppinglist_list' %}">
+                    {% csrf_token %}
+                    <select name="meal_plan_id" class="form-select mb-3">
+                        <option value="">— no meal plan —</option>
+                        {% for plan in meal_plans %}
+                            <option value="{{ plan.id }}">Week of {{ plan.week_start }}</option>
+                        {% endfor %}
+                    </select>
+                    <button type="submit" class="btn btn-primary w-100 fw-bold">CREATE LIST</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
 {% endblock %}

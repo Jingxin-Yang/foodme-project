@@ -3,13 +3,16 @@ from django.contrib.auth.decorators import login_required
 from datetime import timedelta
 from .models import MealPlan, MealPlanDay, MealPlanEntry
 from recipes.models import Recipe
+from datetime import date, timedelta
 
 @login_required
 def mealplan_list(request):
     #get will list all meal plans
     #post will create new weekly meal plan, expecting the date to be monday
     if request.method == "POST":
-        week_start = request.POST.get("week_start")
+        week_start_str = request.POST.get("week_start")
+        #parse the string to a date object so timedelta works in create_week_days
+        week_start = date.fromisoformat(week_start_str)
         meal_plan = MealPlan.objects.create(user=request.user, week_start=week_start)
         #autocreate 7 mealplan day rows for the week
         create_week_days(meal_plan)
@@ -31,7 +34,13 @@ def mealplan_detail(request, mealplan_id):
         return redirect("mealplan_list")
 
     days = meal_plan.days.all().prefetch_related("entries__recipe").order_by("date")
-    return render(request, "meal_planner.html", {"meal_plan": meal_plan, "days": days})
+    #pass recipes so the add to plan section can show them
+    recipes = Recipe.objects.filter(user=request.user)
+    return render(request, "meal_planner.html", {
+        "meal_plan": meal_plan,
+        "days": days,
+        "recipes": recipes,
+    })
 
 @login_required
 def mealplan_days(request, mealplan_id):
