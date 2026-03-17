@@ -1,11 +1,12 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Analytics - FoodMe{% endblock %}
 
 {% block content %}
 <div class="row mb-4">
     <div class="col-12">
-        <h2 class="fw-bold">Analytics & Insights</h2>
+        <h2 class="fw-bold fm-text-primary">Analytics & Insights</h2>
         <p class="text-muted">Track your cooking habits and trends</p>
     </div>
 </div>
@@ -13,43 +14,43 @@
 <div class="card shadow-sm border-0 mb-4">
     <div class="card-body d-flex flex-column flex-md-row justify-content-between align-items-center py-3">
         <div class="btn-group mb-3 mb-md-0" role="group">
-            <a href="?period=week" class="btn btn-sm px-3 {% if period == 'week' %}btn-dark{% else %}btn-outline-secondary{% endif %}">WEEK</a>
-            <a href="?period=month" class="btn btn-sm px-3 {% if period == 'month' %}btn-dark{% else %}btn-outline-secondary{% endif %}">MONTH</a>
-            <a href="?period=3months" class="btn btn-sm px-3 {% if period == '3months' %}btn-dark{% else %}btn-outline-secondary{% endif %}">3 MONTHS</a>
-            <a href="?period=year" class="btn btn-sm px-3 {% if period == 'year' %}btn-dark{% else %}btn-outline-secondary{% endif %}">YEAR</a>
-            <a href="?period=all" class="btn btn-sm px-3 {% if period == 'all' or not period %}btn-dark{% else %}btn-outline-secondary{% endif %}">ALL TIME</a>
+            <a href="?period=week" class="btn btn-sm px-3 rounded-pill me-2 {% if period == 'week' %}btn-dark{% else %}btn-outline-secondary{% endif %}">WEEK</a>
+            <a href="?period=month" class="btn btn-sm px-3 rounded-pill me-2 {% if period == 'month' %}btn-dark{% else %}btn-outline-secondary{% endif %}">MONTH</a>
+            <a href="?period=3months" class="btn btn-sm px-3 rounded-pill me-2 {% if period == '3months' %}btn-dark{% else %}btn-outline-secondary{% endif %}">3 MONTHS</a>
+            <a href="?period=year" class="btn btn-sm px-3 rounded-pill me-2 {% if period == 'year' %}btn-dark{% else %}btn-outline-secondary{% endif %}">YEAR</a>
+            <a href="?period=all" class="btn btn-sm px-3 rounded-pill {% if period == 'all' or not period %}btn-dark{% else %}btn-outline-secondary{% endif %}">ALL TIME</a>
         </div>
-        <span class="text-muted small">Showing: {{ period_label }}</span>
+        <span class="text-muted small">Showing: <strong>{{ period_label }}</strong></span>
     </div>
 </div>
 
 <div class="row g-3 mb-4">
     <div class="col-md-3 col-6">
-        <div class="card p-3 shadow-sm border-0 h-100">
-            <h6 class="text-muted text-uppercase small fw-bold mb-2">Meals Planned</h6>
+        <div class="card p-3 shadow-sm border-0 h-100 fm-border-primary">
+            <h6 class="text-muted text-uppercase fw-bold mb-2 fm-meta-label">Meals Planned</h6>
             <h2 class="mb-1">{{ total_entries }}</h2>
-            <small class="text-muted">Total meal plan entries</small>
+            <small class="text-muted">Total entries</small>
         </div>
     </div>
     <div class="col-md-3 col-6">
-        <div class="card p-3 shadow-sm border-0 h-100">
-            <h6 class="text-muted text-uppercase small fw-bold mb-2">Unique Recipes</h6>
+        <div class="card p-3 shadow-sm border-0 h-100 fm-border-success">
+            <h6 class="text-muted text-uppercase small fw-bold mb-2 fm-meta-label">Unique Recipes</h6>
             <h2 class="mb-1">{{ total_recipes }}</h2>
             <small class="text-muted">In your library</small>
         </div>
     </div>
     <div class="col-md-3 col-6">
-        <div class="card p-3 shadow-sm border-0 h-100">
-            <h6 class="text-muted text-uppercase small fw-bold mb-2">Cooking Streak</h6>
+        <div class="card p-3 shadow-sm border-0 h-100 fm-border-warning">
+            <h6 class="text-muted text-uppercase small fw-bold mb-2 fm-meta-label">Cooking Streak</h6>
             <h2 class="mb-1">{{ streak }} days</h2>
             <small class="text-muted">Current streak</small>
         </div>
     </div>
     <div class="col-md-3 col-6">
-        <div class="card p-3 shadow-sm border-0 h-100">
-            <h6 class="text-muted text-uppercase small fw-bold mb-2">Meal Type Split</h6>
-            <h2 class="mb-1">{{ breakfast_count }} / {{ lunch_count }} / {{ dinner_count }}</h2>
-            <small class="text-muted">Breakfast / Lunch / Dinner</small>
+        <div class="card p-3 shadow-sm border-0 h-100 fm-border-info">
+            <h6 class="text-muted text-uppercase small fw-bold mb-2 fm-meta-label">Meal Type Split</h6>
+            <h3 class="mb-1">{{ breakfast_count }} / {{ lunch_count }} / {{ dinner_count }}</h3>
+            <small class="text-muted">B / L / D</small>
         </div>
     </div>
 </div>
@@ -58,29 +59,18 @@
     <div class="col-lg-6">
         <div class="card shadow-sm border-0 h-100">
             <div class="card-header bg-white border-bottom-0 pt-4 pb-0">
-                <h6 class="text-uppercase fw-bold mb-0 border-bottom pb-2">Cooking Frequency</h6>
+                <h6 class="text-uppercase fw-bold mb-0 border-bottom pb-2 fm-text-primary">Cooking Frequency</h6>
             </div>
-            <div class="card-body d-flex flex-column justify-content-end align-items-center" style="min-height: 250px;">
-                <div class="w-100 d-flex justify-content-between align-items-end px-3" style="height: 150px; border-bottom: 2px solid #dee2e6;">
-                    {% for month in months %}
-                    <div class="{% if month.count == max_count %}bg-primary bg-opacity-75{% else %}bg-secondary bg-opacity-25{% endif %} rounded-top"
-                        style="width: 12%; height: {% if max_count > 0 %}{% widthratio month.count max_count 100 %}{% else %}0{% endif %}%;"></div>
-                    {% endfor %}
-                </div>
-                <div class="w-100 d-flex justify-content-between px-3 mt-2 text-muted small fw-bold">
-                    {% for month in months %}
-                        <span>{{ month.label }}</span>
-                    {% endfor %}
-                </div>
-                <small class="text-muted mt-3">Meals per month</small>
+            <div class="card-body fm-chart-container">
+                <canvas id="cookingFrequencyChart"></canvas>
             </div>
         </div>
     </div>
 
     <div class="col-lg-6">
         <div class="card shadow-sm border-0 h-100">
-            <div class="card-header bg-white border-bottom-0 pt-4 pb-0">
-                <h6 class="text-uppercase fw-bold mb-0 border-bottom pb-2">Most Planned Recipes</h6>
+            <div class="card-header bg-white border-bottom-0 pt-4 pb-2">
+                <h6 class="text-uppercase fw-bold mb-0 border-bottom pb-2 fm-text-primary">Most Planned Recipes</h6>
             </div>
             <div class="card-body">
                 {% for recipe in top_recipes %}
@@ -89,7 +79,7 @@
                         <span class="fw-bold">{{ forloop.counter }}. {{ recipe.title }}</span>
                         <span class="text-muted">{{ recipe.times_planned }}x planned</span>
                     </div>
-                    <div class="progress" style="height: 12px;">
+                    <div class="progress fm-progress-md fm-progress-rounded">
                         {% if top_recipes.0.times_planned > 0 %}
                         <div class="progress-bar bg-dark" role="progressbar"
                             style="width: {% widthratio recipe.times_planned top_recipes.0.times_planned 100 %}%"></div>
@@ -97,7 +87,7 @@
                     </div>
                 </div>
                 {% empty %}
-                    <p class="text-muted small">no recipes planned yet</p>
+                    <p class="text-muted small">No recipes planned yet.</p>
                 {% endfor %}
             </div>
         </div>
@@ -106,22 +96,22 @@
 
 <div class="card shadow-sm border-0 mb-5">
     <div class="card-header bg-white border-bottom-0 pt-4 pb-0">
-        <h6 class="text-uppercase fw-bold mb-0 border-bottom pb-2">Recipe Tag Distribution</h6>
+        <h6 class="text-uppercase fw-bold mb-0 border-bottom pb-2 fm-text-primary">Recipe Tag Distribution</h6>
     </div>
     <div class="card-body">
         <div class="row g-3">
             {% for tag in tags %}
             <div class="col-md-2 col-4">
-                <div class="border rounded p-2 h-100 d-flex flex-column justify-content-between">
-                    <small class="text-muted text-uppercase fw-bold d-block mb-1" style="font-size: 0.7rem;">{{ tag.name }}</small>
-                    <h4 class="mb-2">{{ tag.recipe_count }}</h4>
-                    <div class="progress rounded-0 mb-1" style="height: 20px;">
+                <div class="border rounded p-2 h-100 d-flex flex-column justify-content-between bg-white shadow-sm">
+                    <small class="text-muted text-uppercase fw-bold d-block mb-1 fm-meta-label">{{ tag.name }}</small>
+                    <h4 class="mb-2 fm-text-primary">{{ tag.recipe_count }}</h4>
+                    <div class="progress rounded-0 mb-1 fm-progress-md">
                         {% if tags.0.recipe_count > 0 %}
                         <div class="progress-bar bg-dark"
                             style="width: {% widthratio tag.recipe_count tags.0.recipe_count 100 %}%;"></div>
                         {% endif %}
                     </div>
-                    <small class="text-muted" style="font-size: 0.7rem;">recipes</small>
+                    <small class="text-muted fm-meta-label">recipes</small>
                 </div>
             </div>
             {% empty %}
@@ -130,4 +120,11 @@
         </div>
     </div>
 </div>
+
+<script id="chart-data" type="application/json">
+    {
+        "labels": [{% for month in months %}"{{ month.label|safe }}"{% if not forloop.last %},{% endif %}{% endfor %}],
+        "values": [{% for month in months %}{{ month.count }}{% if not forloop.last %},{% endif %}{% endfor %}]
+    }
+</script>
 {% endblock %}

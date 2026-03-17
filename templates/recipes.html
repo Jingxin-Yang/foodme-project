@@ -1,23 +1,27 @@
 {% extends 'base.html' %}
+{% load static %}
+
 {% block title %}Recipes - FoodMe{% endblock %}
+
 {% block content %}
 <div class="row mb-4 align-items-center">
     <div class="col-md-8">
-        <h2 class="fw-bold">Recipe Library</h2>
+        <h2 class="fw-bold mb-1 fm-text-primary">Recipe Library</h2>
         <p class="text-muted mb-0">Browse and manage your recipes</p>
     </div>
     <div class="col-md-4 text-md-end mt-3 mt-md-0">
-        <a href="{% url 'add_recipe' %}" class="btn btn-dark fw-bold">+ ADD RECIPE</a>
+        <a href="{% url 'add_recipe' %}" class="btn btn-primary fw-bold px-4 rounded-pill shadow-sm">+ ADD RECIPE</a>
     </div>
 </div>
-<div class="card shadow-sm border-0 mb-4">
-    <div class="card-body p-3">
-        <form method="GET" action="{% url 'recipe_list' %}" class="row g-2" id="filterForm">
+
+<div class="card shadow-sm border-0 mb-4 p-2 p-md-3">
+    <div class="card-body p-2">
+        <form method="GET" action="{% url 'recipe_list' %}" class="row g-2 align-items-center" id="filterForm">
             <div class="col-md-9">
-                <input type="text" name="search" class="form-control bg-light border-0" placeholder="Search recipes..." value="{{ search }}">
+                <input type="text" name="search" class="form-control form-control-lg bg-light border-0 shadow-none" placeholder="Search recipes..." value="{{ search }}">
             </div>
             <div class="col-md-3">
-                <select name="sort" class="form-select border-0 bg-light" onchange="document.getElementById('filterForm').submit()">
+                <select name="sort" class="form-select form-select-lg border-0 bg-light shadow-none fw-bold text-muted" onchange="document.getElementById('filterForm').submit()">
                     <option value="newest" {% if sort == "newest" %}selected{% endif %}>Newest First</option>
                     <option value="oldest" {% if sort == "oldest" %}selected{% endif %}>Oldest First</option>
                     <option value="az" {% if sort == "az" %}selected{% endif %}>A → Z</option>
@@ -26,37 +30,36 @@
             </div>
             <input type="hidden" name="tag" value="{{ tag_filter }}">
         </form>
-        <div class="d-flex flex-wrap gap-2 mt-3">
-            <a href="{% url 'recipe_list' %}?sort={{ sort }}&search={{ search }}&tag=all"
-                class="btn btn-sm px-3 rounded-pill {% if not tag_filter or tag_filter == 'all' %}btn-dark{% else %}btn-outline-secondary{% endif %}">ALL</a>
+
+        <div class="d-flex flex-wrap gap-2 mt-3 pt-2 border-top">
+            <a href="{% url 'recipe_list' %}?sort={{ sort }}&search={{ search }}&tag=all" class="btn btn-sm px-3 rounded-pill fw-bold {% if not tag_filter or tag_filter == 'all' %}btn-primary{% else %}btn-outline-secondary{% endif %}">ALL</a>
             {% for tag in tags %}
-            <a href="{% url 'recipe_list' %}?sort={{ sort }}&search={{ search }}&tag={{ tag.name }}"
-                class="btn btn-sm px-3 rounded-pill {% if tag_filter == tag.name %}btn-dark{% else %}btn-outline-secondary{% endif %}">{{ tag.name|upper }}</a>
+                <a href="{% url 'recipe_list' %}?sort={{ sort }}&search={{ search }}&tag={{ tag.name }}" class="btn btn-sm px-3 rounded-pill fw-bold {% if tag_filter == tag.name %}btn-primary{% else %}btn-outline-secondary{% endif %}">{{ tag.name|upper }}</a>
             {% endfor %}
         </div>
     </div>
 </div>
+
 <div class="row g-4 mb-5">
-    <!-- loop through recipes passed from the view -->
     {% for recipe in recipes %}
     <div class="col-md-4 col-sm-6">
         <div class="card h-100 shadow-sm border-0 overflow-hidden">
             <a href="{% url 'recipe_detail' recipe.id %}" class="text-decoration-none">
                 {% if recipe.image %}
-                    <img src="{{ recipe.image.url }}" class="w-100" style="height: 200px; object-fit: cover;">
+                    <img src="{{ recipe.image.url }}" class="recipe-card-img" alt="{{ recipe.title }}">
                 {% else %}
-                    <div class="bg-secondary bg-opacity-25 d-flex align-items-center justify-content-center" style="height: 200px;">
-                        <span class="text-muted fw-bold">no image</span>
-                    </div>
+                    <img src="{% static 'img/recipe_placeholder.svg' %}" class="recipe-placeholder-img" alt="Placeholder">
                 {% endif %}
             </a>
             <div class="card-body">
-                <h6 class="fw-bold mb-3">{{ recipe.title }}</h6>
-                <!-- show tags for this recipe -->
+                <a href="{% url 'recipe_detail' recipe.id %}" class="text-decoration-none">
+                    <h6 class="fw-bold mb-3 text-dark">{{ recipe.title }}</h6>
+                </a>
+
                 <div class="d-flex gap-2 mb-3 flex-wrap">
                     {% for tag in recipe.tags.all %}
                         <a href="{% url 'recipe_list' %}?tag={{ tag.name }}&sort={{ sort }}"
-                            class="badge border text-dark bg-light text-decoration-none">{{ tag.name|upper }}</a>
+                            class="badge border border-secondary text-muted bg-transparent text-decoration-none">{{ tag.name|upper }}</a>
                     {% endfor %}
                 </div>
             </div>
@@ -67,14 +70,15 @@
         </div>
     </div>
     {% empty %}
-        <div class="col-12">
-            <p class="text-muted">
+        <div class="col-12 text-center py-5">
+            <span class="fs-1 d-block mb-3">🍳</span>
+            <h5 class="fw-bold text-muted">
                 {% if search or tag_filter %}
-                    no recipes match your search — <a href="{% url 'recipe_list' %}">clear filters</a>
+                    No recipes match your filters. <br><a href="{% url 'recipe_list' %}" class="btn btn-outline-secondary btn-sm mt-3 rounded-pill">Clear Filters</a>
                 {% else %}
-                    no recipes yet — <a href="{% url 'add_recipe' %}">add your first one</a>
+                    Your recipe library is empty! <br><a href="{% url 'add_recipe' %}" class="btn btn-primary btn-sm mt-3 rounded-pill">Add Your First Recipe</a>
                 {% endif %}
-            </p>
+            </h5>
         </div>
     {% endfor %}
 </div>
