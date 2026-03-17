@@ -23,4 +23,7 @@ urlpatterns = [
     #user stats
     path("analytics/", views.analytics, name="analytics"),
 
+    #landing
+    path("", views.landing, name="landing"),
+
 ]

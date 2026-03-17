@@ -89,6 +89,11 @@ def user_profile(request):
                 "open_security": True,
             })
 
+        if action == "delete_account":
+            logout(request)
+            user.delete()
+            return redirect("landing")
+
     return render(request, "profile.html")
 
 
@@ -132,10 +137,19 @@ def dashboard(request):
     })
 
 
+def landing(request):
+    #redirect to dashboard if already logged in
+    if request.user.is_authenticated:
+        return redirect("dashboard")
+    return render(request, "landing.html")
+
+
 @login_required
 def analytics(request):
     from django.db.models import Count, Q
+    from django.db.models.functions import TruncMonth
     from datetime import timedelta
+    import calendar
 
     #get selected period from query param, default to all time
     period = request.GET.get("period", "all")
@@ -196,6 +210,23 @@ def analytics(request):
         streak += 1
         check_date = check_date - timedelta(days=1)
 
+    #monthly frequency — last 6 months for the bar chart
+    monthly_data = (
+        MealPlanEntry.objects
+        .filter(day__meal_plan__user=request.user)
+        .annotate(month=TruncMonth("day__date"))
+        .values("month")
+        .annotate(count=Count("id"))
+        .order_by("month")
+    )
+    months = []
+    for i in range(5, -1, -1):
+        d = today.replace(day=1) - timedelta(days=i * 30)
+        month_name = calendar.month_abbr[d.month].upper()
+        count = next((m["count"] for m in monthly_data if m["month"].month == d.month and m["month"].year == d.year), 0)
+        months.append({"label": month_name, "count": count})
+    max_count = max((m["count"] for m in months), default=1)
+
     return render(request, "analytics.html", {
         "total_recipes": total_recipes,
         "total_entries": total_entries,
@@ -207,4 +238,6 @@ def analytics(request):
         "streak": streak,
         "period": period,
         "period_label": period_labels.get(period, "All Time"),
+        "months": months,
+        "max_count": max_count,
     })
