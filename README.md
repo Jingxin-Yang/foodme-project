@@ -28,13 +28,12 @@ FoodMe helps users organise their own recipes, plan weekly meals, and automatica
 - **Fonts**: Google Fonts (Nunito)
 
 ## Setup
-# Requires Python 3.10 - 3.12
 
 ```bash
 # Clone the repository
 git clone https://github.com/Jingxin-Yang/foodme-project.git
 cd foodme-project
-
+# Requires Python 3.10 - 3.12
 # Create virtual environment
 python -m venv venv
 source venv/bin/activate  # Mac/Linux
