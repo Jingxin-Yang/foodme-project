@@ -4,7 +4,7 @@ from django.urls import reverse
 from recipes.models import Recipe, Tag, Ingredient, RecipeIngredient, RecipeStep
 from mealplanner.models import MealPlan, MealPlanDay, MealPlanEntry
 from shopping.models import ShoppingList, ShoppingItem
-from shopping.views import generate_items_from_plan
+from shopping.views import _generate_items_from_plan
 from datetime import date, timedelta
 
 
@@ -110,7 +110,7 @@ class ShoppingListGenerationTest(TestCase):
     def test_ingredients_are_merged(self):
         """Shared ingredients should have their quantities summed."""
         sl = ShoppingList.objects.create(user=self.user, meal_plan=self.plan)
-        generate_items_from_plan(sl, self.plan)
+        _generate_items_from_plan(sl, self.plan)
         items = sl.items.all()
         self.assertEqual(items.count(), 2)  # chicken + rice, not 3
 
