@@ -20,7 +20,7 @@ FoodMe helps users organise their own recipes, plan weekly meals, and automatica
 
 ## Tech Stack
 
-- **Backend**: Python 3, Django 5.2
+- **Backend**: Python 3.10, Django 5.2
 - **Frontend**: Django Templates, Bootstrap 5.3, vanilla JavaScript
 - **Charts**: Chart.js 4.4
 - **Database**: SQLite
@@ -28,6 +28,7 @@ FoodMe helps users organise their own recipes, plan weekly meals, and automatica
 - **Fonts**: Google Fonts (Nunito)
 
 ## Setup
+# Requires Python 3.10 - 3.12
 
 ```bash
 # Clone the repository
