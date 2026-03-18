@@ -1,0 +1,1 @@
+web: gunicorn foodme_project_apps_backend.wsgi --log-file -
