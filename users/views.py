@@ -2,43 +2,78 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
-from datetime import date
+from django.contrib import messages
+from datetime import date, timedelta
+import calendar
+from django.db.models import Count, Q
+from django.db.models.functions import TruncMonth
+
 from recipes.models import Recipe, Tag
 from mealplanner.models import MealPlan, MealPlanEntry
 from shopping.models import ShoppingList
 
 
+def _calculate_cooking_streak(user, today):
+    """
+    Helper function to calculate consecutive days of logged meals.
+    Extracted to enforce DRY principles, as this is used in multiple views (dashboard & analytics).
+    """
+    streak = 0
+    check_date = today
+
+    # If there is no entry for today yet, check if the streak was active as of yesterday
+    if not MealPlanEntry.objects.filter(day__meal_plan__user=user, day__date=check_date).exists():
+        check_date = today - timedelta(days=1)
+
+    while MealPlanEntry.objects.filter(day__meal_plan__user=user, day__date=check_date).exists():
+        streak += 1
+        check_date = check_date - timedelta(days=1)
+
+    return streak
+
+
 def register_user(request):
-    #post /register/ creates user account and immediately logs them in
+    if request.user.is_authenticated:
+        return redirect("dashboard")
+
     if request.method == "POST":
         username = request.POST.get("username")
         password = request.POST.get("password")
         email = request.POST.get("email", "")
+
+        # Validate unique username before creation to prevent IntegrityError
         if User.objects.filter(username=username).exists():
             return render(request, "login.html", {"error": "username already taken.", "register": True})
+
         user = User.objects.create_user(username=username, password=password, email=email)
-        login(request, user) #immediately logs in after registering
+        login(request, user)
         return redirect("dashboard")
+
     return render(request, "login.html", {"register": True})
 
 
 def login_user(request):
-    #post login will expect a username and pwd
-    #deliberately vague error so you cant tell if username exists
+    if request.user.is_authenticated:
+        return redirect("dashboard")
+
     if request.method == "POST":
         username = request.POST.get("username")
         password = request.POST.get("password")
+
+        # Authenticate securely against the database using Django's built-in auth system
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
             return redirect("dashboard")
+
+        # Intentionally generic error message to prevent username enumeration attacks
         return render(request, "login.html", {"error": "invalid credentials."})
+
     return render(request, "login.html")
 
 
 @login_required
 def logout_user(request):
-    #will log user out and redirect to login page
     if request.method == "POST":
         logout(request)
         return redirect("login_user")
@@ -47,47 +82,45 @@ def logout_user(request):
 
 @login_required
 def user_profile(request):
-    #get will return logged in user's profile
-    #post will update username, email or password depending on _action
     if request.method == "POST":
         action = request.POST.get("_action")
         user = request.user
 
+        # Route distinct form submissions within a single view using hidden action flags
         if action == "update_profile":
             user.username = request.POST.get("username", user.username)
             user.email = request.POST.get("email", user.email)
             user.save()
-            return render(request, "profile.html", {
-                "success": "profile updated successfully.",
-                "open_profile": True,
-            })
+
+            # Utilize messages framework and PRG pattern to prevent form resubmission and CSRF rotation errors
+            messages.success(request, "profile updated successfully.")
+            return redirect("user_profile")
 
         if action == "update_password":
             current = request.POST.get("current_password")
             new_password = request.POST.get("new_password")
             confirm = request.POST.get("confirm_password")
+
             if not user.check_password(current):
-                return render(request, "profile.html", {
-                    "password_error": "current password is incorrect.",
-                    "open_security": True,
-                })
+                messages.error(request, "current password is incorrect.")
+                return redirect("user_profile")
+
             if new_password != confirm:
-                return render(request, "profile.html", {
-                    "password_error": "passwords do not match.",
-                    "open_security": True,
-                })
+                messages.error(request, "passwords do not match.")
+                return redirect("user_profile")
+
+            # Enforce minimum security standards for user passwords
             if len(new_password) < 8 or not any(c.isdigit() for c in new_password):
-                return render(request, "profile.html", {
-                    "password_error": "password must be 8+ characters and contain a number.",
-                    "open_security": True,
-                })
+                messages.error(request, "password must be 8+ characters and contain a number.")
+                return redirect("user_profile")
+
             user.set_password(new_password)
             user.save()
-            login(request, user) #keep user logged in after password change
-            return render(request, "profile.html", {
-                "password_success": "password updated successfully.",
-                "open_security": True,
-            })
+
+            # Maintain active session after password rotation to prevent unexpected logouts
+            login(request, user)
+            messages.success(request, "password updated successfully.")
+            return redirect("user_profile")
 
         if action == "delete_account":
             logout(request)
@@ -101,27 +134,23 @@ def user_profile(request):
 def dashboard(request):
     today = date.today()
 
-    #get latest meal plan
     latest_plan = MealPlan.objects.filter(user=request.user).order_by("-week_start").first()
 
-    #todays meals from the latest plan
-    todays_entries = []
-    if latest_plan:
-        todays_entries = MealPlanEntry.objects.filter(
-            day__meal_plan=latest_plan,
-            day__date=today
-        ).select_related("recipe")
+    # Pre-select related recipes to optimize rendering of today's meals
+    todays_entries = MealPlanEntry.objects.filter(
+        day__meal_plan__user=request.user,
+        day__date=today
+    ).select_related("recipe")
 
-    #recent recipes
+    streak = _calculate_cooking_streak(request.user, today)
+
     recent_recipes = Recipe.objects.filter(user=request.user).order_by("-created_at")[:4]
 
-    #shopping items remaining across all lists
     remaining_items = 0
     latest_list = ShoppingList.objects.filter(user=request.user).order_by("-created_at").first()
     if latest_list:
         remaining_items = latest_list.items.filter(purchased=False).count()
 
-    #quick stats
     total_recipes = Recipe.objects.filter(user=request.user).count()
     total_plans = MealPlan.objects.filter(user=request.user).count()
 
@@ -134,11 +163,12 @@ def dashboard(request):
         "total_recipes": total_recipes,
         "total_plans": total_plans,
         "latest_list": latest_list,
+        "streak": streak,
     })
 
 
 def landing(request):
-    #redirect to dashboard if already logged in
+    # Route authenticated users directly to the application core
     if request.user.is_authenticated:
         return redirect("dashboard")
     return render(request, "landing.html")
@@ -146,12 +176,6 @@ def landing(request):
 
 @login_required
 def analytics(request):
-    from django.db.models import Count, Q
-    from django.db.models.functions import TruncMonth
-    from datetime import timedelta
-    import calendar
-
-    #get selected period from query param, default to all time
     period = request.GET.get("period", "all")
     today = date.today()
 
@@ -163,7 +187,7 @@ def analytics(request):
         "all": "All Time",
     }
 
-    #calculate the start date based on the selected period
+    # Determine dynamic cutoff date based on user selection
     if period == "week":
         start_date = today - timedelta(days=7)
     elif period == "month":
@@ -175,7 +199,6 @@ def analytics(request):
     else:
         start_date = None
 
-    #base entry queryset filtered by period if one is set
     entry_qs = MealPlanEntry.objects.filter(day__meal_plan__user=request.user)
     if start_date:
         entry_qs = entry_qs.filter(day__date__gte=start_date)
@@ -183,7 +206,7 @@ def analytics(request):
     total_recipes = Recipe.objects.filter(user=request.user).count()
     total_entries = entry_qs.count()
 
-    #most used recipes in meal plans within the period
+    # Aggregate usage frequency to identify top planned recipes
     top_recipes = Recipe.objects.filter(
         user=request.user
     ).annotate(
@@ -193,39 +216,64 @@ def analytics(request):
         )
     ).order_by("-times_planned")[:5]
 
-    #meal type breakdown within the period
     breakfast_count = entry_qs.filter(meal_type="breakfast").count()
     lunch_count = entry_qs.filter(meal_type="lunch").count()
     dinner_count = entry_qs.filter(meal_type="dinner").count()
 
-    #tag breakdown across user recipes
+    # Analyze tag distribution
     tags = Tag.objects.filter(recipe__user=request.user).annotate(
         recipe_count=Count("recipe")
     ).order_by("-recipe_count")
 
-    #cooking streak — consecutive days with entries up to today (not period filtered)
-    streak = 0
-    check_date = today
-    while MealPlanEntry.objects.filter(day__meal_plan__user=request.user, day__date=check_date).exists():
-        streak += 1
-        check_date = check_date - timedelta(days=1)
+    streak = _calculate_cooking_streak(request.user, today)
 
-    #monthly frequency — last 6 months for the bar chart
-    monthly_data = (
-        MealPlanEntry.objects
-        .filter(day__meal_plan__user=request.user)
-        .annotate(month=TruncMonth("day__date"))
-        .values("month")
-        .annotate(count=Count("id"))
-        .order_by("month")
-    )
-    months = []
-    for i in range(5, -1, -1):
-        d = today.replace(day=1) - timedelta(days=i * 30)
-        month_name = calendar.month_abbr[d.month].upper()
-        count = next((m["count"] for m in monthly_data if m["month"].month == d.month and m["month"].year == d.year), 0)
-        months.append({"label": month_name, "count": count})
-    max_count = max((m["count"] for m in months), default=1)
+    # Build chronological dataset for front-end rendering (Chart.js compatibility)
+    chart_data = []
+    if period == "week":
+        for i in range(6, -1, -1):
+            d = today - timedelta(days=i)
+            count = entry_qs.filter(day__date=d).count()
+            chart_data.append({"label": d.strftime('%a').upper(), "count": count})
+
+    elif period == "month":
+        for i in range(29, -1, -1):
+            d = today - timedelta(days=i)
+            count = entry_qs.filter(day__date=d).count()
+            label = d.strftime('%m/%d') if i % 5 == 0 or i == 0 else ""
+            chart_data.append({"label": label, "count": count})
+
+    else:
+        if period == "3months":
+            month_range = 3
+        elif period == "year":
+            month_range = 12
+        else:
+            first_entry = MealPlanEntry.objects.filter(day__meal_plan__user=request.user).order_by("day__date").first()
+            if first_entry:
+                delta = today.year * 12 + today.month - (first_entry.day.date.year * 12 + first_entry.day.date.month)
+                month_range = max(6, delta + 1)
+            else:
+                month_range = 6
+
+        # Group entries by month for long-term trend analysis
+        monthly_stats = (
+            entry_qs
+            .annotate(m=TruncMonth("day__date"))
+            .values("m")
+            .annotate(c=Count("id"))
+            .order_by("m")
+        )
+
+        for i in range(month_range - 1, -1, -1):
+            target_month = (today.month - i - 1) % 12 + 1
+            target_year = today.year + (today.month - i - 1) // 12
+            month_abbr = calendar.month_abbr[target_month].upper()
+            label = f"{month_abbr} {target_year}" if month_range > 6 else month_abbr
+            count = next((item["c"] for item in monthly_stats if
+                          item["m"].month == target_month and item["m"].year == target_year), 0)
+            chart_data.append({"label": label, "count": count})
+
+    max_count = max((item["count"] for item in chart_data), default=1)
 
     return render(request, "analytics.html", {
         "total_recipes": total_recipes,
@@ -238,6 +286,6 @@ def analytics(request):
         "streak": streak,
         "period": period,
         "period_label": period_labels.get(period, "All Time"),
-        "months": months,
+        "months": chart_data,
         "max_count": max_count,
     })

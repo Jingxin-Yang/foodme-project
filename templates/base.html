@@ -4,65 +4,94 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}FoodMe{% endblock %}</title>
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js" defer></script>
+
     {% load static %}
+    <link rel="icon" href="{% static 'img/favicon.ico' %}" type="image/x-icon">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <meta name="description" content="FoodMe - Personal meal planning and recipe management application">
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="#">FoodMe</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+
+    <nav class="navbar navbar-expand-lg navbar-light sticky-top py-3">
+        <div class="container-fluid px-4 px-lg-5">
+            <a class="navbar-brand d-flex align-items-center" href="{% if request.user.is_authenticated %}{% url 'dashboard' %}{% else %}{% url 'landing' %}{% endif %}">
+                <img src="{% static 'img/logo.png' %}" alt="FoodMe Logo" height="32">
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
+
             <div class="collapse navbar-collapse" id="navbarNav">
                 {% if request.user.is_authenticated %}
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'dashboard' %}">DASHBOARD</a>
+                        <a class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}" href="{% url 'dashboard' %}">DASHBOARD</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'recipe_list' %}">RECIPES</a>
+                        <a class="nav-link {% if request.resolver_match.url_name in 'recipe_list,recipe_detail,add_recipe,edit_recipe' %}active{% endif %}" href="{% url 'recipe_list' %}">RECIPES</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'mealplan_list' %}">MEAL PLANNER</a>
+                        <a class="nav-link {% if request.resolver_match.url_name == 'mealplan_list' %}active{% endif %}" href="{% url 'mealplan_list' %}">MEAL PLANNER</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'shoppinglist_list' %}">SHOPPING LIST</a>
+                        <a class="nav-link {% if request.resolver_match.url_name == 'shoppinglist_list' %}active{% endif %}" href="{% url 'shoppinglist_list' %}">SHOPPING LIST</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'analytics' %}">ANALYTICS</a>
+                        <a class="nav-link {% if request.resolver_match.url_name == 'analytics' %}active{% endif %}" href="{% url 'analytics' %}">ANALYTICS</a>
                     </li>
                 </ul>
+
                 <div class="nav-item dropdown d-flex align-items-center ms-3">
                     <a class="nav-link dropdown-toggle d-flex align-items-center text-decoration-none" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <span class="rounded-circle px-2 py-1 text-white fw-bold" style="background-color: var(--fm-primary);">{{ request.user.username|first|upper }}</span>
+                        <span class="rounded-circle text-white fw-bold shadow-sm fm-bg-primary fm-avatar-nav">{{ request.user.username|first|upper }}</span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2" aria-labelledby="userDropdown">
-                        <li><span class="dropdown-item-text text-muted small">Signed in as {{ request.user.username }}</span></li>
+                        <li><span class="dropdown-item-text text-muted small">Signed in as <strong>{{ request.user.username }}</strong></span></li>
                         <li><hr class="dropdown-divider"></li>
                         <li><a class="dropdown-item py-2" href="{% url 'user_profile' %}">👤 Profile & Settings</a></li>
-                        <li><a class="dropdown-item py-2" href="{% url 'dashboard' %}">📊 My Dashboard</a></li>
-                        <li><hr class="dropdown-divider"></li>
                         <li>
-                            <form method="POST" action="{% url 'logout_user' %}">
+                            <form method="POST" action="{% url 'logout_user' %}" class="m-0 p-0">
                                 {% csrf_token %}
-                                <button type="submit" class="dropdown-item py-2 text-danger">🚪 Sign out</button>
+                                <button type="submit" class="dropdown-item py-2 text-danger border-0 bg-transparent text-start w-100">🚪 Sign out</button>
                             </form>
                         </li>
                     </ul>
                 </div>
+
+                {% else %}
+                <ul class="navbar-nav ms-auto align-items-center">
+                    <li class="nav-item">
+                        <a class="nav-link fw-bold me-3" href="#features">Features</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link fw-bold me-4" href="#about">About</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-outline-dark rounded-pill px-4 me-2 fw-bold" href="{% url 'login_user' %}">LOG IN</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-primary rounded-pill px-4 fw-bold" href="{% url 'register_user' %}">GET STARTED</a>
+                    </li>
+                </ul>
                 {% endif %}
             </div>
         </div>
     </nav>
-    <main class="container mt-4">
-        {% block content %}
-        {% endblock %}
+
+    <div id="statusAnnouncer" class="visually-hidden" aria-live="polite" aria-atomic="true"></div>
+
+    <main class="container {% if request.resolver_match.url_name != 'landing' %}mt-4{% endif %}">
+        {% block content %}{% endblock %}
     </main>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{% static 'js/main.js' %}"></script>
 </body>

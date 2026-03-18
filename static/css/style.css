@@ -1,109 +1,175 @@
 /* ==========================================
-   FoodMe 全局主题变量 (清新健康风)
+   1. FoodMe Global Theme Variables
 ========================================== */
 :root {
-    /* 核心主色调：罗勒绿 (对比度高，满足 WCAG 4.5:1 标准) */
     --fm-primary: #2d6a4f;
-    /* 辅色调：浅牛油果绿 (用于背景高亮或悬停) */
     --fm-secondary: #d8f3dc;
-    /* 强调色：活力的番茄红 (可以用于卡路里警告或删除按钮) */
     --fm-accent: #e63946;
-
-    /* 基础灰度 */
     --fm-bg-light: #f8f9fa;
     --fm-text-dark: #1b4332;
     --fm-text-muted: #6c757d;
+    --fm-border-radius-lg: 16px;
+    --fm-border-radius-md: 12px;
+    --fm-border-radius-sm: 8px;
 }
 
 /* ==========================================
-   全局重置与排版
+   2. Global Reset & Typography
 ========================================== */
 body {
     font-family: 'Nunito', sans-serif;
-    background-color: var(--fm-bg-light); /* 整个网页的背景变成极浅的灰色，让白色卡片更立体 */
+    background-color: var(--fm-bg-light);
     color: var(--fm-text-dark);
 }
 
 h1, h2, h3, h4, h5, h6 {
     font-weight: 700;
-    color: var(--fm-primary); /* 让所有标题都带上主色调 */
+    color: var(--fm-primary);
 }
 
+.fm-text-primary { color: var(--fm-primary) !important; }
+.fm-bg-primary { background-color: var(--fm-primary) !important; }
+.fm-micro-text { font-size: 0.75rem; }
+.fm-meta-label { font-size: 0.7rem; }
+
 /* ==========================================
-   卡片 (Cards) 美化
+   3. Generic Components (Cards & Progress)
 ========================================== */
 .card {
-    border-radius: 16px; /* 更圆润的边角 */
+    border-radius: var(--fm-border-radius-lg);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-/* 鼠标悬停时卡片微微浮起，增加一点交互感 */
 .card:hover {
     transform: translateY(-3px);
     box-shadow: 0 10px 20px rgba(45, 106, 79, 0.08) !important;
 }
 
+/* Accent Borders */
+.fm-accent-border { border-left-width: 4px !important; border-left-style: solid !important; }
+.fm-border-primary, .fm-plan-card-border { border-left-color: var(--fm-primary) !important; }
+.fm-border-success { border-left-color: #198754 !important; }
+.fm-border-warning { border-left-color: #ffc107 !important; }
+.fm-border-info    { border-left-color: #0dcaf0 !important; }
+
+/* Progress Bars */
+.fm-progress-md { height: 12px; }
+.fm-progress-rounded { border-radius: 6px; }
+
 /* ==========================================
-   导航栏 (Navbar) 美化
+   4. Navigation & Buttons
 ========================================== */
 .navbar {
     background-color: #ffffff !important;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
 }
 
-.navbar-brand {
-    font-weight: 800;
-    font-size: 1.5rem;
-    color: var(--fm-primary) !important;
-    letter-spacing: -0.5px;
-}
+.navbar-brand { font-weight: 800; font-size: 1.5rem; color: var(--fm-primary) !important; }
 
 .nav-link {
     font-weight: 600;
     font-size: 0.9rem;
     color: var(--fm-text-muted) !important;
-    transition: color 0.2s ease;
 }
 
-.nav-link:hover, .nav-link.active {
-    color: var(--fm-primary) !important;
+.nav-link:hover, .nav-link.active { color: var(--fm-primary) !important; }
+
+.nav-link.active {
+    border-bottom: 3px solid var(--fm-primary);
+    padding-bottom: calc(0.5rem - 3px);
 }
 
-/* ==========================================
-   按钮 (Buttons) 覆写
-========================================== */
 .btn-primary {
     background-color: var(--fm-primary);
     border-color: var(--fm-primary);
-    border-radius: 8px;
+    border-radius: var(--fm-border-radius-sm);
     font-weight: 600;
 }
 
-.btn-primary:hover {
-    background-color: #1b4332;
-    border-color: #1b4332;
-}
-
-/* 快捷操作区那种带边框的按钮 */
 .btn-outline-secondary {
     border-color: #e9ecef;
     color: var(--fm-text-dark);
-    border-radius: 12px;
+    border-radius: var(--fm-border-radius-md);
 }
 
-.btn-outline-secondary:hover {
-    background-color: var(--fm-secondary);
-    color: var(--fm-primary);
-    border-color: var(--fm-secondary);
+/* ==========================================
+   5. Media & Image Handling
+========================================== */
+.fm-object-fit-cover { object-fit: cover; }
+
+/* Recipe Thumbnails (Dashboard/Lists) */
+.recipe-thumb { width: 60px; height: 60px; object-fit: cover; }
+.recipe-thumb-placeholder, .recipe-placeholder-img { background-color: #e9ecef; }
+
+/* Recipe Card Images */
+.recipe-card-img, .fm-recipe-select-img {
+    height: 160px;
+    width: 100%;
+    object-fit: cover;
+    object-position: center;
 }
+
+/* Detail Page Image */
+.fm-detail-img { height: 400px; object-fit: cover; }
+
+/* Avatars */
+.fm-avatar-lg {
+    width: 80px; height: 80px;
+    background-color: var(--fm-primary);
+    font-size: 2rem;
+}
+
+.fm-avatar-nav {
+    width: 32px; height: 32px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ==========================================
+   6. Domain Specific Modules
+========================================== */
+
+/* Profile Settings */
+.nav-pills .nav-link { color: var(--fm-text-dark); border-radius: var(--fm-border-radius-md); transition: all 0.2s; margin-bottom: 4px; }
+.nav-pills .nav-link.active { background-color: var(--fm-primary) !important; color: #ffffff !important; }
+.nav-pills .nav-link:hover:not(.active) { background-color: var(--fm-secondary); color: var(--fm-primary); }
+
+.fm-diet-badge {
+    background-color: var(--fm-secondary) !important;
+    color: var(--fm-primary) !important;
+    border-radius: var(--fm-border-radius-sm);
+    padding: 6px 12px;
+}
+
+/* Recipe Steps & Interaction */
+.fm-inline-form { display: inline; }
+.fm-step-circle, .fm-step-badge {
+    width: 32px !important;
+    height: 32px !important;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0 !important;
+    border-radius: 50% !important;
+    font-size: 0.9rem;
+    padding: 0 !important;
+}
+
+.fm-edit-hidden { display: none !important; }
+.fm-prepared-item { opacity: 0.4; text-decoration: line-through; transition: all 0.3s ease; }
+.fm-upload-box, .fm-upload-box-edit { border-style: dashed !important; height: 180px; }
+
+/* Analytics */
+.fm-chart-container { min-height: 250px; position: relative; }
+
+/* Auth */
+.fm-login-container .row { justify-content: center; width: 100%; }
+
+/* ==========================================
+   7. Media Queries & Print
+========================================== */
 @media print {
-    nav, .btn, form, #emailListBtn, .card-header, .col-lg-4 {
-        display: none !important;
-    }
-    .col-lg-8 {
-        width: 100% !important;
-    }
-    body {
-        font-size: 12pt;
-    }
+    .navbar, .btn, .card-header, .fm-remove-btn, form { display: none !important; }
+    .card { border: 1px solid #ddd !important; transform: none !important; }
 }

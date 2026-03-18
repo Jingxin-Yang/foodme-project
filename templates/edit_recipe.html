@@ -1,153 +1,142 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Edit {{ recipe.title }} - FoodMe{% endblock %}
 
 {% block content %}
 <div class="row mb-4">
     <div class="col-md-8">
-        <h2 class="fw-bold">Edit Recipe</h2>
+        <h2 class="fw-bold fm-text-primary">Edit Recipe</h2>
         <p class="text-muted">Update your recipe details below.</p>
     </div>
     <div class="col-md-4 text-md-end mt-3 mt-md-0 d-flex justify-content-md-end align-items-center">
-        <a href="{% url 'recipe_detail' recipe.id %}" class="btn btn-outline-secondary fw-bold me-2">CANCEL</a>
-        <button type="submit" form="editRecipeForm" class="btn btn-primary fw-bold">SAVE CHANGES</button>
+        <a href="{% url 'recipe_detail' recipe.id %}" class="btn btn-outline-secondary fw-bold me-2 rounded-pill px-4">CANCEL</a>
+        <button type="submit" form="editRecipeForm" class="btn btn-primary fw-bold rounded-pill px-4">SAVE CHANGES</button>
     </div>
 </div>
 
 <form id="editRecipeForm" action="{% url 'edit_recipe' recipe.id %}" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     <div class="row g-4 mb-5">
-
         <div class="col-lg-8">
-
             <div class="card shadow-sm border-0 mb-4 p-4">
-                <h5 class="fw-bold mb-4 border-bottom pb-2">Basic Information</h5>
-
+                <h5 class="fw-bold mb-4 border-bottom pb-2 fm-text-primary">Basic Information</h5>
                 <div class="mb-4">
-                    <label class="form-label small text-muted text-uppercase fw-bold">Recipe Title</label>
-                    <!-- pre-fill with existing value -->
-                    <input type="text" name="title" class="form-control form-control-lg" value="{{ recipe.title }}" required>
+                    <label for="editRecipeTitle" class="form-label small text-muted text-uppercase fw-bold">Recipe Title</label>
+                    <input type="text" name="title" id="editRecipeTitle" class="form-control form-control-lg bg-light border-0" value="{{ recipe.title }}" required>
                 </div>
-
                 <div class="mb-4">
-                    <label class="form-label small text-muted text-uppercase fw-bold">Description</label>
-                    <textarea name="description" class="form-control" rows="3">{{ recipe.description }}</textarea>
+                    <label for="editRecipeDesc" class="form-label small text-muted text-uppercase fw-bold">Description</label>
+                    <textarea name="description" id="editRecipeDesc" class="form-control bg-light border-0" rows="3">{{ recipe.description }}</textarea>
                 </div>
             </div>
 
             <div class="card shadow-sm border-0 mb-4 p-4">
-                <h5 class="fw-bold mb-4 border-bottom pb-2">Instructions</h5>
-                <!-- pre-fill existing steps -->
-                {% for step in recipe.steps.all %}
-                <div class="d-flex mb-3">
-                    <div class="me-3 mt-1">
-                        <span class="badge bg-dark rounded-circle p-2 px-3">{{ step.step_number }}</span>
+                <h5 class="fw-bold mb-4 border-bottom pb-2 fm-text-primary">Instructions</h5>
+                <div id="stepsContainer">
+                    {% for step in recipe.steps.all %}
+                    <div class="d-flex mb-3">
+                        <div class="me-3 mt-1">
+                            <span class="badge bg-dark rounded-circle fm-step-badge p-2 px-3">{{ step.step_number }}</span>
+                        </div>
+                        <div class="flex-grow-1">
+                            <textarea name="steps" class="form-control bg-light border-0" rows="2">{{ step.instruction }}</textarea>
+                        </div>
+                        <div class="ms-2 mt-1">
+                            <button type="button" class="btn btn-sm btn-outline-danger border-0" aria-label="Remove step">✕</button>
+                        </div>
                     </div>
-                    <div class="flex-grow-1">
-                        <textarea name="steps" class="form-control" rows="2">{{ step.instruction }}</textarea>
+                    {% empty %}
+                    <div class="d-flex mb-3">
+                        <div class="me-3 mt-1">
+                            <span class="badge bg-dark rounded-circle fm-step-badge p-2 px-3">1</span>
+                        </div>
+                        <div class="flex-grow-1">
+                            <textarea name="steps" class="form-control bg-light border-0" rows="2" placeholder="Describe this step..."></textarea>
+                        </div>
+                        <div class="ms-2 mt-1">
+                            <button type="button" class="btn btn-sm btn-outline-danger border-0" aria-label="Remove step">✕</button>
+                        </div>
                     </div>
-                    <div class="ms-2 mt-1">
-                        <button type="button" class="btn btn-sm btn-outline-danger border-0">✕</button>
-                    </div>
+                    {% endfor %}
                 </div>
-                {% empty %}
-                <div class="d-flex mb-3">
-                    <div class="me-3 mt-1">
-                        <span class="badge bg-dark rounded-circle p-2 px-3">1</span>
-                    </div>
-                    <div class="flex-grow-1">
-                        <textarea name="steps" class="form-control" rows="2" placeholder="Describe this step..."></textarea>
-                    </div>
-                    <div class="ms-2 mt-1">
-                        <button type="button" class="btn btn-sm btn-outline-danger border-0">✕</button>
-                    </div>
-                </div>
-                {% endfor %}
-                <button type="button" class="btn btn-outline-secondary btn-sm fw-bold mt-2 w-100">+ ADD ANOTHER STEP</button>
+                <button type="button" class="btn btn-outline-secondary btn-sm fw-bold mt-2 w-100 rounded-pill">+ ADD ANOTHER STEP</button>
             </div>
-
         </div>
 
         <div class="col-lg-4">
-
             <div class="card shadow-sm border-0 mb-4 p-4 text-center">
-                <h5 class="fw-bold mb-4 border-bottom pb-2 text-start">Photo</h5>
+                <h5 class="fw-bold mb-4 border-bottom pb-2 text-start fm-text-primary">Photo</h5>
                 {% if recipe.image %}
-                    <img src="{{ recipe.image.url }}" class="rounded mb-3 w-100" style="height: 180px; object-fit: cover;">
+                    <img src="{{ recipe.image.url }}" class="rounded mb-3 w-100 fm-edit-img-preview" alt="Recipe photo">
                 {% else %}
-                    <div class="bg-light border rounded-3 d-flex flex-column align-items-center justify-content-center p-4 mb-3" style="border-style: dashed !important; height: 180px;">
+                    <div class="bg-light border rounded-3 d-flex flex-column align-items-center justify-content-center p-4 mb-3 fm-upload-box-edit">
                         <span class="fs-1 mb-2">📷</span>
                         <small class="text-muted fw-bold">Upload a photo</small>
-                        <small class="text-muted" style="font-size: 0.7rem;">JPEG, PNG up to 5MB</small>
                     </div>
                 {% endif %}
-                <input name="image" class="form-control form-control-sm" type="file">
+                <input name="image" class="form-control form-control-sm bg-light border-0" type="file">
             </div>
 
             <div class="card shadow-sm border-0 mb-4 p-4">
-                <h5 class="fw-bold mb-4 border-bottom pb-2">Ingredients</h5>
-                <!-- pre-fill existing ingredients -->
-                {% for ri in recipe.recipe_ingredients.all %}
-                <div class="row g-2 mb-2">
-                    <div class="col-4">
-                        <input type="number" name="quantities" class="form-control form-control-sm" value="{{ ri.quantity }}" min="0.01" step="0.01">
+                <h5 class="fw-bold mb-4 border-bottom pb-2 fm-text-primary">Ingredients</h5>
+                <div id="ingredientsContainer">
+                    {% for ri in recipe.recipe_ingredients.all %}
+                    <div class="row g-2 mb-2">
+                        <div class="col-4">
+                            <input type="number" name="quantities" class="form-control form-control-sm bg-light border-0" value="{{ ri.quantity }}" step="0.01">
+                        </div>
+                        <div class="col-3">
+                            <input type="text" name="units" class="form-control form-control-sm bg-light border-0" value="{{ ri.unit }}">
+                        </div>
+                        <div class="col-4">
+                            <select name="ingredient_ids" class="form-select form-select-sm bg-light border-0 fw-bold" aria-label="Select ingredient">
+                                {% for ingredient in ingredients %}
+                                    <option value="{{ ingredient.id }}" {% if ingredient.id == ri.ingredient.id %}selected{% endif %}>
+                                        {{ ingredient.name }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-1 text-end">
+                            <button type="button" class="btn btn-sm text-danger p-0 mt-1" aria-label="Remove ingredient">✕</button>
+                        </div>
                     </div>
-                    <div class="col-3">
-                        <input type="text" name="units" class="form-control form-control-sm" value="{{ ri.unit }}">
+                    {% empty %}
+                    <div class="row g-2 mb-2">
+                        <div class="col-4">
+                            <input type="number" name="quantities" class="form-control form-control-sm bg-light border-0" placeholder="Qty" step="0.01">
+                        </div>
+                        <div class="col-3">
+                            <input type="text" name="units" class="form-control form-control-sm bg-light border-0" placeholder="Unit">
+                        </div>
+                        <div class="col-4">
+                            <select name="ingredient_ids" class="form-select form-select-sm bg-light border-0 fw-bold" aria-label="Select ingredient">
+                                {% for ingredient in ingredients %}
+                                    <option value="{{ ingredient.id }}">{{ ingredient.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-1 text-end">
+                            <button type="button" class="btn btn-sm text-danger p-0 mt-1" aria-label="Remove ingredient">✕</button>
+                        </div>
                     </div>
-                    <div class="col-4">
-                        <!-- show current ingredient, allow changing -->
-                        <select name="ingredient_ids" class="form-select form-select-sm">
-                            {% for ingredient in ingredients %}
-                                <option value="{{ ingredient.id }}" {% if ingredient.id == ri.ingredient.id %}selected{% endif %}>
-                                    {{ ingredient.name }}
-                                </option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="col-1 text-end">
-                        <button type="button" class="btn btn-sm text-danger p-0 mt-1">✕</button>
-                    </div>
+                    {% endfor %}
                 </div>
-                {% empty %}
-                <div class="row g-2 mb-2">
-                    <div class="col-4">
-                        <input type="number" name="quantities" class="form-control form-control-sm" placeholder="Qty" min="0.01" step="0.01">
-                    </div>
-                    <div class="col-3">
-                        <input type="text" name="units" class="form-control form-control-sm" placeholder="Unit">
-                    </div>
-                    <div class="col-4">
-                        <select name="ingredient_ids" class="form-select form-select-sm">
-                            {% for ingredient in ingredients %}
-                                <option value="{{ ingredient.id }}">{{ ingredient.name }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="col-1 text-end">
-                        <button type="button" class="btn btn-sm text-danger p-0 mt-1">✕</button>
-                    </div>
-                </div>
-                {% endfor %}
-                <button type="button" class="btn btn-outline-secondary btn-sm fw-bold mt-3 w-100">+ ADD INGREDIENT</button>
-                <button type="button" class="btn btn-outline-primary btn-sm fw-bold mt-2 w-100" data-bs-toggle="modal" data-bs-target="#addIngredientModal">+ NEW INGREDIENT</button>
+                <button type="button" class="btn btn-outline-secondary btn-sm fw-bold mt-3 w-100 rounded-pill">+ ADD INGREDIENT</button>
+                <button type="button" class="btn btn-outline-primary btn-sm fw-bold mt-2 w-100 rounded-pill" data-bs-toggle="modal" data-bs-target="#addIngredientModal">+ NEW INGREDIENT</button>
             </div>
 
             <div class="card shadow-sm border-0 p-4">
-                <h5 class="fw-bold mb-3 border-bottom pb-2">Tags</h5>
-                <!-- pre-select existing tags -->
-                <select name="tag_ids" class="form-select mb-3" multiple style="height: 120px;">
+                <h5 class="fw-bold mb-3 border-bottom pb-2 fm-text-primary">Tags</h5>
+                <select name="tag_ids" class="form-select mb-3 bg-light border-0 fm-tags-select-box" multiple aria-label="Select tags">
                     {% for tag in tags %}
-                        <option value="{{ tag.id }}" {% if tag in recipe.tags.all %}selected{% endif %}>
-                            {{ tag.name }}
-                        </option>
+                        <option value="{{ tag.id }}" {% if tag in recipe.tags.all %}selected{% endif %}>{{ tag.name }}</option>
                     {% endfor %}
                 </select>
-                <small class="text-muted">Hold Ctrl (Windows) or Cmd (Mac) to select multiple tags.</small>
+                <small class="text-muted fm-micro-text">Hold Ctrl/Cmd to select multiple.</small>
             </div>
-
         </div>
     </div>
-{% include 'ingredient_modal.html' %}
-</form>
+</form> {% include 'ingredient_modal.html' %}
 {% endblock %}

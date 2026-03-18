@@ -1,91 +1,99 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Login / Sign Up - FoodMe{% endblock %}
 
 {% block content %}
-<div class="row justify-content-center mt-5 mb-5 g-5">
+<div class="fm-login-container">
+    <div class="row justify-content-center w-100 mt-3 mb-5 g-5">
 
-    <div class="col-md-5">
-        <div class="card shadow-sm border-0 h-100 p-4">
-            <h3 class="fw-bold mb-4">Login</h3>
-            {% if error and not register %}
-                <div class="alert alert-danger">{{ error }}</div>
-            {% endif %}
-            <form action="{% url 'login_user' %}" method="POST">
-                {% csrf_token %}
-                <div class="mb-3">
-                    <label for="loginUsername" class="form-label small text-muted text-uppercase fw-bold">Username</label>
-                    <input type="text" name="username" class="form-control" id="loginUsername" placeholder="Enter your username">
-                </div>
+        <div class="col-md-5">
+            <div class="card shadow-sm border-0 h-100 p-4 fm-auth-card">
+                <h3 class="fw-bold mb-4 fm-text-primary">Login</h3>
 
-                <div class="mb-4">
-                    <label for="loginPassword" class="form-label small text-muted text-uppercase fw-bold">Password</label>
-                    <div class="input-group">
-                        <input type="password" name="password" class="form-control" id="loginPassword" placeholder="Enter your password">
-                        <button class="btn btn-outline-secondary toggle-password" type="button" tabindex="-1" style="border-color: #dee2e6;">🙈</button>
+                {% if error and not register %}
+                    <div class="alert alert-danger small py-2">{{ error }}</div>
+                {% endif %}
+
+                <form action="{% url 'login_user' %}" method="POST" id="loginForm">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="loginUsername" class="form-label small text-muted text-uppercase fw-bold">Username</label>
+                        <input type="text" name="username" class="form-control bg-light border-0" id="loginUsername" placeholder="Enter your username" required>
                     </div>
-                </div>
 
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="rememberMe">
-                        <label class="form-check-label small" for="rememberMe">Remember me</label>
+                    <div class="mb-4">
+                        <label for="loginPassword" class="form-label small text-muted text-uppercase fw-bold">Password</label>
+                        <div class="input-group">
+                            <input type="password" name="password" class="form-control bg-light border-0" id="loginPassword" placeholder="Enter your password" required>
+                            <button class="btn btn-outline-secondary toggle-password bg-light border-0" type="button" tabindex="-1">🙈</button>
+                        </div>
                     </div>
-                    <a href="#" class="text-decoration-none small text-muted">Forgot password?</a>
-                </div>
 
-                <button type="submit" class="btn btn-primary w-100 py-2">LOGIN</button>
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="rememberMe">
+                            <label class="form-check-label small text-muted" for="rememberMe">Remember me</label>
+                        </div>
+                        <a href="#" class="text-decoration-none small text-muted fw-bold">Forgot password?</a>
+                    </div>
 
-                <div class="text-center mt-4 d-block d-md-none">
-                    <span class="text-muted small">Don't have an account?</span>
-                    <a href="#signupSection" class="text-decoration-none fw-bold small">Sign up</a>
-                </div>
-            </form>
+                    <button type="submit" class="btn btn-primary w-100 py-2 fw-bold rounded-pill shadow-sm">LOGIN</button>
+
+                    <div class="text-center mt-4 d-block d-md-none">
+                        <span class="text-muted small">Don't have an account?</span>
+                        <a href="#signupSection" class="text-decoration-none fw-bold small fm-text-primary">Sign up</a>
+                    </div>
+                </form>
+            </div>
         </div>
-    </div>
 
-    <div class="col-md-5" id="signupSection">
-        <div class="card shadow-sm border-0 h-100 p-4 bg-white">
-            <h3 class="fw-bold mb-4">Sign Up</h3>
-            {% if error and register %}
-                <div class="alert alert-danger">{{ error }}</div>
-            {% endif %}
-            <form action="{% url 'register_user' %}" method="POST">
-                {% csrf_token %}
-                <div class="mb-3">
-                    <label for="signupName" class="form-label small text-muted text-uppercase fw-bold">Username</label>
-                    <input type="text" name="username" class="form-control" id="signupName" placeholder="e.g. janedoe">
-                </div>
-                <div class="mb-3">
-                    <label for="signupEmail" class="form-label small text-muted text-uppercase fw-bold">Email</label>
-                    <input type="email" name="email" class="form-control" id="signupEmail" placeholder="Enter your email">
-                </div>
+        <div class="col-md-5" id="signupSection">
+            <div class="card shadow-sm border-0 h-100 p-4 bg-white fm-auth-card">
+                <h3 class="fw-bold mb-4 fm-text-primary">Sign Up</h3>
 
-                <div class="mb-3">
-                    <label for="signupPassword" class="form-label small text-muted text-uppercase fw-bold">Password</label>
-                    <div class="input-group">
-                        <input type="password" name="password" class="form-control" id="signupPassword" placeholder="Create a password">
-                        <button class="btn btn-outline-secondary toggle-password" type="button" tabindex="-1" style="border-color: #dee2e6;">🙈</button>
+                {% if error and register %}
+                    <div class="alert alert-danger small py-2">{{ error }}</div>
+                {% endif %}
+
+                <form action="{% url 'register_user' %}" method="POST" id="signupForm">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="signupName" class="form-label small text-muted text-uppercase fw-bold">Username</label>
+                        <input type="text" name="username" class="form-control bg-light border-0" id="signupName" placeholder="e.g. janedoe" required>
                     </div>
-                </div>
-
-                <div class="mb-4">
-                    <label for="confirmPassword" class="form-label small text-muted text-uppercase fw-bold">Confirm Password</label>
-                    <div class="input-group">
-                        <input type="password" class="form-control" id="confirmPassword" placeholder="Repeat your password">
-                        <button class="btn btn-outline-secondary toggle-password" type="button" tabindex="-1" style="border-color: #dee2e6;">🙈</button>
+                    <div class="mb-3">
+                        <label for="signupEmail" class="form-label small text-muted text-uppercase fw-bold">Email Address</label>
+                        <input type="email" name="email" class="form-control bg-light border-0" id="signupEmail" placeholder="Enter your email" required>
                     </div>
-                </div>
 
-                <div class="form-check mb-4">
-                    <input type="checkbox" class="form-check-input" id="termsAgree">
-                    <label class="form-check-label small" for="termsAgree">I agree to the Terms of Service and Privacy Policy</label>
-                </div>
+                    <div class="mb-3">
+                        <label for="signupPassword" class="form-label small text-muted text-uppercase fw-bold">Password</label>
+                        <div class="input-group">
+                            <input type="password" name="password" class="form-control bg-light border-0" id="signupPassword" placeholder="Create a password" required>
+                            <button class="btn btn-outline-secondary toggle-password bg-light border-0" type="button" tabindex="-1">🙈</button>
+                        </div>
+                        <div class="form-text small text-muted fm-micro-text mt-1">Min. 8 characters with a number.</div>
+                    </div>
 
-                <button type="submit" class="btn btn-dark w-100 py-2">CREATE ACCOUNT</button>
-            </form>
+                    <div class="mb-4">
+                        <label for="confirmPassword" class="form-label small text-muted text-uppercase fw-bold">Confirm Password</label>
+                        <div class="input-group">
+                            <input type="password" class="form-control bg-light border-0" id="confirmPassword" placeholder="Repeat your password" required>
+                            <button class="btn btn-outline-secondary toggle-password bg-light border-0" type="button" tabindex="-1">🙈</button>
+                        </div>
+                    </div>
+
+                    <div class="form-check mb-4">
+                        <input type="checkbox" class="form-check-input" id="termsAgree" required>
+                        <label class="form-check-label small text-muted" for="termsAgree">I agree to the Terms & Privacy Policy</label>
+                    </div>
+
+                    <button type="submit" class="btn btn-dark w-100 py-2 fw-bold rounded-pill shadow-sm">CREATE ACCOUNT</button>
+                </form>
+            </div>
         </div>
-    </div>
 
+    </div>
 </div>
 {% endblock %}

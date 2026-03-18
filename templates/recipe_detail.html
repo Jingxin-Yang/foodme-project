@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}{{ recipe.title }} - FoodMe{% endblock %}
 
@@ -7,59 +8,56 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb mb-0">
             <li class="breadcrumb-item"><a href="{% url 'recipe_list' %}" class="text-decoration-none text-muted">Recipes</a></li>
-            <li class="breadcrumb-item active fw-bold" aria-current="page">{{ recipe.title }}</li>
+            <li class="breadcrumb-item active fw-bold fm-text-primary" aria-current="page">{{ recipe.title }}</li>
         </ol>
     </nav>
     <div class="d-flex gap-2">
-        <!-- link to edit page -->
-        <a href="{% url 'edit_recipe' recipe.id %}" class="btn btn-outline-secondary btn-sm fw-bold">✏️ EDIT</a>
-        <!-- delete form -->
-        <form method="POST" action="{% url 'recipe_detail' recipe.id %}" style="display:inline;">
+        <a href="{% url 'edit_recipe' recipe.id %}" class="btn btn-outline-secondary btn-sm fw-bold rounded-pill px-3">✏️ EDIT</a>
+        <form method="POST" action="{% url 'recipe_detail' recipe.id %}" class="fm-inline-form delete-recipe-form">
             {% csrf_token %}
             <input type="hidden" name="_action" value="delete">
-            <button type="submit" class="btn btn-outline-danger btn-sm fw-bold">🗑️ DELETE</button>
+            <button type="submit" class="btn btn-outline-danger btn-sm fw-bold rounded-pill px-3" aria-label="Delete {{ recipe.title }}">🗑️ DELETE</button>
         </form>
     </div>
 </div>
 
 <div class="row mb-5">
     <div class="col-lg-5 d-flex flex-column justify-content-center mb-4 mb-lg-0">
-        <h1 class="fw-bold mb-3 display-5">{{ recipe.title }}</h1>
+        <h1 class="fw-bold mb-2 display-5 fm-text-primary">{{ recipe.title }}</h1>
         <p class="text-muted mb-4">{{ recipe.description }}</p>
-        
-        <!-- loop through tags on this recipe -->
+
         <div class="d-flex flex-wrap gap-2 mb-4">
             {% for tag in recipe.tags.all %}
-                <span class="badge border text-dark bg-light px-3 py-2 rounded-pill">{{ tag.name|upper }}</span>
+                <span class="badge border text-dark bg-white px-3 py-2 rounded-pill shadow-sm fm-micro-text">{{ tag.name|upper }}</span>
             {% endfor %}
         </div>
-        
-        <div class="card shadow-sm border-0 bg-light">
+
+        <div class="card shadow-sm border-0 bg-white fm-border-primary">
             <div class="card-body py-3">
                 <div class="row text-center g-0">
                     <div class="col-4">
-                        <small class="text-muted text-uppercase fw-bold d-block" style="font-size: 0.7rem;">Created</small>
-                        <span class="fw-bold">{{ recipe.created_at|date:"M j, Y" }}</span>
+                        <small class="text-muted text-uppercase fw-bold d-block fm-meta-label">Created</small>
+                        <span class="fw-bold small">{{ recipe.created_at|date:"M j, Y" }}</span>
                     </div>
                     <div class="col-4 border-start">
-                        <small class="text-muted text-uppercase fw-bold d-block" style="font-size: 0.7rem;">Ingredients</small>
-                        <span class="fw-bold">{{ recipe.recipe_ingredients.count }}</span>
+                        <small class="text-muted text-uppercase fw-bold d-block fm-meta-label">Ingredients</small>
+                        <span class="fw-bold small">{{ recipe.recipe_ingredients.count }}</span>
                     </div>
                     <div class="col-4 border-start">
-                        <small class="text-muted text-uppercase fw-bold d-block" style="font-size: 0.7rem;">Steps</small>
-                        <span class="fw-bold">{{ recipe.steps.count }}</span>
+                        <small class="text-muted text-uppercase fw-bold d-block fm-meta-label">Steps</small>
+                        <span class="fw-bold small">{{ recipe.steps.count }}</span>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    
+
     <div class="col-lg-7">
         {% if recipe.image %}
-            <img src="{{ recipe.image.url }}" class="rounded-4 shadow-sm w-100" style="height: 400px; object-fit: cover;">
+            <img src="{{ recipe.image.url }}" class="rounded-4 shadow-sm w-100 fm-detail-img">
         {% else %}
-            <div class="bg-secondary bg-opacity-25 rounded-4 d-flex align-items-center justify-content-center shadow-sm w-100" style="height: 400px;">
-                <span class="text-muted fs-4 fw-bold">no image uploaded</span>
+            <div class="bg-secondary bg-opacity-10 rounded-4 d-flex align-items-center justify-content-center shadow-sm w-100 fm-detail-img">
+                <span class="text-muted fs-5 fw-bold">NO IMAGE UPLOADED</span>
             </div>
         {% endif %}
     </div>
@@ -67,23 +65,22 @@
 
 <div class="row g-5 mb-5">
     <div class="col-lg-4">
-        <div class="card shadow-sm border-0 h-100">
-            <div class="card-header bg-white border-bottom-0 pt-4 pb-2">
-                <h5 class="fw-bold mb-0">Ingredients</h5>
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-white border-bottom-0 pt-4 pb-1">
+                <h5 class="fw-bold mb-0 fm-text-primary">Ingredients</h5>
             </div>
             <div class="card-body">
-                <!-- loop through recipe ingredients -->
-                <ul class="list-group list-group-flush">
+                <ul class="list-group list-group-flush" id="recipeIngredientList">
                     {% for ri in recipe.recipe_ingredients.all %}
-                    <li class="list-group-item px-0 py-3 d-flex align-items-center">
-                        <input class="form-check-input me-3" type="checkbox" style="width: 1.2rem; height: 1.2rem;">
+                    <li class="list-group-item px-0 py-3 d-flex align-items-center border-bottom">
+                        <input class="form-check-input me-3 fm-check-lg" type="checkbox" aria-label="Mark {{ ri.ingredient.name }} as obtained">
                         <div>
                             <span class="fw-bold text-dark">{{ ri.quantity }} {{ ri.unit }}</span>
                             <span class="text-muted ms-1">{{ ri.ingredient.name }}</span>
                         </div>
                     </li>
                     {% empty %}
-                        <li class="list-group-item px-0 text-muted">no ingredients added yet</li>
+                        <li class="list-group-item px-0 text-muted">No ingredients added yet.</li>
                     {% endfor %}
                 </ul>
             </div>
@@ -91,19 +88,20 @@
     </div>
 
     <div class="col-lg-8">
-        <h5 class="fw-bold mb-4">Instructions</h5>
-        <!-- loop through steps ordered by step_number -->
+        <h5 class="fw-bold mb-4 fm-text-primary">Instructions</h5>
         {% for step in recipe.steps.all %}
-        <div class="d-flex mb-4">
+        <div class="d-flex mb-4 align-items-start">
             <div class="me-3">
-                <div class="rounded-circle bg-dark text-white d-flex justify-content-center align-items-center fw-bold" style="width: 32px; height: 32px;">{{ step.step_number }}</div>
+                <div class="rounded-circle bg-dark text-white fw-bold fm-step-circle">
+                    {{ step.step_number }}
+                </div>
             </div>
-            <div>
+            <div class="pt-1">
                 <p class="text-muted mb-0">{{ step.instruction }}</p>
             </div>
         </div>
         {% empty %}
-            <p class="text-muted">no steps added yet</p>
+            <p class="text-muted">No steps added yet.</p>
         {% endfor %}
     </div>
 </div>

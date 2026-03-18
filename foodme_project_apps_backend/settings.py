@@ -97,3 +97,7 @@ STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+# Authentication Redirects
+LOGIN_URL = 'login_user'
+LOGIN_REDIRECT_URL = 'dashboard'

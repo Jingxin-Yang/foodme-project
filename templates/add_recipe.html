@@ -1,137 +1,126 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}Add New Recipe - FoodMe{% endblock %}
 
 {% block content %}
-<div class="row mb-4">
+<div class="row mb-4 align-items-center">
     <div class="col-md-8">
-        <h2 class="fw-bold">Create New Recipe</h2>
-        <p class="text-muted">Share your culinary masterpiece with the world (or just save it for yourself).</p>
+        <h2 class="fw-bold mb-1 fm-text-primary">Create New Recipe</h2>
+        <p class="text-muted mb-0">Share your culinary masterpiece with the world (or just save it for yourself).</p>
     </div>
-    <div class="col-md-4 text-md-end mt-3 mt-md-0 d-flex justify-content-md-end align-items-center">
-        <a href="{% url 'recipe_list' %}" class="btn btn-outline-secondary fw-bold me-2">CANCEL</a>
-        <button type="submit" form="recipeForm" class="btn btn-primary fw-bold">SAVE RECIPE</button>
+    <div class="col-md-4 text-md-end mt-3 mt-md-0">
+        <a href="{% url 'recipe_list' %}" class="btn btn-outline-danger fw-bold px-4 rounded-pill me-2">CANCEL</a>
+        <button type="submit" form="recipeForm" class="btn btn-primary fw-bold px-4 rounded-pill shadow-sm">SAVE RECIPE</button>
     </div>
 </div>
 
 <form id="recipeForm" action="{% url 'add_recipe' %}" method="POST" enctype="multipart/form-data">
     {% csrf_token %}
     <div class="row g-4 mb-5">
-        
+
         <div class="col-lg-8">
-            
-            <div class="card shadow-sm border-0 mb-4 p-4">
-                <h5 class="fw-bold mb-4 border-bottom pb-2">Basic Information</h5>
-                
+            <div class="card shadow-sm border-0 mb-4 p-4 p-md-5">
+                <h5 class="fw-bold mb-4 border-bottom pb-3 fm-text-primary">Basic Information</h5>
+
                 <div class="mb-4">
-                    <label for="recipeTitle" class="form-label small text-muted text-uppercase fw-bold">Recipe Title</label>
-                    <input type="text" name="title" class="form-control form-control-lg" id="recipeTitle" placeholder="e.g., Spicy Thai Basil Chicken" required>
+                    <label for="recipeTitle" class="form-label small text-muted text-uppercase fw-bold">Recipe Title <span class="text-danger">*</span></label>
+                    <input type="text" name="title" class="form-control form-control-lg bg-light border-0" id="recipeTitle" placeholder="e.g., Spicy Thai Basil Chicken" required>
                 </div>
 
                 <div class="mb-4">
                     <label for="recipeDescription" class="form-label small text-muted text-uppercase fw-bold">Description</label>
-                    <textarea name="description" class="form-control" id="recipeDescription" rows="3" placeholder="A short description of what makes this recipe great..."></textarea>
+                    <textarea name="description" class="form-control bg-light border-0" id="recipeDescription" rows="3" placeholder="A short description of what makes this recipe great..."></textarea>
                 </div>
 
-                <div class="row g-3 mb-4">
+                <div class="row g-3">
                     <div class="col-md-4">
                         <label for="prepTime" class="form-label small text-muted text-uppercase fw-bold">Prep Time (min)</label>
-                        <input type="number" class="form-control" id="prepTime" min="0" placeholder="15">
+                        <input type="number" name="prep_time" class="form-control bg-light border-0" id="prepTime" min="0" placeholder="15">
                     </div>
                     <div class="col-md-4">
                         <label for="cookTime" class="form-label small text-muted text-uppercase fw-bold">Cook Time (min)</label>
-                        <input type="number" class="form-control" id="cookTime" min="0" placeholder="20">
+                        <input type="number" name="cook_time" class="form-control bg-light border-0" id="cookTime" min="0" placeholder="20">
                     </div>
                     <div class="col-md-4">
                         <label for="servings" class="form-label small text-muted text-uppercase fw-bold">Servings</label>
-                        <input type="number" class="form-control" id="servings" min="1" placeholder="4">
+                        <input type="number" name="servings" class="form-control bg-light border-0" id="servings" min="1" placeholder="4">
                     </div>
                 </div>
             </div>
 
-            <div class="card shadow-sm border-0 mb-4 p-4">
-                <h5 class="fw-bold mb-4 border-bottom pb-2">Instructions</h5>
-                
-                <div class="d-flex mb-3">
-                    <div class="me-3 mt-1">
-                        <span class="badge bg-dark rounded-circle p-2 px-3">1</span>
-                    </div>
-                    <div class="flex-grow-1">
-                        <textarea name="steps" class="form-control" rows="2" placeholder="Describe this step..."></textarea>
-                    </div>
-                    <div class="ms-2 mt-1">
-                        <button type="button" class="btn btn-sm btn-outline-danger border-0">✕</button>
-                    </div>
-                </div>
-                
-                <div class="d-flex mb-3">
-                    <div class="me-3 mt-1">
-                        <span class="badge bg-dark rounded-circle p-2 px-3">2</span>
-                    </div>
-                    <div class="flex-grow-1">
-                        <textarea name="steps" class="form-control" rows="2" placeholder="Describe this step..."></textarea>
-                    </div>
-                    <div class="ms-2 mt-1">
-                        <button type="button" class="btn btn-sm btn-outline-danger border-0">✕</button>
+            <div class="card shadow-sm border-0 mb-4 p-4 p-md-5">
+                <h5 class="fw-bold mb-4 border-bottom pb-3 fm-text-primary">Instructions</h5>
+
+                <div id="stepsContainer">
+                    <div class="d-flex mb-3 align-items-start">
+                        <div class="me-3 mt-1">
+                            <span class="badge bg-dark rounded-circle d-flex align-items-center justify-content-center fm-step-badge">1</span>
+                        </div>
+                        <div class="flex-grow-1">
+                            <textarea name="steps" class="form-control bg-light border-0" rows="2" placeholder="Describe this step..."></textarea>
+                        </div>
+                        <div class="ms-2 mt-1">
+                            <button type="button" class="btn btn-sm btn-outline-danger border-0">✕</button>
+                        </div>
                     </div>
                 </div>
 
-                <button type="button" class="btn btn-outline-secondary btn-sm fw-bold mt-2 w-100">+ ADD ANOTHER STEP</button>
+                <button type="button" class="btn btn-outline-secondary btn-sm fw-bold mt-3 rounded-pill px-4">+ ADD ANOTHER STEP</button>
             </div>
-            
         </div>
 
         <div class="col-lg-4">
-            
-            <div class="card shadow-sm border-0 mb-4 p-4 text-center">
-                <h5 class="fw-bold mb-4 border-bottom pb-2 text-start">Photo</h5>
-                
-                <div class="bg-light border rounded-3 d-flex flex-column align-items-center justify-content-center p-4 mb-3" style="border-style: dashed !important; height: 180px;">
+
+            <div class="card shadow-sm border-0 mb-4 p-4">
+                <h5 class="fw-bold mb-4 border-bottom pb-2 fm-text-primary">Photo</h5>
+                <div class="bg-light border rounded-4 d-flex flex-column align-items-center justify-content-center p-4 mb-3 fm-upload-box">
                     <span class="fs-1 mb-2">📷</span>
                     <small class="text-muted fw-bold">Upload a photo</small>
-                    <small class="text-muted" style="font-size: 0.7rem;">JPEG, PNG up to 5MB</small>
+                    <small class="text-muted fm-micro-text">JPEG, PNG up to 5MB</small>
                 </div>
-                <input name="image" class="form-control form-control-sm" type="file" id="recipeImage">
+                <input name="image" class="form-control form-control-sm bg-light border-0" type="file" id="recipeImage">
             </div>
 
             <div class="card shadow-sm border-0 mb-4 p-4">
-                <h5 class="fw-bold mb-4 border-bottom pb-2">Ingredients</h5>
-                
-                <div class="row g-2 mb-2">
-                    <div class="col-4">
-                        <input type="number" name="quantities" class="form-control form-control-sm" placeholder="Qty" min="0.01" step="0.01">
-                    </div>
-                    <div class="col-3">
-                        <input type="text" name="units" class="form-control form-control-sm" placeholder="Unit">
-                    </div>
-                    <div class="col-4">
-                        <select name="ingredient_ids" class="form-select form-select-sm">
-                            {% for ingredient in ingredients %}
-                                <option value="{{ ingredient.id }}">{{ ingredient.name }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="col-1 text-end">
-                        <button type="button" class="btn btn-sm text-danger p-0 mt-1">✕</button>
+                <h5 class="fw-bold mb-4 border-bottom pb-2 fm-text-primary">Ingredients</h5>
+
+                <div id="ingredientsContainer">
+                    <div class="row g-2 mb-2">
+                        <div class="col-4">
+                            <input type="number" name="quantities" class="form-control form-control-sm bg-light border-0" placeholder="Qty" min="0.01" step="0.01" required>
+                        </div>
+                        <div class="col-3">
+                            <input type="text" name="units" class="form-control form-control-sm bg-light border-0" placeholder="Unit" required>
+                        </div>
+                        <div class="col-4">
+                            <select name="ingredient_ids" class="form-select form-select-sm bg-light border-0 fw-bold">
+                                {% for ingredient in ingredients %}
+                                    <option value="{{ ingredient.id }}">{{ ingredient.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-1 text-end">
+                            <button type="button" class="btn btn-sm text-danger p-0 mt-1">✕</button>
+                        </div>
                     </div>
                 </div>
 
-                <button type="button" class="btn btn-outline-secondary btn-sm fw-bold mt-3 w-100">+ ADD INGREDIENT</button>
-                <button type="button" class="btn btn-outline-primary btn-sm fw-bold mt-2 w-100" data-bs-toggle="modal" data-bs-target="#addIngredientModal">+ NEW INGREDIENT</button>
+                <button type="button" class="btn btn-outline-secondary btn-sm fw-bold mt-3 w-100 rounded-pill">+ ADD INGREDIENT</button>
+                <button type="button" class="btn btn-outline-primary btn-sm fw-bold mt-2 w-100 rounded-pill" data-bs-toggle="modal" data-bs-target="#addIngredientModal">+ NEW INGREDIENT</button>
             </div>
 
             <div class="card shadow-sm border-0 p-4">
-                <h5 class="fw-bold mb-3 border-bottom pb-2">Tags</h5>
-                <select name="tag_ids" class="form-select mb-3" multiple aria-label="Multiple select example" style="height: 120px;">
+                <h5 class="fw-bold mb-3 border-bottom pb-2 fm-text-primary">Tags</h5>
+                <select name="tag_ids" class="form-select bg-light border-0 mb-3 fm-tags-select" multiple>
                     {% for tag in tags %}
                         <option value="{{ tag.id }}">{{ tag.name }}</option>
                     {% endfor %}
                 </select>
-                <small class="text-muted">Hold Ctrl (Windows) or Cmd (Mac) to select multiple tags.</small>
+                <small class="text-muted fm-micro-text">Hold Ctrl/Cmd to select multiple.</small>
             </div>
 
         </div>
     </div>
-{% include 'ingredient_modal.html' %}
-</form>
+</form> {% include 'ingredient_modal.html' %}
 {% endblock %}

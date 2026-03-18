@@ -14,21 +14,16 @@
     </div>
     <div class="col-md-6 text-md-end mt-3 mt-md-0 d-flex justify-content-md-end gap-2">
         <button class="btn btn-outline-secondary btn-sm px-3 fw-bold" id="emailListBtn">📧 EMAIL LIST</button>
-        <button class="btn btn-outline-secondary btn-sm px-3 fw-bold" onclick="window.print()">🖨️ PRINT</button>
+        <button class="btn btn-outline-secondary btn-sm px-3 fw-bold" id="printListBtn">🖨️ PRINT</button>
         {% if shopping_list %}
             <a href="{% url 'shoppinglist_list' %}" class="btn btn-outline-secondary btn-sm px-3 fw-bold">☰ ALL LISTS</a>
-            {% if shopping_list.meal_plan %}
-                <a href="{% url 'mealplan_detail' shopping_list.meal_plan.id %}" class="btn btn-dark btn-sm px-3 fw-bold">← BACK TO PLANNER</a>
-            {% else %}
-                <a href="{% url 'mealplan_list' %}" class="btn btn-dark btn-sm px-3 fw-bold">← BACK TO PLANNER</a>
-            {% endif %}
+            <a href="{% url 'mealplan_list' %}" class="btn btn-dark btn-sm px-3 fw-bold">← BACK TO PLANNER</a>
         {% else %}
             <a href="{% url 'mealplan_list' %}" class="btn btn-dark btn-sm px-3 fw-bold">← BACK TO PLANNER</a>
         {% endif %}
     </div>
 </div>
 
-<!-- stats derived from items context -->
 {% if shopping_list %}
 <div class="row g-3 mb-4">
     <div class="col-md-3 col-6">
@@ -40,13 +35,13 @@
     <div class="col-md-3 col-6">
         <div class="card p-3 shadow-sm border-0 h-100 border-start border-4 border-success">
             <h6 class="text-muted text-uppercase small fw-bold mb-1">Checked Off</h6>
-            <h3 class="mb-0 text-success">{{ purchased_count }}</h3>
+            <h3 class="mb-0 text-success" id="checkedOffCount">{{ purchased_count }}</h3>
         </div>
     </div>
     <div class="col-md-3 col-6">
         <div class="card p-3 shadow-sm border-0 h-100 border-start border-4 border-warning">
             <h6 class="text-muted text-uppercase small fw-bold mb-1">Remaining</h6>
-            <h3 class="mb-0 text-warning">{{ remaining_count }}</h3>
+            <h3 class="mb-0 text-warning" id="remainingCount">{{ remaining_count }}</h3>
         </div>
     </div>
     <div class="col-md-3 col-6">
@@ -56,10 +51,7 @@
         </div>
     </div>
 </div>
-{% endif %}
 
-{% if shopping_list %}
-<!-- detail view — show items for a specific shopping list -->
 <div class="row g-4 mb-5">
     <div class="col-lg-8">
         <div class="card shadow-sm border-0 h-100">
@@ -67,57 +59,49 @@
                 <h6 class="text-uppercase fw-bold mb-0 text-muted">Shopping Items</h6>
             </div>
             <ul class="list-group list-group-flush" id="shoppingListGroup">
-                <!-- loop through all items in this shopping list -->
                 {% for item in items %}
-                <li class="list-group-item py-3 {% if item.purchased %}bg-light{% endif %}">
-                    <!-- normal display row -->
-                    <div class="d-flex justify-content-between align-items-center item-display-{{ item.id }}">
+                <li class="list-group-item py-3 {% if item.purchased %}bg-light{% endif %}" id="item-row-{{ item.id }}">
+                    <div class="d-flex justify-content-between align-items-center">
                         <div class="form-check d-flex align-items-center mb-0">
-                            <!-- toggle purchased status via post -->
-                            <form method="POST" action="{% url 'mark_item_purchased' item.id %}">
-                                {% csrf_token %}
-                                <input class="form-check-input me-3 item-checkbox" type="checkbox"
-                                    style="width: 1.2rem; height: 1.2rem;"
-                                    {% if item.purchased %}checked{% endif %}
-                                    onchange="this.form.submit()">
-                            </form>
+                            <input class="form-check-input me-3 fm-check-lg purchase-checkbox"
+                                   type="checkbox"
+                                   data-item-id="{{ item.id }}"
+                                   data-url="{% url 'mark_item_purchased' item.id %}"
+                                   aria-label="Mark {{ item.name }} as purchased"
+                                   {% if item.purchased %}checked{% endif %}>
+
                             <label class="form-check-label {% if item.purchased %}text-decoration-line-through text-muted{% endif %}">
                                 <span class="fw-bold d-block {% if not item.purchased %}text-dark{% endif %}">{{ item.name }}</span>
                                 <small class="{% if not item.purchased %}text-muted{% endif %}">{{ item.quantity }} {{ item.unit }}</small>
                             </label>
                         </div>
-                        <!-- edit button toggles the inline form -->
                         <div class="d-flex gap-2 align-items-center">
-                            <button class="btn btn-link text-muted text-decoration-none small p-0"
-                                onclick="toggleItemEdit({{ item.id }})">Edit</button>
-                            <form method="POST" action="{% url 'delete_shopping_item' item.id %}">
+                            <button class="btn btn-link text-muted p-0 fm-btn-link-sm toggle-edit-btn"
+                                    data-item-id="{{ item.id }}" aria-label="Edit {{ item.name }}">Edit</button>
+
+                            <form method="POST" action="{% url 'delete_shopping_item' item.id %}" class="delete-item-form">
                                 {% csrf_token %}
-                                <button type="submit" class="btn btn-link text-danger text-decoration-none small p-0"
-                                    onclick="return confirm('Remove this item?')">🗑️</button>
+                                <button type="submit" class="btn btn-link text-danger p-0 fm-btn-link-sm" aria-label="Delete {{ item.name }}">🗑️</button>
                             </form>
                         </div>
                     </div>
-                    <!-- inline edit form — hidden by default -->
-                    <div class="item-edit-{{ item.id }} mt-2" style="display:none;">
+
+                    <div class="item-edit-container-{{ item.id }} mt-2 fm-edit-hidden">
                         <form method="POST" action="{% url 'edit_shopping_item' item.id %}">
                             {% csrf_token %}
                             <div class="row g-2 align-items-center">
                                 <div class="col-md-4">
-                                    <input type="text" name="name" class="form-control form-control-sm"
-                                        value="{{ item.name }}" placeholder="Item name">
+                                    <input type="text" name="name" class="form-control form-control-sm" value="{{ item.name }}" aria-label="Item name">
                                 </div>
                                 <div class="col-md-2">
-                                    <input type="number" name="quantity" class="form-control form-control-sm"
-                                        value="{{ item.quantity }}" min="0.01" step="0.01" placeholder="Qty">
+                                    <input type="number" name="quantity" class="form-control form-control-sm" value="{{ item.quantity }}" step="0.01" aria-label="Quantity">
                                 </div>
                                 <div class="col-md-2">
-                                    <input type="text" name="unit" class="form-control form-control-sm"
-                                        value="{{ item.unit }}" placeholder="Unit">
+                                    <input type="text" name="unit" class="form-control form-control-sm" value="{{ item.unit }}" aria-label="Unit">
                                 </div>
                                 <div class="col-md-4 d-flex gap-2">
                                     <button type="submit" class="btn btn-primary btn-sm fw-bold">SAVE</button>
-                                    <button type="button" class="btn btn-outline-secondary btn-sm"
-                                        onclick="toggleItemEdit({{ item.id }})">CANCEL</button>
+                                    <button type="button" class="btn btn-outline-secondary btn-sm cancel-edit-btn" data-item-id="{{ item.id }}">CANCEL</button>
                                 </div>
                             </div>
                         </form>
@@ -136,42 +120,35 @@
                 <h6 class="text-uppercase fw-bold mb-0">Add Custom Item</h6>
             </div>
             <div class="card-body">
-                <!-- post to shopping_items to add a custom item -->
-                <form method="POST" action="{% url 'shopping_items' shopping_list.id %}" novalidate>
+                <form method="POST" action="{% url 'shopping_items' shopping_list.id %}">
                     {% csrf_token %}
                     <div class="mb-3">
-                        <label for="itemName" class="form-label small text-muted text-uppercase fw-bold">Item Name</label>
-                        <input type="text" name="name" class="form-control" id="itemName" required>
-                        <div class="invalid-feedback custom-error small">Please enter an item name.</div>
+                        <label for="customItemName" class="form-label small text-muted text-uppercase fw-bold">Item Name</label>
+                        <input type="text" name="name" id="customItemName" class="form-control" required>
                     </div>
                     <div class="mb-3">
-                        <label for="itemAmount" class="form-label small text-muted text-uppercase fw-bold">Amount (Quantity)</label>
-                        <input type="number" name="quantity" class="form-control" id="itemAmount" min="0.01" step="0.01" required>
-                        <div class="invalid-feedback custom-error small" id="amountErrorText">Quantity cannot be negative.</div>
+                        <label for="customItemQty" class="form-label small text-muted text-uppercase fw-bold">Amount</label>
+                        <input type="number" name="quantity" id="customItemQty" class="form-control" min="0.01" step="0.01" required>
                     </div>
                     <div class="mb-3">
-                        <label for="itemUnit" class="form-label small text-muted text-uppercase fw-bold">Unit</label>
-                        <input type="text" name="unit" class="form-control" id="itemUnit" placeholder="e.g. kg, cups">
+                        <label for="customItemUnit" class="form-label small text-muted text-uppercase fw-bold">Unit</label>
+                        <input type="text" name="unit" id="customItemUnit" class="form-control" placeholder="e.g. kg, cups">
                     </div>
                     <button type="submit" class="btn btn-outline-primary w-100 fw-bold">+ ADD ITEM</button>
                 </form>
             </div>
         </div>
 
-        <!-- delete the shopping list -->
-        <div class="d-grid gap-2">
-            <form method="POST" action="{% url 'shoppinglist_detail' shopping_list.id %}">
+        <div class="d-grid">
+            <form method="POST" action="{% url 'shoppinglist_detail' shopping_list.id %}" class="delete-list-form">
                 {% csrf_token %}
                 <input type="hidden" name="_action" value="delete">
-                <button type="submit" class="btn btn-outline-danger fw-bold bg-white shadow-sm w-100"
-                    onclick="return confirm('Delete this shopping list? This cannot be undone.')">🗑️ DELETE LIST</button>
+                <button type="submit" class="btn btn-outline-danger fw-bold bg-white shadow-sm w-100" aria-label="Delete shopping list">🗑️ DELETE LIST</button>
             </form>
         </div>
     </div>
 </div>
-
 {% else %}
-<!-- list view — show all shopping lists when none is selected -->
 <div class="row g-4 mb-5">
     <div class="col-lg-8">
         <div class="card shadow-sm border-0">
@@ -182,16 +159,21 @@
                 {% for list in lists %}
                 <li class="list-group-item d-flex justify-content-between align-items-center py-3">
                     <div>
-                        <span class="fw-bold d-block">Shopping List — {{ list.created_at|date:"M j, Y" }}</span>
+                        <span class="fw-bold d-block">
+                            {% if list.meal_plan %}
+                                Shopping List (Plan: {{ list.meal_plan.week_start|date:"M j" }})
+                            {% else %}
+                                Shopping List — {{ list.created_at|date:"M j, Y" }}
+                            {% endif %}
+                        </span>
                         <small class="text-muted">{{ list.items.count }} items</small>
                     </div>
                     <div class="d-flex gap-2">
                         <a href="{% url 'shoppinglist_detail' list.id %}" class="btn btn-sm btn-outline-primary">VIEW</a>
-                        <form method="POST" action="{% url 'shoppinglist_detail' list.id %}">
+                        <form method="POST" action="{% url 'shoppinglist_detail' list.id %}" class="delete-list-form">
                             {% csrf_token %}
                             <input type="hidden" name="_action" value="delete">
-                            <button type="submit" class="btn btn-sm btn-outline-danger"
-                                onclick="return confirm('Delete this shopping list?')">🗑️</button>
+                            <button type="submit" class="btn btn-sm btn-outline-danger" aria-label="Delete list from {{ list.created_at|date:'M j' }}">🗑️</button>
                         </form>
                     </div>
                 </li>
@@ -201,9 +183,7 @@
             </ul>
         </div>
     </div>
-
     <div class="col-lg-4">
-        <!-- create a new empty shopping list -->
         <div class="card shadow-sm border-0 mb-4">
             <div class="card-header bg-white border-bottom-0 pt-3 pb-0">
                 <h6 class="text-uppercase fw-bold mb-0">New Shopping List</h6>
@@ -211,7 +191,7 @@
             <div class="card-body">
                 <form method="POST" action="{% url 'shoppinglist_list' %}">
                     {% csrf_token %}
-                    <select name="meal_plan_id" class="form-select mb-3">
+                    <select name="meal_plan_id" class="form-select mb-3" aria-label="Select meal plan to generate list from">
                         <option value="">— no meal plan —</option>
                         {% for plan in meal_plans %}
                             <option value="{{ plan.id }}">Week of {{ plan.week_start }}</option>
