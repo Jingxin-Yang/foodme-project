@@ -10,12 +10,12 @@
         <p class="text-muted mb-0">Plan your meals for the week</p>
     </div>
     <div class="col-md-6 text-md-end mt-3 mt-md-0 d-flex justify-content-md-end gap-2">
-        {% if meal_plan %}
         <button type="button" class="btn btn-outline-primary fw-bold shadow-sm rounded-pill px-4"
                 data-bs-toggle="modal" data-bs-target="#newPlanModal">
             + NEW PLAN
         </button>
 
+        {% if meal_plan %}
         <form method="POST" action="{% url 'shoppinglist_list' %}" class="d-inline">
             {% csrf_token %}
             <input type="hidden" name="meal_plan_id" value="{{ meal_plan.id }}">
