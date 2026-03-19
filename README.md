@@ -89,6 +89,6 @@ foodme-project/
 
 ## Team
 
-- **Ivan Germanoff** (2542890G) — Backend: models, views, URL routing, authentication
-- **Runmeng Chen** (3092353C) — Frontend enhancements: filtering, validation, charts, deployment, video production
-- **Jingxin Yang** (3096032Y) — Frontend scaffolding: templates, layout, Bootstrap styling
+- **Runmeng Chen (3092353C) — Frontend interactivity, deployment, unit tests, report drafting, video editing
+- **Jingxin Yang (3096032Y) — Frontend scaffolding, templates, Bootstrap styling, backend modifications, report refinement
+- **Ivan Germanoff (2542890G) — Backend models, views, URL routing, authentication, video recording
