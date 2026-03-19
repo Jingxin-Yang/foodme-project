@@ -39,7 +39,7 @@
                         <a class="nav-link {% if request.resolver_match.url_name in 'recipe_list,recipe_detail,add_recipe,edit_recipe' %}active{% endif %}" href="{% url 'recipe_list' %}">RECIPES</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link {% if request.resolver_match.url_name == 'mealplan_list' %}active{% endif %}" href="{% url 'mealplan_list' %}">MEAL PLANNER</a>
+                        <a class="nav-link {% if request.resolver_match.url_name in 'mealplan_list,mealplan_detail,mealplan_days,mealplan_entries' %}active{% endif %}" href="{% url 'mealplan_list' %}">MEAL PLANNER</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {% if request.resolver_match.url_name == 'shoppinglist_list' %}active{% endif %}" href="{% url 'shoppinglist_list' %}">SHOPPING LIST</a>
